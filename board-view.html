@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IPAI Board Dashboard</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #0a0a12 0%, #12121f 50%, #0d1117 100%);
+            min-height: 100vh;
+            color: #fff;
+            padding: 30px 40px;
+        }
+        
+        .container { max-width: 1400px; margin: 0 auto; }
+        
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding-bottom: 30px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 40px;
+        }
+        
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo { font-size: 2.5rem; }
+        
+        .title-group h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .title-group .subtitle {
+            color: #8892b0;
+            font-size: 1rem;
+            margin-top: 4px;
+        }
+        
+        .header-meta { text-align: right; }
+        
+        .last-updated {
+            color: #64ffda;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        
+        .period {
+            color: #8892b0;
+            font-size: 0.85rem;
+            margin-top: 4px;
+        }
+        
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #8892b0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .section-title::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, rgba(255,255,255,0.2), transparent);
+        }
+        
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .metric-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 24px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .metric-card.live {
+            border-color: rgba(100, 255, 218, 0.3);
+            background: linear-gradient(135deg, rgba(100, 255, 218, 0.05), transparent);
+        }
+        
+        .metric-card.live::before {
+            content: '● LIVE';
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            font-size: 0.65rem;
+            font-weight: 600;
+            color: #64ffda;
+            letter-spacing: 0.5px;
+        }
+        
+        .metric-card.unavailable {
+            border-color: rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.02);
+        }
+        
+        .metric-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+        
+        .metric-name {
+            font-size: 0.9rem;
+            color: #8892b0;
+            font-weight: 500;
+        }
+        
+        .metric-icon { font-size: 1.5rem; opacity: 0.8; }
+        
+        .metric-values {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 12px;
+        }
+        
+        .value-group {
+            text-align: center;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 10px;
+        }
+        
+        .value-label {
+            font-size: 0.7rem;
+            color: #8892b0;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+        
+        .value-number {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #fff;
+        }
+        
+        .value-number.live { color: #64ffda; }
+        .value-number.forecast { color: #667eea; }
+        
+        .value-number.unavailable {
+            font-size: 0.85rem;
+            color: #ff6b6b;
+            font-weight: 500;
+        }
+        
+        .metric-status {
+            padding: 10px 12px;
+            background: rgba(255, 107, 107, 0.1);
+            border: 1px solid rgba(255, 107, 107, 0.2);
+            border-radius: 8px;
+            font-size: 0.75rem;
+            color: #ff8a8a;
+            line-height: 1.4;
+        }
+        
+        .metric-status.success {
+            background: rgba(100, 255, 218, 0.1);
+            border-color: rgba(100, 255, 218, 0.2);
+            color: #64ffda;
+        }
+        
+        .metric-note {
+            font-size: 0.75rem;
+            color: #8892b0;
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+        
+        /* Summary Cards */
+        .summary-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+        
+        .summary-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+        
+        .summary-card .number {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #64ffda;
+        }
+        
+        .summary-card .label {
+            color: #8892b0;
+            font-size: 0.8rem;
+            margin-top: 6px;
+        }
+        
+        .summary-card .sublabel {
+            color: #667eea;
+            font-size: 0.7rem;
+            margin-top: 4px;
+        }
+        
+        /* Legend */
+        .legend {
+            display: flex;
+            gap: 30px;
+            padding: 15px 20px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.8rem;
+            color: #8892b0;
+        }
+        
+        .legend-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+        
+        .legend-dot.live { background: #64ffda; box-shadow: 0 0 8px #64ffda; }
+        .legend-dot.forecast { background: #667eea; }
+        .legend-dot.unavailable { background: #ff6b6b; }
+        
+        /* Loading state */
+        .loading {
+            color: #667eea;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        footer {
+            text-align: center;
+            padding: 40px 20px 20px;
+            color: #8892b0;
+            font-size: 0.8rem;
+        }
+        
+        @media (max-width: 900px) {
+            .summary-row { grid-template-columns: repeat(2, 1fr); }
+            .metrics-grid { grid-template-columns: 1fr; }
+            .legend { flex-wrap: wrap; }
+        }
+        
+        @media (max-width: 600px) {
+            body { padding: 20px; }
+            header { flex-direction: column; gap: 20px; }
+            .header-meta { text-align: left; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo-section">
+                <div class="logo">🚀</div>
+                <div class="title-group">
+                    <h1>Inception Point AI</h1>
+                    <p class="subtitle">Board Metrics Dashboard</p>
+                </div>
+            </div>
+            <div class="header-meta">
+                <div class="last-updated" id="lastUpdated">Loading...</div>
+                <div class="period">Reporting Period: January 2026</div>
+            </div>
+        </header>
+        
+        <!-- Quick Summary - Live from API -->
+        <div class="summary-row">
+            <div class="summary-card">
+                <div class="number" id="totalShows">—</div>
+                <div class="label">Total Shows</div>
+            </div>
+            <div class="summary-card">
+                <div class="number" id="totalEpisodes">—</div>
+                <div class="label">Total Episodes</div>
+            </div>
+            <div class="summary-card">
+                <div class="number" id="orgDownloads">—</div>
+                <div class="label">Total Downloads</div>
+            </div>
+            <div class="summary-card">
+                <div class="number" id="totalPlays">—</div>
+                <div class="label">Total Plays</div>
+            </div>
+        </div>
+        
+        <!-- Legend -->
+        <div class="legend">
+            <div class="legend-item">
+                <span class="legend-dot live"></span>
+                <span>Live Data (Spreaker API)</span>
+            </div>
+            <div class="legend-item">
+                <span class="legend-dot forecast"></span>
+                <span>Forecast (Manual Input)</span>
+            </div>
+            <div class="legend-item">
+                <span class="legend-dot unavailable"></span>
+                <span>Data Unavailable</span>
+            </div>
+        </div>
+        
+        <!-- Financial Metrics -->
+        <div class="section-title">Financial Metrics</div>
+        <div class="metrics-grid">
+            <!-- Revenue -->
+            <div class="metric-card unavailable">
+                <div class="metric-header">
+                    <div class="metric-name">Revenue</div>
+                    <div class="metric-icon">💰</div>
+                </div>
+                <div class="metric-values">
+                    <div class="value-group">
+                        <div class="value-label">Forecast</div>
+                        <div class="value-number unavailable">N/A</div>
+                    </div>
+                    <div class="value-group">
+                        <div class="value-label">Actual</div>
+                        <div class="value-number unavailable">N/A</div>
+                    </div>
+                </div>
+                <div class="metric-status">
+                    ❌ Spreaker API doesn't expose revenue. Need Spreaker Prime dashboard export or direct finance integration.
+                </div>
+            </div>
+            
+            <!-- Blended CPM -->
+            <div class="metric-card unavailable">
+                <div class="metric-header">
+                    <div class="metric-name">Blended CPM (or RPM)</div>
+                    <div class="metric-icon">📊</div>
+                </div>
+                <div class="metric-values">
+                    <div class="value-group">
+                        <div class="value-label">Forecast</div>
+                        <div class="value-number unavailable">N/A</div>
+                    </div>
+                    <div class="value-group">
+                        <div class="value-label">Actual</div>
+                        <div class="value-number unavailable">N/A</div>
+                    </div>
+                </div>
+                <div class="metric-status">
+                    ❌ Requires Revenue ÷ Impressions. Need revenue data + ad impression counts.
+                </div>
+            </div>
+            
+            <!-- Gross Margin -->
+            <div class="metric-card unavailable">
+                <div class="metric-header">
+                    <div class="metric-name">Gross Margin %</div>
+                    <div class="metric-icon">📈</div>
+                </div>
+                <div class="metric-values">
+                    <div class="value-group">
+                        <div class="value-label">Forecast</div>
+                        <div class="value-number unavailable">N/A</div>
+                    </div>
+                    <div class="value-group">
+                        <div class="value-label">Actual</div>
+                        <div class="value-number unavailable">N/A</div>
+                    </div>
+                </div>
+                <div class="metric-status">
+                    ❌ Finance data required. Need COGS breakdown (AI costs, hosting, distribution).
+                </div>
+            </div>
+            
+            <!-- AI Cost per Episode -->
+            <div class="metric-card unavailable">
+                <div class="metric-header">
+                    <div class="metric-name">AI Cost per Episode</div>
+                    <div class="metric-icon">🤖</div>
+                </div>
+                <div class="metric-values">
+                    <div class="value-group">
+                        <div class="value-label">Forecast</div>
+                        <div class="value-number unavailable">N/A</div>
+                    </div>
+                    <div class="value-group">
+                        <div class="value-label">Actual</div>
+                        <div class="value-number unavailable">N/A</div>
+                    </div>
+                </div>
+                <div class="metric-status">
+                    ❌ Need production cost tracking: LLM API, TTS, storage per episode from Make.com or Arc.
+                </div>
+            </div>
+            
+            <!-- % Revenue from Licensing -->
+            <div class="metric-card unavailable">
+                <div class="metric-header">
+                    <div class="metric-name">% Revenue from Licensing / Non-Ad</div>
+                    <div class="metric-icon">📜</div>
+                </div>
+                <div class="metric-values">
+                    <div class="value-group">
+                        <div class="value-label">Forecast</div>
+                        <div class="value-number unavailable">N/A</div>
+                    </div>
+                    <div class="value-group">
+                        <div class="value-label">Actual</div>
+                        <div class="value-number unavailable">N/A</div>
+                    </div>
+                </div>
+                <div class="metric-status">
+                    ❌ Finance data required. Need revenue split: ad revenue vs licensing deals.
+                </div>
+            </div>
+            
+            <!-- Cash Runway -->
+            <div class="metric-card unavailable">
+                <div class="metric-header">
+                    <div class="metric-name">Cash Runway (months)</div>
+                    <div class="metric-icon">🏦</div>
+                </div>
+                <div class="metric-values">
+                    <div class="value-group">
+                        <div class="value-label">Forecast</div>
+                        <div class="value-number unavailable">N/A</div>
+                    </div>
+                    <div class="value-group">
+                        <div class="value-label">Actual</div>
+                        <div class="value-number unavailable">N/A</div>
+                    </div>
+                </div>
+                <div class="metric-status">
+                    ❌ Finance data required. Need: cash balance ÷ monthly burn rate.
+                </div>
+            </div>
+        </div>
+        
+        <!-- Engagement / Content Metrics -->
+        <div class="section-title">Engagement & Content Metrics</div>
+        <div class="metrics-grid">
+            <!-- Total Streams/Downloads -->
+            <div class="metric-card live">
+                <div class="metric-header">
+                    <div class="metric-name">Total Streams / Downloads</div>
+                    <div class="metric-icon">📥</div>
+                </div>
+                <div class="metric-values">
+                    <div class="value-group">
+                        <div class="value-label">Forecast</div>
+                        <div class="value-number forecast">—</div>
+                    </div>
+                    <div class="value-group">
+                        <div class="value-label">Actual</div>
+                        <div class="value-number live" id="downloadsMetric">—</div>
+                    </div>
+                </div>
+                <div class="metric-status success">
+                    ✅ Live from Spreaker API: /users/{id}/statistics
+                </div>
+                <div class="metric-note" id="downloadsNote">Loading...</div>
+            </div>
+            
+            <!-- Total Engagement/Reach -->
+            <div class="metric-card live">
+                <div class="metric-header">
+                    <div class="metric-name">Total Engagement / Reach</div>
+                    <div class="metric-icon">👥</div>
+                </div>
+                <div class="metric-values">
+                    <div class="value-group">
+                        <div class="value-label">Forecast</div>
+                        <div class="value-number forecast">—</div>
+                    </div>
+                    <div class="value-group">
+                        <div class="value-label">Actual (Plays)</div>
+                        <div class="value-number live" id="playsMetric">—</div>
+                    </div>
+                </div>
+                <div class="metric-status success">
+                    ✅ Live from Spreaker API. Plays = streaming listens (vs downloads = file downloads).
+                </div>
+                <div class="metric-note" id="playsNote">Loading...</div>
+            </div>
+            
+            <!-- Monetized AI Personalities -->
+            <div class="metric-card live">
+                <div class="metric-header">
+                    <div class="metric-name"># Monetized AI Personalities</div>
+                    <div class="metric-icon">🎭</div>
+                </div>
+                <div class="metric-values">
+                    <div class="value-group">
+                        <div class="value-label">Forecast</div>
+                        <div class="value-number forecast">—</div>
+                    </div>
+                    <div class="value-group">
+                        <div class="value-label">Actual (Shows)</div>
+                        <div class="value-number live" id="showsMetric">—</div>
+                    </div>
+                </div>
+                <div class="metric-status success">
+                    ✅ Counting unique shows. For named personalities (Clare, Nigel), need separate mapping.
+                </div>
+                <div class="metric-note" id="showsNote">Loading...</div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>Inception Point AI • Board Dashboard v1.1</p>
+            <p style="margin-top: 8px; color: #64ffda;">Goal: Metrics tell us whether our AI content engine is scaling efficiently and monetizing effectively.</p>
+            <p style="margin-top: 12px; font-size: 0.75rem;">Data sources: Spreaker API (QP-1: user/17313059, Org: 12296333)</p>
+        </footer>
+    </div>
+    
+    <script>
+        const API_KEY = 'c5e07e8373932ea7d0276c77f73837c768b83c98';
+        const USER_ID = '17313059';
+        const ORG_ID = '12296333';
+        
+        function formatNumber(num) {
+            if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
+            if (num >= 1000) return (num / 1000).toFixed(0) + 'K';
+            return num.toLocaleString();
+        }
+        
+        async function fetchStats() {
+            try {
+                // Fetch user stats
+                const userRes = await fetch(`https://api.spreaker.com/v2/users/${USER_ID}/statistics`, {
+                    headers: { 'Authorization': `Bearer ${API_KEY}` }
+                });
+                const userData = await userRes.json();
+                const userStats = userData.response.statistics;
+                
+                // Fetch org stats
+                const orgRes = await fetch(`https://api.spreaker.com/v2/organizations/${ORG_ID}/statistics`, {
+                    headers: { 'Authorization': `Bearer ${API_KEY}` }
+                });
+                const orgData = await orgRes.json();
+                const orgStats = orgData.response.statistics;
+                
+                // Update summary cards
+                document.getElementById('totalShows').textContent = formatNumber(userStats.shows_count);
+                document.getElementById('totalEpisodes').textContent = formatNumber(userStats.episodes_count);
+                document.getElementById('orgDownloads').textContent = formatNumber(orgStats.downloads_count);
+                document.getElementById('totalPlays').textContent = formatNumber(orgStats.plays_count);
+                
+                // Update metric cards
+                document.getElementById('downloadsMetric').textContent = formatNumber(orgStats.downloads_count);
+                document.getElementById('downloadsNote').textContent = `${orgStats.downloads_count.toLocaleString()} total downloads across all networks`;
+                
+                document.getElementById('playsMetric').textContent = formatNumber(orgStats.plays_count);
+                document.getElementById('playsNote').textContent = `${orgStats.plays_ondemand_count.toLocaleString()} on-demand plays across all networks`;
+                
+                document.getElementById('showsMetric').textContent = formatNumber(userStats.shows_count);
+                document.getElementById('showsNote').textContent = `${userStats.episodes_count.toLocaleString()} total episodes • ${userStats.likes_count} likes`;
+                
+                // Update timestamp
+                const now = new Date();
+                document.getElementById('lastUpdated').textContent = 
+                    `Last Updated: ${now.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })} • ${now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZoneName: 'short' })}`;
+                
+            } catch (error) {
+                console.error('Failed to fetch stats:', error);
+                document.getElementById('lastUpdated').textContent = 'Failed to load live data';
+            }
+        }
+        
+        // Load on page load
+        fetchStats();
+        
+        // Refresh every 5 minutes
+        setInterval(fetchStats, 300000);
+    </script>
+</body>
+</html>

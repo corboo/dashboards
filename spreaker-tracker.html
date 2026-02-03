@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inception Point AI - Podcast Asset Tracker</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #fff;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { max-width: 1400px; margin: 0 auto; }
+        header { 
+            text-align: center; 
+            margin-bottom: 30px;
+            padding: 20px;
+        }
+        header h1 { 
+            font-size: 2.5rem; 
+            background: linear-gradient(90deg, #00d4ff, #7b2ff7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .update-time { color: #888; font-size: 0.9rem; margin-top: 5px; }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .stat-card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .stat-card .value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #00d4ff;
+        }
+        .stat-card .label {
+            color: #888;
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+        .stat-card.highlight { border-color: #7b2ff7; }
+        .stat-card.highlight .value { color: #7b2ff7; }
+        
+        .section {
+            background: rgba(255,255,255,0.05);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .section h2 {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .networks-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+        }
+        .network-card {
+            background: rgba(0,212,255,0.1);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+        }
+        .network-card .name { font-weight: 600; }
+        .network-card .shows { color: #00d4ff; font-size: 1.5rem; font-weight: 700; }
+        .network-card .label { color: #888; font-size: 0.8rem; }
+        .network-card.active { border: 2px solid #00ff88; }
+        .network-card.inactive { opacity: 0.5; }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        th { color: #888; font-weight: 500; }
+        tr:hover { background: rgba(255,255,255,0.05); }
+        
+        .badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 5px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .badge-green { background: rgba(0,255,136,0.2); color: #00ff88; }
+        .badge-blue { background: rgba(0,212,255,0.2); color: #00d4ff; }
+        .badge-purple { background: rgba(123,47,247,0.2); color: #7b2ff7; }
+        .badge-yellow { background: rgba(255,200,0,0.2); color: #ffc800; }
+        
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 8px;
+        }
+        .status-dot.green { background: #00ff88; }
+        .status-dot.yellow { background: #ffc800; }
+        .status-dot.red { background: #ff4444; }
+        
+        .two-col {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+        }
+        @media (max-width: 900px) {
+            .two-col { grid-template-columns: 1fr; }
+        }
+        
+        .ideas-list { list-style: none; }
+        .ideas-list li {
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .ideas-list li:last-child { border-bottom: none; }
+        
+        footer {
+            text-align: center;
+            color: #666;
+            padding: 30px;
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🚀 Podcast Asset Tracker</h1>
+            <div class="update-time">Last Updated: February 3, 2026 at 8:20 AM PST</div>
+        </header>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="value">2,889</div>
+                <div class="label">Total Shows (6 accounts)</div>
+            </div>
+            <div class="stat-card">
+                <div class="value">~250K</div>
+                <div class="label">Est. Total Episodes</div>
+            </div>
+            <div class="stat-card">
+                <div class="value">6</div>
+                <div class="label">Active Networks</div>
+            </div>
+            <div class="stat-card">
+                <div class="value">~330</div>
+                <div class="label">Eps/Day Avg</div>
+            </div>
+            <div class="stat-card highlight">
+                <div class="value">50,792</div>
+                <div class="label">Top Downloads</div>
+            </div>
+            <div class="stat-card highlight">
+                <div class="value">97%</div>
+                <div class="label">Best Apple%</div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🌐 Network Status</h2>
+            <div class="networks-grid">
+                <div class="network-card active">
+                    <div class="name">QP-Daily</div>
+                    <div class="shows">1,012</div>
+                    <div class="label">shows</div>
+                </div>
+                <div class="network-card active">
+                    <div class="name">QP-1</div>
+                    <div class="shows">519</div>
+                    <div class="label">shows</div>
+                </div>
+                <div class="network-card active">
+                    <div class="name">QP-3</div>
+                    <div class="shows">498</div>
+                    <div class="label">shows</div>
+                </div>
+                <div class="network-card active">
+                    <div class="name">Katie Brown 2</div>
+                    <div class="shows">369</div>
+                    <div class="label">shows</div>
+                </div>
+                <div class="network-card active">
+                    <div class="name">QP-JT2</div>
+                    <div class="shows">276</div>
+                    <div class="label">shows</div>
+                </div>
+                <div class="network-card active">
+                    <div class="name">QP-5</div>
+                    <div class="shows">215</div>
+                    <div class="label">shows</div>
+                </div>
+                <div class="network-card inactive">
+                    <div class="name">QP-2</div>
+                    <div class="shows">—</div>
+                    <div class="label">needs API key</div>
+                </div>
+                <div class="network-card inactive">
+                    <div class="name">QP-4</div>
+                    <div class="shows">—</div>
+                    <div class="label">needs API key</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="two-col">
+            <div class="section">
+                <h2>📊 Top Performing Shows</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Category</th>
+                            <th>Title</th>
+                            <th>Downloads</th>
+                            <th>Apple%</th>
+                            <th>Network</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="badge badge-blue">Music</span></td>
+                            <td>Calm Podcast</td>
+                            <td>50,792</td>
+                            <td>45%</td>
+                            <td>QP-1</td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge badge-blue">Music</span></td>
+                            <td>Bad Bunny</td>
+                            <td>49,668</td>
+                            <td>19%</td>
+                            <td>QP-1</td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge badge-purple">Documentary</span></td>
+                            <td>BIGFOOT! - Biography Flash</td>
+                            <td>31,097</td>
+                            <td>0%</td>
+                            <td>QP-1</td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge badge-green">Arts</span></td>
+                            <td>CBS Radio Mystery Theater - OTR</td>
+                            <td>25,369</td>
+                            <td>21%</td>
+                            <td>QP-1</td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge badge-yellow">News</span></td>
+                            <td>AK-47 Who Makes it</td>
+                            <td>24,265</td>
+                            <td>1%</td>
+                            <td>QP-1</td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge badge-blue">Soccer</span></td>
+                            <td>Cristiano Ronaldo - Biography Flash</td>
+                            <td>21,723</td>
+                            <td>35%</td>
+                            <td>QP-1</td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge badge-green">Hobbies</span></td>
+                            <td>Bird Songs for Cats</td>
+                            <td>17,364</td>
+                            <td>7%</td>
+                            <td>QP-1</td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge badge-purple">History</span></td>
+                            <td>Britney Spears - Audio Biography</td>
+                            <td>14,647</td>
+                            <td>61%</td>
+                            <td>QP-1</td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge badge-purple">Fiction</span></td>
+                            <td>12 Spooky Ghost Stories</td>
+                            <td>13,801</td>
+                            <td>97%</td>
+                            <td>QP-1</td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge badge-yellow">News</span></td>
+                            <td>Donald Trump Trials</td>
+                            <td>11,698</td>
+                            <td>15%</td>
+                            <td>QP-Daily</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div>
+                <div class="section">
+                    <h2>💚 System Health</h2>
+                    <table>
+                        <tr>
+                            <td><span class="status-dot green"></span>Spreaker API</td>
+                            <td><span class="badge badge-green">Online</span></td>
+                        </tr>
+                        <tr>
+                            <td><span class="status-dot green"></span>Make.com Pipeline</td>
+                            <td><span class="badge badge-green">Active</span></td>
+                        </tr>
+                        <tr>
+                            <td><span class="status-dot green"></span>Publishing</td>
+                            <td><span class="badge badge-green">Active</span></td>
+                        </tr>
+                        <tr>
+                            <td>Last Episode</td>
+                            <td>Today 8:00 AM</td>
+                        </tr>
+                        <tr>
+                            <td>Daily Avg</td>
+                            <td>~330 episodes</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="section">
+                    <h2>🎯 Hot Topics</h2>
+                    <ul class="ideas-list">
+                        <li>
+                            <span class="badge badge-yellow">🔥 Hot</span>
+                            <span>Super Bowl LX (11 days)</span>
+                        </li>
+                        <li>
+                            <span class="badge badge-green">📅 Now</span>
+                            <span>Black History Month</span>
+                        </li>
+                        <li>
+                            <span class="badge badge-purple">📈 Trend</span>
+                            <span>DeepSeek AI</span>
+                        </li>
+                        <li>
+                            <span class="badge badge-blue">🏆 Awards</span>
+                            <span>Oscars 2026</span>
+                        </li>
+                        <li>
+                            <span class="badge badge-green">💡 Idea</span>
+                            <span>Grammy Drama Daily</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>📰 Recent Episodes</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Network</th>
+                        <th>Title</th>
+                        <th>Published</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="badge badge-blue">QP-1</span></td>
+                        <td>Margot Robbie and Jacob Elordi's Wuthering Heights</td>
+                        <td>Today</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge badge-blue">QP-1</span></td>
+                        <td>Biography Flash: Kim Kardashian's Secret Lewis Hamilton Romance</td>
+                        <td>Today</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge badge-blue">QP-1</span></td>
+                        <td>Taylor Swift Skips 2026 Grammys But Parties Hard</td>
+                        <td>Today</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge badge-purple">QP-Daily</span></td>
+                        <td>Amazon's 16000 Job Cuts and Fresh Store Closures</td>
+                        <td>Today</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge badge-purple">QP-Daily</span></td>
+                        <td>Apple's AI Bet: Q.ai Acquisition, M5 MacBook Delay</td>
+                        <td>Today</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge badge-green">Katie Brown 2</span></td>
+                        <td>Elon Musk's SpaceX Acquisition of xAI</td>
+                        <td>Today</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge badge-green">Katie Brown 2</span></td>
+                        <td>SZA and Kendrick Lamar Win Record of the Year at 2026 Grammys</td>
+                        <td>Today</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <footer>
+            Inception Point AI • Podcast Asset Tracker • Updated via Spreaker API
+        </footer>
+    </div>
+</body>
+</html>

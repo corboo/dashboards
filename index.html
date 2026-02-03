@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inception Point AI - Dashboards</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            color: #fff;
+            padding: 40px 20px;
+        }
+        .container { max-width: 800px; margin: 0 auto; }
+        h1 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #00d4ff, #7b2ff7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .subtitle { text-align: center; color: #888; margin-bottom: 40px; }
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .dashboard-card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 15px;
+            padding: 25px;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            border-color: #00d4ff;
+            box-shadow: 0 10px 30px rgba(0,212,255,0.2);
+        }
+        .dashboard-card .icon { font-size: 2rem; margin-bottom: 10px; }
+        .dashboard-card h3 { font-size: 1.2rem; margin-bottom: 8px; }
+        .dashboard-card p { color: #888; font-size: 0.9rem; }
+        footer { text-align: center; margin-top: 50px; color: #666; font-size: 0.85rem; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 Inception Point AI</h1>
+        <p class="subtitle">Dashboard Hub</p>
+        
+        <div class="dashboard-grid">
+            <a href="spreaker-tracker.html" class="dashboard-card">
+                <div class="icon">📊</div>
+                <h3>Spreaker Tracker</h3>
+                <p>Main podcast asset tracker with network overview and top performers.</p>
+            </a>
+            
+            <a href="ipai-dashboard.html" class="dashboard-card">
+                <div class="icon">🎯</div>
+                <h3>IPAI Dashboard</h3>
+                <p>Full content performance dashboard with filtering and analytics.</p>
+            </a>
+            
+            <a href="board-view.html" class="dashboard-card">
+                <div class="icon">📋</div>
+                <h3>Board View</h3>
+                <p>Executive board-style overview of podcast operations.</p>
+            </a>
+            
+            <a href="spreaker-analytics.html" class="dashboard-card">
+                <div class="icon">📈</div>
+                <h3>Spreaker Analytics</h3>
+                <p>Detailed Spreaker-specific analytics and metrics.</p>
+            </a>
+            
+            <a href="operations.html" class="dashboard-card">
+                <div class="icon">⚙️</div>
+                <h3>Operations</h3>
+                <p>Operations and workflow status dashboard.</p>
+            </a>
+            
+            <a href="make-operations.html" class="dashboard-card">
+                <div class="icon">🔧</div>
+                <h3>Make.com Operations</h3>
+                <p>Make.com automation pipeline status.</p>
+            </a>
+        </div>
+        
+        <footer>
+            Inception Point AI • Auto-updated via GitHub Pages
+        </footer>
+    </div>
+</body>
+</html>
