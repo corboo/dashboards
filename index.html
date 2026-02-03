@@ -13,7 +13,7 @@
             color: #fff;
             padding: 40px 20px;
         }
-        .container { max-width: 800px; margin: 0 auto; }
+        .container { max-width: 900px; margin: 0 auto; }
         h1 {
             text-align: center;
             font-size: 2.5rem;
@@ -25,7 +25,7 @@
         .subtitle { text-align: center; color: #888; margin-bottom: 40px; }
         .dashboard-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 20px;
         }
         .dashboard-card {
@@ -43,9 +43,11 @@
             border-color: #00d4ff;
             box-shadow: 0 10px 30px rgba(0,212,255,0.2);
         }
+        .dashboard-card.youtube:hover { border-color: #FF0000; box-shadow: 0 10px 30px rgba(255,0,0,0.2); }
         .dashboard-card .icon { font-size: 2rem; margin-bottom: 10px; }
         .dashboard-card h3 { font-size: 1.2rem; margin-bottom: 8px; }
         .dashboard-card p { color: #888; font-size: 0.9rem; }
+        .section-title { color: #888; font-size: 0.9rem; margin: 30px 0 15px; text-transform: uppercase; letter-spacing: 1px; }
         footer { text-align: center; margin-top: 50px; color: #666; font-size: 0.85rem; }
     </style>
 </head>
@@ -54,6 +56,7 @@
         <h1>🚀 Inception Point AI</h1>
         <p class="subtitle">Dashboard Hub</p>
         
+        <div class="section-title">📻 Podcast Analytics</div>
         <div class="dashboard-grid">
             <a href="spreaker-tracker.html" class="dashboard-card">
                 <div class="icon">📊</div>
@@ -67,18 +70,30 @@
                 <p>Full content performance dashboard with filtering and analytics.</p>
             </a>
             
-            <a href="board-view.html" class="dashboard-card">
-                <div class="icon">📋</div>
-                <h3>Board View</h3>
-                <p>Executive board-style overview of podcast operations.</p>
-            </a>
-            
             <a href="spreaker-analytics.html" class="dashboard-card">
                 <div class="icon">📈</div>
                 <h3>Spreaker Analytics</h3>
                 <p>Detailed Spreaker-specific analytics and metrics.</p>
             </a>
             
+            <a href="board-view.html" class="dashboard-card">
+                <div class="icon">📋</div>
+                <h3>Board View</h3>
+                <p>Executive board-style overview of podcast operations.</p>
+            </a>
+        </div>
+        
+        <div class="section-title">📺 Video Analytics</div>
+        <div class="dashboard-grid">
+            <a href="youtube-dashboard.html" class="dashboard-card youtube">
+                <div class="icon">📺</div>
+                <h3>YouTube Dashboard</h3>
+                <p>Video content analytics across 5 YouTube channels. 6K+ views, 40 videos.</p>
+            </a>
+        </div>
+        
+        <div class="section-title">⚙️ Operations</div>
+        <div class="dashboard-grid">
             <a href="operations.html" class="dashboard-card">
                 <div class="icon">⚙️</div>
                 <h3>Operations</h3>
