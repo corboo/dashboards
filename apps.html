@@ -92,6 +92,16 @@
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
         }
         
+        .card.featured {
+            border-color: rgba(255, 193, 7, 0.5);
+            background: rgba(255, 193, 7, 0.08);
+        }
+        
+        .card.featured:hover {
+            border-color: rgba(255, 193, 7, 0.8);
+            box-shadow: 0 20px 40px rgba(255, 193, 7, 0.2);
+        }
+        
         .card-header {
             display: flex;
             justify-content: space-between;
@@ -154,6 +164,17 @@
         .tag-github {
             background: rgba(255, 255, 255, 0.1);
             color: #ccc;
+        }
+        
+        .tag-new {
+            background: rgba(255, 75, 75, 0.3);
+            color: #ff6b6b;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
         }
         
         .status {
@@ -221,6 +242,19 @@
             font-size: 0.85rem;
             color: #8892b0;
         }
+        
+        .featured-badge {
+            position: absolute;
+            top: -8px;
+            right: 16px;
+            background: linear-gradient(90deg, #ffc107, #ff9800);
+            color: #000;
+            font-size: 0.65rem;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 4px;
+            text-transform: uppercase;
+        }
     </style>
 </head>
 <body>
@@ -232,7 +266,7 @@
         
         <div class="stats-bar">
             <div class="stat">
-                <div class="stat-value">3</div>
+                <div class="stat-value">4</div>
                 <div class="stat-label">Streamlit Apps</div>
             </div>
             <div class="stat">
@@ -249,9 +283,26 @@
         <div class="section">
             <h2 class="section-title">
                 🚀 Streamlit Apps
-                <span class="count">3 apps</span>
+                <span class="count">4 apps</span>
             </h2>
             <div class="grid">
+                <!-- FORGE - Featured -->
+                <a href="https://qp1-tools-cxjt6gffvwuump8fsczqu8.streamlit.app/" target="_blank" class="card featured">
+                    <div class="featured-badge">⚡ Featured</div>
+                    <div class="card-header">
+                        <div class="card-icon">⚡</div>
+                    </div>
+                    <div class="card-title">FORGE — Audio to Video</div>
+                    <div class="card-desc">Transform audio into AI-generated video. Custom shot prompts, style presets, consistency controls. The QP-1 team's secret weapon.</div>
+                    <div class="card-tags">
+                        <span class="card-tag tag-new">NEW v2.0</span>
+                        <span class="card-tag tag-streamlit">Streamlit</span>
+                        <span class="card-tag tag-api">LTX Video</span>
+                        <span class="card-tag tag-api">OpenAI</span>
+                    </div>
+                    <div class="status"><span class="status-dot status-live"></span> Live</div>
+                </a>
+                
                 <a href="https://claire-video-generator-3eu5c3hvxozv6y45wdq2xd.streamlit.app/" target="_blank" class="card">
                     <div class="card-header">
                         <div class="card-icon">🎥</div>
@@ -276,7 +327,7 @@
                         <span class="card-tag tag-streamlit">Streamlit</span>
                         <span class="card-tag tag-api">Google Sheets</span>
                     </div>
-                    <div class="status"><span class="status-dot status-pending"></span> Deploy Pending — Click for GitHub</div>
+                    <div class="status"><span class="status-dot status-pending"></span> Deploy Pending</div>
                 </a>
                 
                 <a href="https://github.com/corboo/qp1-tools" target="_blank" class="card">
@@ -289,7 +340,7 @@
                         <span class="card-tag tag-streamlit">Streamlit</span>
                         <span class="card-tag tag-api">Spreaker API</span>
                     </div>
-                    <div class="status"><span class="status-dot status-dev"></span> In Repo — Click for GitHub</div>
+                    <div class="status"><span class="status-dot status-dev"></span> In Repo</div>
                 </a>
             </div>
         </div>
@@ -410,6 +461,20 @@
                 <span class="count">3 repos</span>
             </h2>
             <div class="grid">
+                <a href="https://github.com/corboo/qp1-tools" target="_blank" class="card">
+                    <div class="card-header">
+                        <div class="card-icon">🎧</div>
+                    </div>
+                    <div class="card-title">QP-1 Tools (FORGE)</div>
+                    <div class="card-desc">Home of FORGE audio-to-video generator plus utilities for the QP-1 podcast network. The main production toolkit.</div>
+                    <div class="card-tags">
+                        <span class="card-tag tag-github">Python</span>
+                        <span class="card-tag tag-api">LTX Video</span>
+                        <span class="card-tag tag-api">Spreaker</span>
+                    </div>
+                    <div class="status"><span class="status-dot status-live"></span> GitHub</div>
+                </a>
+                
                 <a href="https://github.com/corboo/claire-delish" target="_blank" class="card">
                     <div class="card-header">
                         <div class="card-icon">🍳</div>
@@ -433,20 +498,6 @@
                     <div class="card-tags">
                         <span class="card-tag tag-github">Scripts</span>
                         <span class="card-tag tag-api">Hume + D-ID</span>
-                    </div>
-                    <div class="status"><span class="status-dot status-dev"></span> GitHub</div>
-                </a>
-                
-                <a href="https://github.com/corboo/qp1-tools" target="_blank" class="card">
-                    <div class="card-header">
-                        <div class="card-icon">🎧</div>
-                    </div>
-                    <div class="card-title">QP-1 Tools</div>
-                    <div class="card-desc">Audio-to-Video generator and utilities for the QP-1 podcast network.</div>
-                    <div class="card-tags">
-                        <span class="card-tag tag-github">Python</span>
-                        <span class="card-tag tag-api">LTX Video</span>
-                        <span class="card-tag tag-api">Spreaker</span>
                     </div>
                     <div class="status"><span class="status-dot status-dev"></span> GitHub</div>
                 </a>
@@ -488,7 +539,7 @@
         
         <footer>
             <p>Built with ⚡ by CB for <a href="https://inceptionpoint.ai" target="_blank">Inception Point AI</a></p>
-            <p style="margin-top: 8px;">Last updated: February 3, 2026</p>
+            <p style="margin-top: 8px;">Last updated: February 4, 2026</p>
         </footer>
     </div>
 </body>
