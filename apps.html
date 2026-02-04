@@ -82,6 +82,7 @@
             color: inherit;
             display: block;
             position: relative;
+            cursor: pointer;
         }
         
         .card:hover {
@@ -100,41 +101,6 @@
         
         .card-icon {
             font-size: 2.2rem;
-        }
-        
-        .card-links {
-            display: flex;
-            gap: 8px;
-        }
-        
-        .card-link {
-            width: 28px;
-            height: 28px;
-            border-radius: 6px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.8rem;
-            text-decoration: none;
-            transition: all 0.2s;
-        }
-        
-        .link-app {
-            background: rgba(0, 255, 136, 0.2);
-            color: #00ff88;
-        }
-        
-        .link-app:hover {
-            background: rgba(0, 255, 136, 0.4);
-        }
-        
-        .link-github {
-            background: rgba(255, 255, 255, 0.1);
-            color: #fff;
-        }
-        
-        .link-github:hover {
-            background: rgba(255, 255, 255, 0.2);
         }
         
         .card-title {
@@ -255,25 +221,6 @@
             font-size: 0.85rem;
             color: #8892b0;
         }
-        
-        .tooltip {
-            position: relative;
-        }
-        
-        .tooltip:hover::after {
-            content: attr(data-tip);
-            position: absolute;
-            bottom: 100%;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #333;
-            color: #fff;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 0.75rem;
-            white-space: nowrap;
-            margin-bottom: 5px;
-        }
     </style>
 </head>
 <body>
@@ -305,13 +252,9 @@
                 <span class="count">3 apps</span>
             </h2>
             <div class="grid">
-                <div class="card">
+                <a href="https://claire-video-generator-3eu5c3hvxozv6y45wdq2xd.streamlit.app/" target="_blank" class="card">
                     <div class="card-header">
                         <div class="card-icon">🎥</div>
-                        <div class="card-links">
-                            <a href="https://claire-video-generator-3eu5c3hvxozv6y45wdq2xd.streamlit.app/" target="_blank" class="card-link link-app tooltip" data-tip="Open App">▶</a>
-                            <a href="https://github.com/corboo/claire-video-generator" target="_blank" class="card-link link-github tooltip" data-tip="GitHub">⌘</a>
-                        </div>
                     </div>
                     <div class="card-title">AI Video Generator</div>
                     <div class="card-desc">Create talking avatar videos with any face. Upload an image, enter a script, get a lip-synced video.</div>
@@ -321,14 +264,11 @@
                         <span class="card-tag tag-api">D-ID</span>
                     </div>
                     <div class="status"><span class="status-dot status-live"></span> Live</div>
-                </div>
+                </a>
                 
-                <div class="card">
+                <a href="https://github.com/corboo/deal-scorer" target="_blank" class="card">
                     <div class="card-header">
                         <div class="card-icon">🎯</div>
-                        <div class="card-links">
-                            <a href="https://github.com/corboo/deal-scorer" target="_blank" class="card-link link-github tooltip" data-tip="GitHub">⌘</a>
-                        </div>
                     </div>
                     <div class="card-title">Deal Scorer</div>
                     <div class="card-desc">Score enterprise partnership opportunities with weighted criteria. Auto-calculates Go/Explore/Pause/Pass recommendations.</div>
@@ -336,15 +276,12 @@
                         <span class="card-tag tag-streamlit">Streamlit</span>
                         <span class="card-tag tag-api">Google Sheets</span>
                     </div>
-                    <div class="status"><span class="status-dot status-pending"></span> Deploy Pending</div>
-                </div>
+                    <div class="status"><span class="status-dot status-pending"></span> Deploy Pending — Click for GitHub</div>
+                </a>
                 
-                <div class="card">
+                <a href="https://github.com/corboo/qp1-tools" target="_blank" class="card">
                     <div class="card-header">
                         <div class="card-icon">📊</div>
-                        <div class="card-links">
-                            <a href="https://github.com/corboo/qp1-tools" target="_blank" class="card-link link-github tooltip" data-tip="GitHub">⌘</a>
-                        </div>
                     </div>
                     <div class="card-title">QP-1 Spreaker Dashboard</div>
                     <div class="card-desc">Analytics dashboard for QP-1 podcast network. Track plays, downloads, and episode performance.</div>
@@ -352,8 +289,8 @@
                         <span class="card-tag tag-streamlit">Streamlit</span>
                         <span class="card-tag tag-api">Spreaker API</span>
                     </div>
-                    <div class="status"><span class="status-dot status-dev"></span> In Repo</div>
-                </div>
+                    <div class="status"><span class="status-dot status-dev"></span> In Repo — Click for GitHub</div>
+                </a>
             </div>
         </div>
         
@@ -473,12 +410,9 @@
                 <span class="count">3 repos</span>
             </h2>
             <div class="grid">
-                <div class="card">
+                <a href="https://github.com/corboo/claire-delish" target="_blank" class="card">
                     <div class="card-header">
                         <div class="card-icon">🍳</div>
-                        <div class="card-links">
-                            <a href="https://github.com/corboo/claire-delish" target="_blank" class="card-link link-github tooltip" data-tip="GitHub">⌘</a>
-                        </div>
                     </div>
                     <div class="card-title">Claire Delish (Realtime)</div>
                     <div class="card-desc">Real-time AI cooking companion with voice interaction. Talk to Claire and get live cooking guidance.</div>
@@ -488,14 +422,11 @@
                         <span class="card-tag tag-api">Hume EVI</span>
                     </div>
                     <div class="status"><span class="status-dot status-dev"></span> GitHub</div>
-                </div>
+                </a>
                 
-                <div class="card">
+                <a href="https://github.com/corboo/claire-delish-videos" target="_blank" class="card">
                     <div class="card-header">
                         <div class="card-icon">🎬</div>
-                        <div class="card-links">
-                            <a href="https://github.com/corboo/claire-delish-videos" target="_blank" class="card-link link-github tooltip" data-tip="GitHub">⌘</a>
-                        </div>
                     </div>
                     <div class="card-title">Claire Delish Videos</div>
                     <div class="card-desc">Video generation scripts for Claire Delish content. Batch processing for cooking videos.</div>
@@ -504,14 +435,11 @@
                         <span class="card-tag tag-api">Hume + D-ID</span>
                     </div>
                     <div class="status"><span class="status-dot status-dev"></span> GitHub</div>
-                </div>
+                </a>
                 
-                <div class="card">
+                <a href="https://github.com/corboo/qp1-tools" target="_blank" class="card">
                     <div class="card-header">
                         <div class="card-icon">🎧</div>
-                        <div class="card-links">
-                            <a href="https://github.com/corboo/qp1-tools" target="_blank" class="card-link link-github tooltip" data-tip="GitHub">⌘</a>
-                        </div>
                     </div>
                     <div class="card-title">QP-1 Tools</div>
                     <div class="card-desc">Audio-to-Video generator and utilities for the QP-1 podcast network.</div>
@@ -521,7 +449,7 @@
                         <span class="card-tag tag-api">Spreaker</span>
                     </div>
                     <div class="status"><span class="status-dot status-dev"></span> GitHub</div>
-                </div>
+                </a>
             </div>
         </div>
         
