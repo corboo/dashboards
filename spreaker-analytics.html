@@ -3,165 +3,332 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QP-1 Spreaker Dashboard</title>
+    <title>Spreaker Analytics — IPAI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            min-height: 100vh;
-            color: #e4e4e7;
-            padding: 20px;
+        :root {
+            --bg-primary: #2d2d2d;
+            --bg-secondary: #3a3a3a;
+            --bg-tertiary: #454545;
+            --silver: #a8a8a8;
+            --silver-light: #c5c5c5;
+            --gold: #d4af37;
+            --gold-light: #e8c547;
+            --gold-bright: #f5d742;
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.7);
+            --text-tertiary: rgba(255, 255, 255, 0.5);
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --glass-hover: rgba(255, 255, 255, 0.08);
+            --success: #34c759;
+            --warning: #ff9f0a;
+            --error: #ff453a;
         }
-        .container { max-width: 1400px; margin: 0 auto; }
-        h1 {
-            font-size: 2rem;
-            margin-bottom: 8px;
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            min-height: 100vh;
+            color: var(--text-primary);
+            -webkit-font-smoothing: antialiased;
+        }
+        
+        .bg-gradient {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: 
+                radial-gradient(ellipse at 20% 20%, rgba(168, 168, 168, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(212, 175, 55, 0.06) 0%, transparent 50%),
+                var(--bg-primary);
+            z-index: -1;
+        }
+        
+        .container { max-width: 1400px; margin: 0 auto; padding: 48px 24px; }
+        
+        /* Back Link */
+        .back-link {
+            position: fixed;
+            top: 24px;
+            left: 24px;
+            font-size: 0.8125rem;
+            color: var(--text-tertiary);
+            text-decoration: none;
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 6px;
+            transition: color 0.2s;
+            z-index: 100;
         }
-        .subtitle { color: #a1a1aa; margin-bottom: 24px; font-size: 0.9rem; }
         
-        /* Metrics Grid */
-        .metrics-grid {
+        .back-link:hover { color: var(--gold); text-decoration: none; }
+        
+        /* Header */
+        header { text-align: center; margin-bottom: 48px; }
+        
+        .logo {
+            width: 72px;
+            height: 72px;
+            margin-bottom: 20px;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            margin-bottom: 8px;
+            background: linear-gradient(180deg, var(--silver-light) 0%, var(--gold) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .subtitle { font-size: 1rem; color: var(--text-secondary); margin-bottom: 8px; }
+        .updated { font-size: 0.8125rem; color: var(--text-tertiary); }
+        
+        /* Stats Bar */
+        .stats-bar {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 16px;
-            margin-bottom: 32px;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 12px;
+            margin-bottom: 40px;
         }
-        .metric-card {
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 12px;
+        
+        .stat-box {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 14px;
             padding: 20px;
+            text-align: center;
+            border: 1px solid var(--glass-border);
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .metric-label { color: #a1a1aa; font-size: 0.85rem; margin-bottom: 8px; }
-        .metric-value { font-size: 1.8rem; font-weight: 700; }
-        .metric-change {
-            font-size: 0.85rem;
+        
+        .stat-box:hover {
+            border-color: rgba(212, 175, 55, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        .stat-value {
+            font-size: 1.75rem;
+            font-weight: 700;
+            background: linear-gradient(180deg, var(--silver) 0%, var(--gold-light) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.02em;
+        }
+        
+        .stat-label {
+            font-size: 0.6875rem;
+            color: var(--text-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
             margin-top: 4px;
+        }
+        
+        .stat-change {
+            font-size: 0.75rem;
+            margin-top: 6px;
             display: inline-flex;
             align-items: center;
             gap: 4px;
-            padding: 2px 8px;
-            border-radius: 12px;
-        }
-        .metric-change.positive { background: rgba(34,197,94,0.2); color: #4ade80; }
-        .metric-change.negative { background: rgba(239,68,68,0.2); color: #f87171; }
-        
-        /* Charts */
-        .charts-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-            gap: 24px;
-            margin-bottom: 32px;
-        }
-        .chart-card {
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 12px;
-            padding: 24px;
-        }
-        .chart-card h3 { margin-bottom: 16px; font-size: 1.1rem; }
-        .chart-container { position: relative; height: 300px; }
-        
-        /* Yearly Totals */
-        .yearly-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
-            margin-bottom: 24px;
-        }
-        .yearly-card {
-            background: rgba(255,255,255,0.03);
+            padding: 3px 8px;
             border-radius: 8px;
-            padding: 16px;
-            text-align: center;
         }
-        .yearly-card .year { color: #a1a1aa; font-size: 0.85rem; }
-        .yearly-card .amount { font-size: 1.4rem; font-weight: 600; color: #4ade80; }
+        
+        .stat-change.positive { background: rgba(52, 199, 89, 0.15); color: var(--success); }
+        .stat-change.negative { background: rgba(255, 69, 58, 0.15); color: var(--error); }
+        
+        /* Grid */
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 24px; }
+        @media (max-width: 900px) { .grid-2, .grid-3 { grid-template-columns: 1fr; } }
+        
+        /* Card */
+        .card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid var(--glass-border);
+            margin-bottom: 16px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .card:hover {
+            background: var(--glass-hover);
+            border-color: rgba(212, 175, 55, 0.2);
+        }
+        
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--glass-border);
+        }
+        
+        .card-icon { font-size: 1.25rem; }
+        .card-title { font-size: 1rem; font-weight: 600; letter-spacing: -0.01em; }
+        
+        h3 { font-size: 1rem; font-weight: 600; margin-bottom: 16px; }
+        
+        /* Yearly Cards */
+        .yearly-card {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid transparent;
+            transition: all 0.25s ease;
+        }
+        
+        .yearly-card:hover {
+            border-color: rgba(212, 175, 55, 0.2);
+        }
+        
+        .yearly-year { font-size: 0.75rem; color: var(--text-tertiary); margin-bottom: 6px; }
+        
+        .yearly-amount {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--success);
+        }
+        
+        /* Chart Container */
+        .chart-container {
+            position: relative;
+            height: 280px;
+        }
         
         /* Table */
-        .table-card {
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 12px;
-            padding: 24px;
-            overflow-x: auto;
-        }
         table { width: 100%; border-collapse: collapse; }
-        th, td { padding: 12px 16px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.1); }
-        th { color: #a1a1aa; font-weight: 500; font-size: 0.85rem; }
-        td { font-size: 0.95rem; }
-        tr:hover { background: rgba(255,255,255,0.03); }
+        
+        th {
+            text-align: left;
+            font-size: 0.6875rem;
+            font-weight: 600;
+            color: var(--text-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 12px 10px;
+            border-bottom: 1px solid var(--glass-border);
+        }
+        
+        td {
+            padding: 14px 10px;
+            font-size: 0.875rem;
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+        }
+        
+        tr:hover { background: rgba(255,255,255,0.02); }
+        
         .text-right { text-align: right; }
         
+        .status-paid {
+            color: var(--success);
+            font-size: 0.8125rem;
+        }
+        
         /* Footer */
-        .footer { text-align: center; color: #71717a; font-size: 0.8rem; margin-top: 40px; }
+        footer {
+            text-align: center;
+            margin-top: 48px;
+            padding-top: 24px;
+            border-top: 1px solid var(--glass-border);
+            font-size: 0.8125rem;
+            color: var(--text-tertiary);
+        }
+        
+        footer a { color: var(--gold); text-decoration: none; }
+        footer a:hover { text-decoration: underline; }
         
         @media (max-width: 768px) {
-            .charts-grid { grid-template-columns: 1fr; }
-            .yearly-grid { grid-template-columns: 1fr; }
-            .metric-value { font-size: 1.4rem; }
+            .back-link { position: static; margin-bottom: 24px; }
+            .container { padding: 32px 16px; }
+            h1 { font-size: 2rem; }
+            .stat-value { font-size: 1.4rem; }
+            .chart-container { height: 220px; }
         }
     </style>
 </head>
 <body>
+    <div class="bg-gradient"></div>
+    
+    <a href="index.html" class="back-link">← Dashboard Hub</a>
+    
     <div class="container">
-        <h1>📊 QP-1 Spreaker Dashboard</h1>
-        <p class="subtitle">Last updated: February 2, 2026 • Data from Spreaker CMS</p>
+        <header>
+            <img src="ipai-logo.jpg" alt="IPAI" class="logo">
+            <h1>Spreaker Analytics</h1>
+            <p class="subtitle">QP-1 Network Performance</p>
+            <p class="updated">Last updated: February 2, 2026 • Data from Spreaker CMS</p>
+        </header>
         
         <!-- Key Metrics -->
-        <div class="metrics-grid">
-            <div class="metric-card">
-                <div class="metric-label">📥 Downloads (30d)</div>
-                <div class="metric-value">713,577</div>
-                <span class="metric-change positive">↑ +10%</span>
+        <div class="stats-bar">
+            <div class="stat-box">
+                <div class="stat-label">📥 Downloads (30d)</div>
+                <div class="stat-value">713,577</div>
+                <span class="stat-change positive">↑ +10%</span>
             </div>
-            <div class="metric-card">
-                <div class="metric-label">👁️ Ad Impressions (30d)</div>
-                <div class="metric-value">1,686,895</div>
-                <span class="metric-change negative">↓ -26%</span>
+            <div class="stat-box">
+                <div class="stat-label">👁️ Ad Impressions (30d)</div>
+                <div class="stat-value">1,686,895</div>
+                <span class="stat-change negative">↓ -26%</span>
             </div>
-            <div class="metric-card">
-                <div class="metric-label">💵 Ad Revenue (30d)</div>
-                <div class="metric-value">$4,111.54</div>
-                <span class="metric-change negative">↓ -62%</span>
+            <div class="stat-box">
+                <div class="stat-label">💵 Ad Revenue (30d)</div>
+                <div class="stat-value">$4,111.54</div>
+                <span class="stat-change negative">↓ -62%</span>
             </div>
-            <div class="metric-card">
-                <div class="metric-label">🎙️ Shows / Episodes</div>
-                <div class="metric-value">5,265 / 246K</div>
+            <div class="stat-box">
+                <div class="stat-label">🎙️ Shows / Episodes</div>
+                <div class="stat-value">5,265 / 246K</div>
             </div>
         </div>
         
         <!-- Yearly Totals -->
-        <div class="yearly-grid">
+        <div class="grid-3">
             <div class="yearly-card">
-                <div class="year">2025 Total</div>
-                <div class="amount">$69,067.97</div>
+                <div class="yearly-year">2025 Total</div>
+                <div class="yearly-amount">$69,067.97</div>
             </div>
             <div class="yearly-card">
-                <div class="year">2024 Total</div>
-                <div class="amount">$72,223.10</div>
+                <div class="yearly-year">2024 Total</div>
+                <div class="yearly-amount">$72,223.10</div>
             </div>
             <div class="yearly-card">
-                <div class="year">2023 Total</div>
-                <div class="amount">$5,676.92</div>
+                <div class="yearly-year">2023 Total</div>
+                <div class="yearly-amount">$5,676.92</div>
             </div>
         </div>
         
         <!-- Charts -->
-        <div class="charts-grid">
-            <div class="chart-card">
-                <h3>📈 Monthly Revenue</h3>
+        <div class="grid-2">
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-icon">📈</span>
+                    <span class="card-title">Monthly Revenue</span>
+                </div>
                 <div class="chart-container">
                     <canvas id="revenueChart"></canvas>
                 </div>
             </div>
-            <div class="chart-card">
-                <h3>📊 Revenue by Account (30d)</h3>
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-icon">📊</span>
+                    <span class="card-title">Revenue by Account (30d)</span>
+                </div>
                 <div class="chart-container">
                     <canvas id="accountChart"></canvas>
                 </div>
@@ -169,8 +336,11 @@
         </div>
         
         <!-- Payment History Table -->
-        <div class="table-card">
-            <h3 style="margin-bottom: 16px;">💳 Payment History</h3>
+        <div class="card">
+            <div class="card-header">
+                <span class="card-icon">💳</span>
+                <span class="card-title">Payment History</span>
+            </div>
             <table>
                 <thead>
                     <tr>
@@ -184,7 +354,9 @@
             </table>
         </div>
         
-        <p class="footer">QP-1 Podcast Network • Powered by Spreaker</p>
+        <footer>
+            <a href="index.html">Inception Point AI</a> • QP-1 Podcast Network • Powered by Spreaker
+        </footer>
     </div>
     
     <script>
@@ -223,12 +395,16 @@
             tableBody.innerHTML += `
                 <tr>
                     <td>${p.month}</td>
-                    <td class="text-right">$${p.amount.toLocaleString('en-US', {minimumFractionDigits: 2})}</td>
-                    <td><span style="color: #4ade80;">✓ ${p.status}</span></td>
-                    <td>${p.paidDate}</td>
+                    <td class="text-right" style="font-family: 'SF Mono', Monaco, monospace;">$${p.amount.toLocaleString('en-US', {minimumFractionDigits: 2})}</td>
+                    <td><span class="status-paid">✓ ${p.status}</span></td>
+                    <td style="color: var(--text-tertiary);">${p.paidDate}</td>
                 </tr>
             `;
         });
+        
+        // Chart.js defaults for dark theme
+        Chart.defaults.color = 'rgba(255, 255, 255, 0.5)';
+        Chart.defaults.borderColor = 'rgba(255, 255, 255, 0.1)';
         
         // Revenue Chart
         new Chart(document.getElementById('revenueChart'), {
@@ -238,12 +414,15 @@
                 datasets: [{
                     label: 'Revenue',
                     data: paymentHistory.map(p => p.amount).reverse(),
-                    borderColor: '#4ade80',
-                    backgroundColor: 'rgba(74, 222, 128, 0.1)',
+                    borderColor: '#d4af37',
+                    backgroundColor: 'rgba(212, 175, 55, 0.1)',
                     fill: true,
-                    tension: 0.3,
+                    tension: 0.4,
                     pointRadius: 4,
-                    pointHoverRadius: 6
+                    pointHoverRadius: 6,
+                    pointBackgroundColor: '#d4af37',
+                    pointBorderColor: '#2d2d2d',
+                    pointBorderWidth: 2
                 }]
             },
             options: {
@@ -252,6 +431,13 @@
                 plugins: {
                     legend: { display: false },
                     tooltip: {
+                        backgroundColor: 'rgba(45, 45, 45, 0.95)',
+                        titleColor: '#fff',
+                        bodyColor: '#d4af37',
+                        borderColor: 'rgba(212, 175, 55, 0.3)',
+                        borderWidth: 1,
+                        cornerRadius: 8,
+                        padding: 12,
                         callbacks: {
                             label: ctx => '$' + ctx.raw.toLocaleString('en-US', {minimumFractionDigits: 2})
                         }
@@ -260,15 +446,15 @@
                 scales: {
                     y: {
                         beginAtZero: true,
-                        grid: { color: 'rgba(255,255,255,0.1)' },
+                        grid: { color: 'rgba(255,255,255,0.05)' },
                         ticks: { 
-                            color: '#a1a1aa',
+                            color: 'rgba(255,255,255,0.5)',
                             callback: v => '$' + (v/1000) + 'k'
                         }
                     },
                     x: {
                         grid: { display: false },
-                        ticks: { color: '#a1a1aa' }
+                        ticks: { color: 'rgba(255,255,255,0.5)' }
                     }
                 }
             }
@@ -283,10 +469,19 @@
                     label: 'Revenue',
                     data: accountRevenue.map(a => a.revenue),
                     backgroundColor: [
-                        '#3b82f6', '#8b5cf6', '#ec4899', '#f97316', '#eab308',
-                        '#22c55e', '#14b8a6', '#06b6d4', '#6366f1', '#a855f7'
+                        'rgba(212, 175, 55, 0.8)',
+                        'rgba(232, 197, 71, 0.7)',
+                        'rgba(245, 215, 66, 0.6)',
+                        'rgba(168, 168, 168, 0.6)',
+                        'rgba(197, 197, 197, 0.5)',
+                        'rgba(212, 175, 55, 0.5)',
+                        'rgba(232, 197, 71, 0.4)',
+                        'rgba(168, 168, 168, 0.4)',
+                        'rgba(197, 197, 197, 0.3)',
+                        'rgba(212, 175, 55, 0.3)'
                     ],
-                    borderRadius: 6
+                    borderRadius: 6,
+                    borderSkipped: false
                 }]
             },
             options: {
@@ -296,6 +491,13 @@
                 plugins: {
                     legend: { display: false },
                     tooltip: {
+                        backgroundColor: 'rgba(45, 45, 45, 0.95)',
+                        titleColor: '#fff',
+                        bodyColor: '#d4af37',
+                        borderColor: 'rgba(212, 175, 55, 0.3)',
+                        borderWidth: 1,
+                        cornerRadius: 8,
+                        padding: 12,
                         callbacks: {
                             label: ctx => '$' + ctx.raw.toLocaleString('en-US', {minimumFractionDigits: 2})
                         }
@@ -304,15 +506,18 @@
                 scales: {
                     x: {
                         beginAtZero: true,
-                        grid: { color: 'rgba(255,255,255,0.1)' },
+                        grid: { color: 'rgba(255,255,255,0.05)' },
                         ticks: { 
-                            color: '#a1a1aa',
+                            color: 'rgba(255,255,255,0.5)',
                             callback: v => '$' + v
                         }
                     },
                     y: {
                         grid: { display: false },
-                        ticks: { color: '#a1a1aa' }
+                        ticks: { 
+                            color: 'rgba(255,255,255,0.7)',
+                            font: { size: 11 }
+                        }
                     }
                 }
             }
