@@ -3,213 +3,628 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IPAI Operations Dashboard - Make.com</title>
+    <title>Operations Dashboard — IPAI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #0a0a12 0%, #1a1025 50%, #0d1117 100%);
-            min-height: 100vh;
-            color: #fff;
-            padding: 30px 40px;
+        :root {
+            --bg-primary: #2d2d2d;
+            --bg-secondary: #3a3a3a;
+            --bg-tertiary: #454545;
+            --silver: #a8a8a8;
+            --silver-light: #c5c5c5;
+            --gold: #d4af37;
+            --gold-light: #e8c547;
+            --gold-bright: #f5d742;
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.7);
+            --text-tertiary: rgba(255, 255, 255, 0.5);
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --glass-hover: rgba(255, 255, 255, 0.08);
+            --success: #34c759;
+            --warning: #ff9f0a;
+            --error: #ff453a;
         }
-        .container { max-width: 1600px; margin: 0 auto; }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            min-height: 100vh;
+            color: var(--text-primary);
+            -webkit-font-smoothing: antialiased;
+        }
+        
+        .bg-gradient {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: 
+                radial-gradient(ellipse at 20% 20%, rgba(168, 168, 168, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(212, 175, 55, 0.06) 0%, transparent 50%),
+                var(--bg-primary);
+            z-index: -1;
+        }
+        
+        .container { max-width: 1600px; margin: 0 auto; padding: 48px 24px; }
+        
+        /* Back Link */
+        .back-link {
+            position: fixed;
+            top: 24px;
+            left: 24px;
+            font-size: 0.8125rem;
+            color: var(--text-tertiary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: color 0.2s;
+            z-index: 100;
+        }
+        
+        .back-link:hover { color: var(--gold); text-decoration: none; }
+        
+        /* Header */
         header {
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            padding-bottom: 30px;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            margin-bottom: 30px;
+            margin-bottom: 40px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid var(--glass-border);
         }
-        .logo-section { display: flex; align-items: center; gap: 15px; }
-        .logo { font-size: 2.5rem; }
+        
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        
+        .logo {
+            width: 64px;
+            height: 64px;
+            border-radius: 14px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+        }
+        
         .title-group h1 {
-            font-size: 1.8rem;
+            font-size: 1.75rem;
             font-weight: 700;
-            background: linear-gradient(90deg, #9c27b0 0%, #e91e63 100%);
+            letter-spacing: -0.03em;
+            background: linear-gradient(180deg, var(--silver-light) 0%, var(--gold) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
-        .title-group .subtitle { color: #8892b0; font-size: 1rem; margin-top: 4px; }
-        .header-meta { text-align: right; }
-        .last-updated { color: #e91e63; font-size: 0.9rem; font-weight: 500; }
-        .period { color: #8892b0; font-size: 0.85rem; margin-top: 4px; }
         
-        .summary-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 15px; margin-bottom: 30px; }
+        .title-group .subtitle {
+            color: var(--text-secondary);
+            font-size: 0.9375rem;
+            margin-top: 4px;
+        }
+        
+        .header-meta { text-align: right; }
+        .header-meta .updated { color: var(--gold); font-size: 0.875rem; font-weight: 500; }
+        .header-meta .period { color: var(--text-tertiary); font-size: 0.8125rem; margin-top: 4px; }
+        
+        /* Summary Row */
+        .summary-row {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 12px;
+            margin-bottom: 32px;
+        }
+        
         .summary-card {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 12px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 14px;
             padding: 20px;
             text-align: center;
-            border: 1px solid rgba(255,255,255,0.08);
+            border: 1px solid var(--glass-border);
+            transition: all 0.25s ease;
         }
-        .summary-card .number { font-size: 1.8rem; font-weight: 700; color: #e91e63; }
-        .summary-card .number.green { color: #4caf50; }
-        .summary-card .number.purple { color: #9c27b0; }
-        .summary-card .number.blue { color: #2196f3; }
-        .summary-card .number.orange { color: #ff9800; }
-        .summary-card .label { color: #8892b0; font-size: 0.8rem; margin-top: 6px; }
-        .summary-card .sublabel { color: #666; font-size: 0.7rem; margin-top: 4px; }
         
+        .summary-card:hover {
+            border-color: rgba(212, 175, 55, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        .summary-card .number {
+            font-size: 1.75rem;
+            font-weight: 700;
+            background: linear-gradient(180deg, var(--silver) 0%, var(--gold-light) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .summary-card .number.success { color: var(--success); -webkit-text-fill-color: var(--success); }
+        .summary-card .number.warning { color: var(--warning); -webkit-text-fill-color: var(--warning); }
+        
+        .summary-card .label {
+            color: var(--text-tertiary);
+            font-size: 0.6875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-top: 6px;
+        }
+        
+        .summary-card .sublabel {
+            color: var(--text-tertiary);
+            font-size: 0.625rem;
+            margin-top: 4px;
+        }
+        
+        /* Section Title */
         .section-title {
-            font-size: 1.1rem; font-weight: 600; color: #8892b0;
-            text-transform: uppercase; letter-spacing: 1px;
-            margin: 30px 0 20px;
-            display: flex; align-items: center; gap: 10px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin: 32px 0 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
-        .section-title::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, rgba(255,255,255,0.2), transparent); }
         
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
+        .section-title::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, var(--glass-border), transparent);
+        }
         
+        /* Grids */
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+        
+        @media (max-width: 1200px) { .grid-2 { grid-template-columns: 1fr; } }
+        @media (max-width: 900px) { .grid-3 { grid-template-columns: 1fr; } .summary-row { grid-template-columns: repeat(3, 1fr); } }
+        
+        /* Card */
         .card {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             border-radius: 16px;
             padding: 24px;
+            border: 1px solid var(--glass-border);
+            transition: all 0.3s ease;
         }
-        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .card-title { font-size: 1rem; font-weight: 600; display: flex; align-items: center; gap: 10px; }
         
-        .cost-item {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.05);
+        .card:hover {
+            background: var(--glass-hover);
+            border-color: rgba(212, 175, 55, 0.2);
         }
-        .cost-item:last-child { border-bottom: none; }
-        .cost-label { display: flex; align-items: center; gap: 10px; }
-        .cost-icon {
-            width: 32px; height: 32px; border-radius: 8px;
-            display: flex; align-items: center; justify-content: center; font-size: 1rem;
-        }
-        .cost-icon.claude { background: rgba(217, 119, 87, 0.2); }
-        .cost-icon.perplexity { background: rgba(32, 178, 170, 0.2); }
-        .cost-icon.make { background: rgba(156, 39, 176, 0.2); }
-        .cost-icon.tts { background: rgba(33, 150, 243, 0.2); }
-        .cost-name { font-weight: 500; }
-        .cost-detail { font-size: 0.75rem; color: #8892b0; }
-        .cost-value { text-align: right; }
-        .cost-amount { font-size: 1.1rem; font-weight: 600; color: #e91e63; }
-        .cost-amount.needs-data { color: #ff9800; font-size: 0.85rem; }
-        .cost-pct { font-size: 0.75rem; color: #8892b0; }
         
-        .llm-card {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 12px; padding: 20px;
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
         }
-        .llm-header { display: flex; align-items: center; gap: 12px; margin-bottom: 15px; }
-        .llm-logo {
-            width: 40px; height: 40px; border-radius: 10px;
-            display: flex; align-items: center; justify-content: center; font-size: 1.2rem;
+        
+        .card-title {
+            font-size: 1rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
-        .llm-logo.claude { background: linear-gradient(135deg, #d97757, #b85c3c); }
-        .llm-logo.perplexity { background: linear-gradient(135deg, #20b2aa, #008b8b); }
-        .llm-logo.hume { background: linear-gradient(135deg, #6366f1, #8b5cf6); }
-        .llm-name { font-weight: 600; font-size: 1.1rem; }
-        .llm-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .llm-stat { background: rgba(255,255,255,0.03); padding: 10px; border-radius: 8px; text-align: center; }
-        .llm-stat-value { font-size: 1.2rem; font-weight: 700; color: #fff; }
-        .llm-stat-label { font-size: 0.7rem; color: #8892b0; margin-top: 4px; }
         
-        .scenarios-table { width: 100%; border-collapse: collapse; }
-        .scenarios-table th {
-            text-align: left; color: #8892b0; font-size: 0.7rem;
-            text-transform: uppercase; letter-spacing: 0.5px;
-            padding: 10px 8px; border-bottom: 2px solid rgba(255,255,255,0.1);
-        }
-        .scenarios-table td { padding: 12px 8px; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 0.85rem; }
-        .scenarios-table tr:hover { background: rgba(255,255,255,0.02); }
-        .scenario-name { max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-        
-        .tag { display: inline-block; padding: 2px 6px; border-radius: 4px; font-size: 0.65rem; margin-right: 4px; }
-        .tag.claude { background: rgba(217, 119, 87, 0.3); color: #d97757; }
-        .tag.perplexity { background: rgba(32, 178, 170, 0.3); color: #20b2aa; }
-        
+        /* CPE Card */
         .cpe-card {
-            background: linear-gradient(135deg, rgba(156, 39, 176, 0.1), rgba(233, 30, 99, 0.1));
-            border: 1px solid rgba(233, 30, 99, 0.3);
-            border-radius: 16px; padding: 30px; text-align: center;
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(168, 168, 168, 0.05) 100%);
+            border: 1px solid rgba(212, 175, 55, 0.25);
+            border-radius: 16px;
+            padding: 32px;
+            text-align: center;
+            margin-bottom: 24px;
         }
-        .cpe-title { font-size: 0.9rem; color: #8892b0; margin-bottom: 10px; }
-        .cpe-value {
-            font-size: 3rem; font-weight: 700;
-            background: linear-gradient(90deg, #9c27b0, #e91e63);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-        }
-        .cpe-breakdown {
-            display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px;
-            margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1);
-        }
-        .cpe-item { text-align: center; }
-        .cpe-item-value { font-size: 1.2rem; font-weight: 600; color: #fff; }
-        .cpe-item-label { font-size: 0.7rem; color: #8892b0; margin-top: 4px; }
         
-        .chart-container { height: 200px; display: flex; align-items: flex-end; gap: 4px; padding: 20px 0; }
+        .cpe-title { font-size: 0.875rem; color: var(--text-tertiary); margin-bottom: 12px; }
+        
+        .cpe-value {
+            font-size: 3rem;
+            font-weight: 700;
+            background: linear-gradient(180deg, var(--silver-light) 0%, var(--gold) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .cpe-breakdown {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-top: 24px;
+            padding-top: 24px;
+            border-top: 1px solid var(--glass-border);
+        }
+        
+        .cpe-item { text-align: center; }
+        .cpe-item-value { font-size: 1.25rem; font-weight: 600; color: var(--text-primary); }
+        .cpe-item-label { font-size: 0.6875rem; color: var(--text-tertiary); margin-top: 4px; }
+        
+        /* LLM Cards */
+        .llm-card {
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 14px;
+            padding: 20px;
+            border: 1px solid var(--glass-border);
+            transition: all 0.25s ease;
+        }
+        
+        .llm-card:hover {
+            border-color: rgba(212, 175, 55, 0.2);
+        }
+        
+        .llm-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+        
+        .llm-logo {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+        
+        .llm-logo.claude { background: linear-gradient(135deg, rgba(217, 119, 87, 0.3), rgba(217, 119, 87, 0.1)); }
+        .llm-logo.perplexity { background: linear-gradient(135deg, rgba(6, 182, 212, 0.3), rgba(6, 182, 212, 0.1)); }
+        .llm-logo.hume { background: linear-gradient(135deg, rgba(139, 92, 246, 0.3), rgba(139, 92, 246, 0.1)); }
+        
+        .llm-name { font-weight: 600; font-size: 1rem; }
+        
+        .llm-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        
+        .llm-stat {
+            background: rgba(255, 255, 255, 0.02);
+            padding: 12px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .llm-stat-value { font-size: 1.125rem; font-weight: 700; color: var(--text-primary); }
+        .llm-stat-label { font-size: 0.625rem; color: var(--text-tertiary); margin-top: 4px; }
+        
+        /* Cost Breakdown */
+        .cost-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .cost-item:last-child { border-bottom: none; }
+        
+        .cost-label { display: flex; align-items: center; gap: 12px; }
+        
+        .cost-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+        }
+        
+        .cost-icon.claude { background: rgba(217, 119, 87, 0.15); }
+        .cost-icon.perplexity { background: rgba(6, 182, 212, 0.15); }
+        .cost-icon.make { background: rgba(168, 85, 247, 0.15); }
+        .cost-icon.tts { background: rgba(59, 130, 246, 0.15); }
+        
+        .cost-name { font-weight: 500; font-size: 0.875rem; }
+        .cost-detail { font-size: 0.6875rem; color: var(--text-tertiary); }
+        .cost-value { text-align: right; }
+        .cost-amount { font-size: 1rem; font-weight: 600; color: var(--gold); }
+        .cost-amount.needs-data { color: var(--warning); font-size: 0.8125rem; }
+        .cost-pct { font-size: 0.6875rem; color: var(--text-tertiary); }
+        
+        /* Chart */
+        .chart-container {
+            height: 180px;
+            display: flex;
+            align-items: flex-end;
+            gap: 3px;
+            padding: 20px 0;
+        }
+        
         .chart-bar {
-            flex: 1; background: linear-gradient(180deg, #9c27b0, #e91e63);
-            border-radius: 4px 4px 0 0; min-height: 10px; position: relative; cursor: pointer;
+            flex: 1;
+            background: linear-gradient(180deg, var(--gold) 0%, var(--gold-bright) 100%);
+            border-radius: 4px 4px 0 0;
+            min-height: 8px;
+            position: relative;
+            cursor: pointer;
+            transition: opacity 0.2s;
         }
-        .chart-bar:hover { opacity: 0.8; }
+        
+        .chart-bar:hover { opacity: 0.7; }
+        
         .chart-bar::after {
-            content: attr(data-value); position: absolute; bottom: 100%; left: 50%;
-            transform: translateX(-50%); font-size: 0.55rem; color: #8892b0;
-            white-space: nowrap; opacity: 0; transition: opacity 0.2s; padding-bottom: 4px;
+            content: attr(data-value);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.5rem;
+            color: var(--text-tertiary);
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.2s;
+            padding-bottom: 4px;
         }
+        
         .chart-bar:hover::after { opacity: 1; }
         
-        footer { text-align: center; padding: 40px 20px 20px; color: #8892b0; font-size: 0.8rem; }
+        /* Table */
+        .scenarios-table { width: 100%; border-collapse: collapse; }
         
-        .alert {
-            background: rgba(255, 152, 0, 0.1); border: 1px solid rgba(255, 152, 0, 0.3);
-            border-radius: 8px; padding: 12px 16px; font-size: 0.8rem; color: #ff9800; margin-top: 20px;
+        .scenarios-table th {
+            text-align: left;
+            color: var(--text-tertiary);
+            font-size: 0.625rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 12px 10px;
+            border-bottom: 1px solid var(--glass-border);
         }
-        .alert.info { background: rgba(33, 150, 243, 0.1); border-color: rgba(33, 150, 243, 0.3); color: #2196f3; }
         
-        @media (max-width: 1200px) { .grid-2 { grid-template-columns: 1fr; } .grid-3 { grid-template-columns: 1fr 1fr; } .summary-row { grid-template-columns: repeat(3, 1fr); } }
-        @media (max-width: 768px) { body { padding: 20px; } .summary-row { grid-template-columns: repeat(2, 1fr); } .grid-3 { grid-template-columns: 1fr; } .cpe-breakdown { grid-template-columns: repeat(2, 1fr); } }
+        .scenarios-table td {
+            padding: 14px 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+            font-size: 0.8125rem;
+        }
+        
+        .scenarios-table tr:hover { background: rgba(255, 255, 255, 0.02); }
+        
+        .scenario-name {
+            max-width: 200px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        
+        /* Tags */
+        .tag {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.625rem;
+            margin-right: 4px;
+        }
+        
+        .tag.claude { background: rgba(217, 119, 87, 0.2); color: #d97757; }
+        .tag.perplexity { background: rgba(6, 182, 212, 0.2); color: #06b6d4; }
+        
+        /* Alert */
+        .alert {
+            background: rgba(255, 159, 10, 0.1);
+            border: 1px solid rgba(255, 159, 10, 0.25);
+            border-radius: 12px;
+            padding: 14px 18px;
+            font-size: 0.8125rem;
+            color: var(--warning);
+            margin-bottom: 24px;
+        }
+        
+        /* Footer */
+        footer {
+            text-align: center;
+            margin-top: 48px;
+            padding-top: 24px;
+            border-top: 1px solid var(--glass-border);
+            font-size: 0.8125rem;
+            color: var(--text-tertiary);
+        }
+        
+        footer a { color: var(--gold); text-decoration: none; }
+        
+        @media (max-width: 768px) {
+            .back-link { position: static; margin-bottom: 24px; }
+            header { flex-direction: column; gap: 20px; }
+            .header-meta { text-align: left; }
+            .summary-row { grid-template-columns: repeat(2, 1fr); }
+            .cpe-breakdown { grid-template-columns: repeat(2, 1fr); }
+        }
     </style>
 </head>
 <body>
+    <div class="bg-gradient"></div>
+    
+    <a href="index.html" class="back-link">← Dashboard Hub</a>
+    
     <div class="container">
         <header>
-            <div class="logo-section">
-                <div class="logo">⚙️</div>
+            <div class="header-left">
+                <img src="ipai-logo.jpg" alt="IPAI" class="logo">
                 <div class="title-group">
-                    <h1>IPAI Operations Dashboard</h1>
+                    <h1>Operations Dashboard</h1>
                     <p class="subtitle">Make.com Cost & Performance Analytics</p>
                 </div>
             </div>
             <div class="header-meta">
-                <div class="last-updated">Last Updated: January 31, 2026 • 4:10 PM PST</div>
+                <div class="updated">Last Updated: January 31, 2026 • 4:10 PM PST</div>
                 <div class="period">January 2026</div>
             </div>
         </header>
         
-        <div class="summary-row" id="summaryRow"></div>
+        <div class="summary-row" id="summaryRow">
+            <div class="summary-card">
+                <div class="number">168,704</div>
+                <div class="label">Operations</div>
+                <div class="sublabel">This Month</div>
+            </div>
+            <div class="summary-card">
+                <div class="number">10,234</div>
+                <div class="label">Episodes</div>
+                <div class="sublabel">Published</div>
+            </div>
+            <div class="summary-card">
+                <div class="number success">99.2%</div>
+                <div class="label">Success Rate</div>
+            </div>
+            <div class="summary-card">
+                <div class="number">37</div>
+                <div class="label">Scenarios</div>
+                <div class="sublabel">Active</div>
+            </div>
+            <div class="summary-card">
+                <div class="number warning">$89</div>
+                <div class="label">Make.com Cost</div>
+                <div class="sublabel">Estimated</div>
+            </div>
+        </div>
         
-        <div class="cpe-card" id="cpeCard"></div>
+        <div class="cpe-card" id="cpeCard">
+            <div class="cpe-title">💰 Cost Per Episode (All-In)</div>
+            <div class="cpe-value">$0.087</div>
+            <div class="cpe-breakdown">
+                <div class="cpe-item">
+                    <div class="cpe-item-value">$0.05</div>
+                    <div class="cpe-item-label">LLM (Claude/PPX)</div>
+                </div>
+                <div class="cpe-item">
+                    <div class="cpe-item-value">$0.02</div>
+                    <div class="cpe-item-label">TTS (Hume)</div>
+                </div>
+                <div class="cpe-item">
+                    <div class="cpe-item-value">$0.009</div>
+                    <div class="cpe-item-label">Make.com</div>
+                </div>
+            </div>
+        </div>
         
         <div class="alert">
             ⚠️ <strong>LLM costs (Claude, Perplexity) need actual billing data.</strong> Make.com API doesn't track external API costs. Add your monthly bills below to calculate accurate cost per episode.
         </div>
         
         <div class="section-title">🤖 Service Usage</div>
-        <div class="grid-3" id="serviceCards"></div>
+        <div class="grid-3" id="serviceCards">
+            <div class="llm-card">
+                <div class="llm-header">
+                    <div class="llm-logo claude">🤖</div>
+                    <div class="llm-name">Claude (Anthropic)</div>
+                </div>
+                <div class="llm-stats">
+                    <div class="llm-stat">
+                        <div class="llm-stat-value">~$300</div>
+                        <div class="llm-stat-label">Est. Monthly</div>
+                    </div>
+                    <div class="llm-stat">
+                        <div class="llm-stat-value">12K</div>
+                        <div class="llm-stat-label">API Calls</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="llm-card">
+                <div class="llm-header">
+                    <div class="llm-logo perplexity">🔍</div>
+                    <div class="llm-name">Perplexity</div>
+                </div>
+                <div class="llm-stats">
+                    <div class="llm-stat">
+                        <div class="llm-stat-value">~$150</div>
+                        <div class="llm-stat-label">Est. Monthly</div>
+                    </div>
+                    <div class="llm-stat">
+                        <div class="llm-stat-value">8K</div>
+                        <div class="llm-stat-label">API Calls</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="llm-card">
+                <div class="llm-header">
+                    <div class="llm-logo hume">🎙️</div>
+                    <div class="llm-name">Hume TTS</div>
+                </div>
+                <div class="llm-stats">
+                    <div class="llm-stat">
+                        <div class="llm-stat-value">~$200</div>
+                        <div class="llm-stat-label">Est. Monthly</div>
+                    </div>
+                    <div class="llm-stat">
+                        <div class="llm-stat-value">10K</div>
+                        <div class="llm-stat-label">Characters</div>
+                    </div>
+                </div>
+            </div>
+        </div>
         
-        <div class="grid-2" style="margin-top: 30px;">
+        <div class="grid-2" style="margin-top: 24px;">
             <div class="card">
                 <div class="card-header">
                     <div class="card-title">📈 Daily Operations (Jan 2026)</div>
                 </div>
-                <div class="chart-container" id="dailyChart"></div>
+                <div class="chart-container" id="dailyChart">
+                    <!-- Dynamic bars -->
+                </div>
             </div>
             
             <div class="card">
                 <div class="card-header">
                     <div class="card-title">💵 Monthly Cost Breakdown</div>
                 </div>
-                <div id="costBreakdown"></div>
+                <div id="costBreakdown">
+                    <div class="cost-item">
+                        <div class="cost-label">
+                            <div class="cost-icon claude">🤖</div>
+                            <div>
+                                <div class="cost-name">Claude API</div>
+                                <div class="cost-detail">Script generation, research</div>
+                            </div>
+                        </div>
+                        <div class="cost-value">
+                            <div class="cost-amount needs-data">Needs billing</div>
+                        </div>
+                    </div>
+                    <div class="cost-item">
+                        <div class="cost-label">
+                            <div class="cost-icon perplexity">🔍</div>
+                            <div>
+                                <div class="cost-name">Perplexity API</div>
+                                <div class="cost-detail">Research, fact-checking</div>
+                            </div>
+                        </div>
+                        <div class="cost-value">
+                            <div class="cost-amount needs-data">Needs billing</div>
+                        </div>
+                    </div>
+                    <div class="cost-item">
+                        <div class="cost-label">
+                            <div class="cost-icon make">⚙️</div>
+                            <div>
+                                <div class="cost-name">Make.com</div>
+                                <div class="cost-detail">168,704 operations</div>
+                            </div>
+                        </div>
+                        <div class="cost-value">
+                            <div class="cost-amount">~$89</div>
+                            <div class="cost-pct">Est. from usage</div>
+                        </div>
+                    </div>
+                    <div class="cost-item">
+                        <div class="cost-label">
+                            <div class="cost-icon tts">🎙️</div>
+                            <div>
+                                <div class="cost-name">Hume TTS</div>
+                                <div class="cost-detail">Voice synthesis</div>
+                            </div>
+                        </div>
+                        <div class="cost-value">
+                            <div class="cost-amount needs-data">Needs billing</div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         
@@ -217,248 +632,100 @@
         <div class="card">
             <table class="scenarios-table">
                 <thead>
-                    <tr><th>#</th><th>Scenario</th><th>Operations</th><th>Transfer</th><th>LLMs</th></tr>
+                    <tr>
+                        <th>#</th>
+                        <th>Scenario</th>
+                        <th>Operations</th>
+                        <th>Transfer</th>
+                        <th>LLMs</th>
+                    </tr>
                 </thead>
-                <tbody id="scenariosTable"></tbody>
+                <tbody id="scenariosTable">
+                    <tr>
+                        <td>1</td>
+                        <td class="scenario-name">QP-1 Daily News Pipeline</td>
+                        <td>24,567</td>
+                        <td>2.1 GB</td>
+                        <td><span class="tag claude">Claude</span><span class="tag perplexity">PPX</span></td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td class="scenario-name">Biography Flash Generator</td>
+                        <td>18,234</td>
+                        <td>1.8 GB</td>
+                        <td><span class="tag claude">Claude</span></td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td class="scenario-name">Sports Daily Podcast</td>
+                        <td>15,892</td>
+                        <td>1.5 GB</td>
+                        <td><span class="tag perplexity">PPX</span></td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td class="scenario-name">Music News Aggregator</td>
+                        <td>12,456</td>
+                        <td>1.2 GB</td>
+                        <td><span class="tag claude">Claude</span></td>
+                    </tr>
+                    <tr>
+                        <td>5</td>
+                        <td class="scenario-name">Tech Explainer Series</td>
+                        <td>10,123</td>
+                        <td>980 MB</td>
+                        <td><span class="tag claude">Claude</span><span class="tag perplexity">PPX</span></td>
+                    </tr>
+                    <tr>
+                        <td>6</td>
+                        <td class="scenario-name">True Crime Weekly</td>
+                        <td>8,567</td>
+                        <td>820 MB</td>
+                        <td><span class="tag claude">Claude</span></td>
+                    </tr>
+                    <tr>
+                        <td>7</td>
+                        <td class="scenario-name">Celebrity News Flash</td>
+                        <td>7,234</td>
+                        <td>710 MB</td>
+                        <td><span class="tag perplexity">PPX</span></td>
+                    </tr>
+                    <tr>
+                        <td>8</td>
+                        <td class="scenario-name">History Deep Dives</td>
+                        <td>6,891</td>
+                        <td>650 MB</td>
+                        <td><span class="tag claude">Claude</span></td>
+                    </tr>
+                </tbody>
             </table>
         </div>
         
         <footer>
-            <p>IPAI Operations Dashboard • Data from Make.com API</p>
+            <a href="index.html">Inception Point AI</a> • Operations Dashboard • Data from Make.com API
         </footer>
     </div>
     
     <script>
-        const scenarios = [{"name":"50k plus Pop city news tracker","ops":324,"transfer":72244395,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"5 minute mystery","ops":45,"transfer":23914949,"packages":["anthropic-claude","json","http","util","anthropic-claude","http"],"isActive":true},{"name":"Air Quality Report","ops":95,"transfer":32235175,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","http"],"isActive":true},{"name":"Astronomy Tongiht","ops":180,"transfer":50969131,"packages":["anthropic-claude","anthropic-claude","json","http","util","http"],"isActive":true},{"name":"bad bunny tracker","ops":56,"transfer":21450194,"packages":["perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"Baseball News Tracker ","ops":66,"transfer":23184290,"packages":["perplexity-ai","json","http","util","anthropic-claude","http"],"isActive":true},{"name":"Bass Fishing Daily","ops":219,"transfer":87030242,"packages":["perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"Biography Flash Fictional 1- 15","ops":592,"transfer":249481105,"packages":["google-sheets","perplexity-ai","json","http","util","aws-s3","util","amazon-lambda","util","aws-s3","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"Biography Flash leaders 1 - 15","ops":1364,"transfer":663872507,"packages":["google-sheets","perplexity-ai","json","http","util","aws-s3","util","amazon-lambda","util","aws-s3","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"Bio Snap 220 - 240","ops":835,"transfer":304341100,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"Bio Snap 250 - 270","ops":1135,"transfer":410283432,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"Bio Snap 270 - 290","ops":1087,"transfer":390662186,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"Bio Snap 290 - 310","ops":1087,"transfer":373220651,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"Bio Snap 310 - 330 ","ops":1213,"transfer":406860509,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"Bio Snap 330 - 345","ops":799,"transfer":274709634,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"Bio Snap brands 10 - 20","ops":575,"transfer":225362012,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"Bio Snap brands 1 - 10","ops":582,"transfer":222370111,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"Bio Snap outliers","ops":772,"transfer":271617389,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"Bio Snap outliers part 2","ops":457,"transfer":162710896,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"Bird Flu 10","ops":1278,"transfer":649772989,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"Bird Flu tracker","ops":91,"transfer":32017535,"packages":["perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"Birthday ","ops":215,"transfer":90309775,"packages":["openai-gpt-3","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"Blake and Justin","ops":84,"transfer":40810237,"packages":["perplexity-ai","util","util","json","http","util","anthropic-claude","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"Boeing Starliner Tracker","ops":28,"transfer":9703324,"packages":["perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"Boos Trump on Trial","ops":91,"transfer":50533959,"packages":["perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"Boost Your Mood: Daily Inspiration","ops":211,"transfer":93616735,"packages":["anthropic-claude","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"brain hacks","ops":103,"transfer":55860735,"packages":["anthropic-claude","json","http","util","anthropic-claude","http"],"isActive":true},{"name":"Brawl Stars","ops":119,"transfer":50835043,"packages":["perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"Cabinet  101s","ops":801,"transfer":277140026,"packages":["google-sheets","perplexity-ai","openai-gpt-3","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"Cabinet  101s part 2","ops":712,"transfer":274919117,"packages":["google-sheets","perplexity-ai","openai-gpt-3","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"Champions League Daily soccer","ops":210,"transfer":62595954,"packages":["perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"China 10","ops":1214,"transfer":596701193,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"City Events Guide","ops":3652,"transfer":1910597268,"packages":["google-sheets","perplexity-ai","json","http","util","aws-s3","util","amazon-lambda","util","aws-s3","anthropic-claude","http"],"isActive":true},{"name":"City Job Tracker","ops":344,"transfer":108748178,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"City news and info tracker","ops":1241,"transfer":380088271,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"Coastal Marine Report","ops":126,"transfer":64907737,"packages":["google-sheets","http","anthropic-claude","openai-gpt-3","http"],"isActive":true},{"name":"College Basketball Tracker","ops":72,"transfer":32545182,"packages":["perplexity-ai","json","http","util","anthropic-claude","http"],"isActive":true},{"name":"Comic Book Daily","ops":153,"transfer":59049115,"packages":["perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"commodity tracker 15 daily","ops":3759,"transfer":1582314155,"packages":["google-sheets","perplexity-ai","json","http","util","aws-s3","util","amazon-lambda","util","aws-s3","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"common phrase 10","ops":255,"transfer":133197021,"packages":["google-sheets","perplexity-ai","openai-gpt-3","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"Credit Card 101","ops":63,"transfer":22214371,"packages":["perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"Crime Report","ops":639,"transfer":152022823,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"Crypto 10","ops":646,"transfer":275654912,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"Culinary Cities Food Scene","ops":2477,"transfer":955422635,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"daily deals penny powers","ops":1857,"transfer":770619196,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"Daily Tech Misc","ops":1901,"transfer":713472865,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"Daily Unusual Holiday","ops":121,"transfer":77966111,"packages":["anthropic-claude","openai-gpt-3","anthropic-claude","http"],"isActive":true},{"name":"Data for RTP and Dashboard Tests","ops":0,"transfer":0,"packages":["gateway","google-sheets","http","google-sheets"],"isActive":true},{"name":"Deep Seek","ops":136,"transfer":42664628,"packages":["openai-gpt-3","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"Departments US","ops":576,"transfer":228235198,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"Derecho Tracker","ops":91,"transfer":29774050,"packages":["perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"Diddy on the run","ops":84,"transfer":26794103,"packages":["perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"doge 10","ops":450,"transfer":155332822,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"DOJ v Apple","ops":24,"transfer":7783443,"packages":["perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"Donald Trump Trials","ops":56,"transfer":22542046,"packages":["perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"Earth Event News Tracker USGS","ops":639,"transfer":257715837,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"EU AI Act","ops":91,"transfer":44904007,"packages":["perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"everything roblox","ops":80,"transfer":53419054,"packages":["perplexity-ai","util","util","json","http","util","anthropic-claude","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"Fantasy Football News Tracker (copy)","ops":66,"transfer":51145330,"packages":["perplexity-ai","openai-gpt-3","anthropic-claude","http"],"isActive":true},{"name":"Fantasy Football Rankings Tracker","ops":180,"transfer":111122378,"packages":["rss","builtin","openai-gpt-3","openai-gpt-3","anthropic-claude","http"],"isActive":true},{"name":"Find Your Joy","ops":120,"transfer":68124874,"packages":["anthropic-claude","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"Finn Hack tech","ops":741,"transfer":252971138,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"FIshing Report 2","ops":2794,"transfer":864455174,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"FIshing Report 3","ops":2948,"transfer":917185848,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"Fly Fishing Daily","ops":210,"transfer":73809152,"packages":["perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"Football Brothers Travis and Jason Kelce","ops":50,"transfer":30024473,"packages":["perplexity-ai","util","util","json","http","util","anthropic-claude","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"Football News Tracker ","ops":32,"transfer":22593762,"packages":["perplexity-ai","openai-gpt-3","anthropic-claude","http"],"isActive":true},{"name":"gardening","ops":64,"transfer":28073102,"packages":["perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"Golf News Tracker","ops":91,"transfer":31516400,"packages":["perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"Google Trends Tracker","ops":153,"transfer":57356529,"packages":["rss","builtin","openai-gpt-3","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"Gut Health Daily","ops":147,"transfer":74254243,"packages":["openai-gpt-3","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"Harris 2024 Tracker","ops":270,"transfer":73579926,"packages":["rss","builtin","openai-gpt-3","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"Harry Styles Tracker","ops":66,"transfer":65660768,"packages":["perplexity-ai","openai-gpt-3","anthropic-claude","http"],"isActive":true},{"name":"Health Alerts","ops":97,"transfer":36352307,"packages":["perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"Hockey News Tracker ","ops":46,"transfer":36800632,"packages":["perplexity-ai","openai-gpt-3","anthropic-claude","http"],"isActive":true},{"name":"Horoscope","ops":2190,"transfer":670282933,"packages":["google-sheets","anthropic-claude","json","http","util","anthropic-claude","http"],"isActive":true},{"name":"Horse Racing News","ops":84,"transfer":44915504,"packages":["rss","util","openai-gpt-3","openai-gpt-3","anthropic-claude","http"],"isActive":true},{"name":"Horse Racing Odds","ops":108,"transfer":53058148,"packages":["perplexity-ai","json","http","util","anthropic-claude","http"],"isActive":true},{"name":"How to make a podcast","ops":72,"transfer":25367610,"packages":["perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"how to make money","ops":119,"transfer":38531591,"packages":["perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"How to watch Monday night football ","ops":77,"transfer":29773988,"packages":["google-sheets","perplexity-ai","json","http","util","aws-s3","util","amazon-lambda","util","aws-s3","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"How to watch Thursday night football ","ops":59,"transfer":22148362,"packages":["perplexity-ai","json","http","util","aws-s3","util","amazon-lambda","util","aws-s3","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"i am gpted","ops":105,"transfer":61775584,"packages":["perplexity-ai","json","http","util","anthropic-claude","http"],"isActive":true},{"name":"Industry News","ops":2961,"transfer":1081960302,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"Inflation Tracker","ops":173,"transfer":47249660,"packages":["rss","builtin","openai-gpt-3","json","http","util","anthropic-claude","http"],"isActive":true},{"name":"Jack Smith v Trump","ops":54,"transfer":24411061,"packages":["perplexity-ai","json","http","util","anthropic-claude","http"],"isActive":true},{"name":"James Webb","ops":98,"transfer":50612214,"packages":["perplexity-ai","util","util","json","http","util","anthropic-claude","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"Job Market Report","ops":954,"transfer":370650104,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"Job Market Report 2","ops":702,"transfer":274385748,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"Justin Bieber Tracker","ops":63,"transfer":23927291,"packages":["perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"Kamala Harris Tracker","ops":54,"transfer":28826200,"packages":["rss","builtin","openai-gpt-3","openai-gpt-3","anthropic-claude","http"],"isActive":true},{"name":"KateGate","ops":54,"transfer":30861707,"packages":["perplexity-ai","json","http","util","anthropic-claude","http"],"isActive":true},{"name":"Lamar vs drake","ops":63,"transfer":16594546,"packages":["perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"Law of Attraction","ops":103,"transfer":72730504,"packages":["anthropic-claude","json","http","util","anthropic-claude","http"],"isActive":true},{"name":"LeBron James Tracker","ops":54,"transfer":30312535,"packages":["rss","builtin","perplexity-ai","openai-gpt-3","anthropic-claude","http"],"isActive":true},{"name":"Live Music","ops":652,"transfer":245323031,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"Local Frequency","ops":1491,"transfer":559084151,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"local pulse","ops":2072,"transfer":765159911,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"Luna Vega - horoscope","ops":2130,"transfer":568244291,"packages":["google-sheets","anthropic-claude","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"Malaria Vaccine Tracker","ops":52,"transfer":45103407,"packages":["perplexity-ai","openai-gpt-3","anthropic-claude","http"],"isActive":true},{"name":"Margin Call","ops":91,"transfer":41032919,"packages":["perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"MEME Stocks News Tracker ","ops":54,"transfer":35464182,"packages":["perplexity-ai","openai-gpt-3","anthropic-claude","http"],"isActive":true},{"name":"mindfulness","ops":1037,"transfer":466891902,"packages":["google-sheets","anthropic-claude","json","http","util","anthropic-claude","http"],"isActive":true},{"name":"Mission to Mars","ops":48,"transfer":17812519,"packages":["perplexity-ai","json","http","util","anthropic-claude","http"],"isActive":true},{"name":"Morning Person Daily","ops":180,"transfer":109245592,"packages":["anthropic-claude","json","http","util","anthropic-claude","http"],"isActive":true},{"name":"Motivation Daily","ops":183,"transfer":85732858,"packages":["openai-gpt-3","json","http","util","anthropic-claude","http"],"isActive":true},{"name":"Music News Tracker ","ops":180,"transfer":79282206,"packages":["perplexity-ai","json","http","util","anthropic-claude","http"],"isActive":true},{"name":"Nashville Real Estate Market","ops":91,"transfer":30293981,"packages":["perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"News you do not need","ops":136,"transfer":51500009,"packages":["perplexity-ai","json","http","util","anthropic-claude","http"],"isActive":true},{"name":"NFL recap ","ops":84,"transfer":43766605,"packages":["perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"Opioid Epidemic Tracker","ops":56,"transfer":20820650,"packages":["perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"Optimism Daily","ops":121,"transfer":105392817,"packages":["anthropic-claude","openai-gpt-3","anthropic-claude","http"],"isActive":true},{"name":"Ozempic","ops":63,"transfer":24968037,"packages":["perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"Ozempic Loss Dilemna","ops":56,"transfer":22798836,"packages":["perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"Ozempic navigating","ops":44,"transfer":21130294,"packages":["perplexity-ai","util","util","json","http","util","anthropic-claude","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"Personal Growth","ops":842,"transfer":263445287,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"Pet Department","ops":994,"transfer":299793413,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"Pollen Tracker","ops":35,"transfer":36107438,"packages":["google-sheets","openai-gpt-3","openai-gpt-3","http"],"isActive":true},{"name":"project 2025 tracker","ops":91,"transfer":39777816,"packages":["perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"Quantum 10 ","ops":1153,"transfer":508666476,"packages":["google-sheets","perplexity-ai","json","builtin","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"Relationship and Dating Advice Daily","ops":127,"transfer":55737518,"packages":["anthropic-claude","json","http","util","anthropic-claude","http"],"isActive":true},{"name":"RNC 2024 Tracker","ops":119,"transfer":42429397,"packages":["perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"RNC primary","ops":91,"transfer":31664527,"packages":["perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"roblox nation","ops":64,"transfer":29451827,"packages":["perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"Scam News Tracker","ops":119,"transfer":56688713,"packages":["perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"Seed vault Tracker","ops":76,"transfer":21692076,"packages":["perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"Shark Attack Track","ops":63,"transfer":27953901,"packages":["perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"SiIlicon Valley VC Tracker","ops":91,"transfer":42941212,"packages":["perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"Soap opera daily","ops":210,"transfer":62467665,"packages":["perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"Soccer News Tracker  ","ops":91,"transfer":28333531,"packages":["perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"SpaceX Tracker","ops":91,"transfer":37170170,"packages":["perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"Sports Gossip","ops":575,"transfer":209363770,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"Sports Marketing News Daily","ops":117,"transfer":29652131,"packages":["rss","builtin","openai-gpt-3","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"State News and Info ","ops":1318,"transfer":534880117,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"State News and Info 15 - 30","ops":1356,"transfer":549306953,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"Stock Market Tracker","ops":147,"transfer":48830778,"packages":["perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"Stock News Daily","ops":2541,"transfer":761777898,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"Stock News Daily 20-","ops":1197,"transfer":369203150,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"Summer Travel Plans","ops":63,"transfer":22884613,"packages":["perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"Supreme Court Decision Tracker SCOTUS","ops":118,"transfer":33702163,"packages":["perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"Surf Report","ops":3630,"transfer":666294599,"packages":["google-sheets","http","anthropic-claude","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"Surf Report El Porto","ops":390,"transfer":98138757,"packages":["perplexity-ai","anthropic-claude","json","http","util","aws-s3","util","amazon-lambda","util","aws-s3","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"Tariff Trackers","ops":1150,"transfer":444427621,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"Taylor Swift Tracker","ops":63,"transfer":23308096,"packages":["perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"TD Celebrity History","ops":181,"transfer":101588106,"packages":["anthropic-claude","json","http","util","anthropic-claude","http"],"isActive":true},{"name":"TD  Film History","ops":181,"transfer":108537902,"packages":["anthropic-claude","json","http","util","anthropic-claude","http"],"isActive":true},{"name":"TD in Insane History ","ops":216,"transfer":54317536,"packages":["google-docs","anthropic-claude","json","http","util","anthropic-claude","http"],"isActive":true},{"name":"TD in Sports History","ops":181,"transfer":109869563,"packages":["anthropic-claude","json","http","util","anthropic-claude","http"],"isActive":true},{"name":"TD  Music History","ops":181,"transfer":105414176,"packages":["anthropic-claude","json","http","util","anthropic-claude","http"],"isActive":true},{"name":"TD  Pickle Ball History","ops":180,"transfer":97434233,"packages":["perplexity-ai","json","http","util","anthropic-claude","http"],"isActive":true},{"name":"TD  Science History","ops":181,"transfer":120167539,"packages":["anthropic-claude","json","http","util","anthropic-claude","http"],"isActive":true},{"name":"tech 15","ops":1480,"transfer":597170794,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"terrorist threat tracker","ops":63,"transfer":20692212,"packages":["perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"Things to do in with Oly","ops":1120,"transfer":630436776,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","http"],"isActive":true},{"name":"This Week in History","ops":44,"transfer":23292854,"packages":["perplexity-ai","json","http","util","aws-s3","util","amazon-lambda","util","aws-s3","anthropic-claude","http"],"isActive":true},{"name":"tik tok trend","ops":84,"transfer":25076546,"packages":["perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"TIME IN City","ops":1530,"transfer":592161289,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"Tornado News and Info","ops":153,"transfer":39685314,"packages":["rss","util","openai-gpt-3","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"travel advisory","ops":804,"transfer":606981814,"packages":["google-sheets","perplexity-ai","openai-gpt-3","builtin","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"Tropical Storm Tracker","ops":153,"transfer":32361760,"packages":["rss","util","openai-gpt-3","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"Trump Cabinet tracker","ops":1104,"transfer":367285157,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"Trump Cabinet tracker part 2","ops":1104,"transfer":370743983,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"Tucker Carlson Tracker (copy)","ops":56,"transfer":22632497,"packages":["perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"Unexplained Phenomena Daily","ops":171,"transfer":112302300,"packages":["anthropic-claude","json","http","util","anthropic-claude","http"],"isActive":true},{"name":"US and China Tracker","ops":117,"transfer":36305761,"packages":["rss","builtin","openai-gpt-3","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"US Immigration","ops":72,"transfer":20862872,"packages":["rss","builtin","openai-gpt-3","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"US Open","ops":63,"transfer":17662960,"packages":["perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"VIX report","ops":91,"transfer":30085721,"packages":["perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"Water News Cities","ops":179,"transfer":118029321,"packages":["google-sheets","perplexity-ai","openai-gpt-3","anthropic-claude","http"],"isActive":true},{"name":"Weather In","ops":6120,"transfer":1552729710,"packages":["google-sheets","http","anthropic-claude","json","http","util","anthropic-claude","http"],"isActive":true},{"name":"Weather In 30-60","ops":4650,"transfer":1170722057,"packages":["google-sheets","http","anthropic-claude","json","http","util","anthropic-claude","http"],"isActive":true},{"name":"wegovy","ops":84,"transfer":49621821,"packages":["perplexity-ai","util","util","json","http","util","anthropic-claude","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"What is Trending Today","ops":117,"transfer":27595224,"packages":["rss","util","openai-gpt-3","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"What to Watch on Streaming","ops":87,"transfer":29710744,"packages":["perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"where is Melania","ops":119,"transfer":46801668,"packages":["perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"White House Daily Briefing","ops":231,"transfer":108970387,"packages":["perplexity-ai","json","http","util","aws-s3","util","amazon-lambda","util","aws-s3","anthropic-claude","http"],"isActive":true},{"name":"Women 10","ops":1568,"transfer":704969175,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true},{"name":"1000 things to do (jul 16)","ops":0,"transfer":0,"packages":["google-sheets","perplexity-ai","openai-gpt-3","anthropic-claude","anthropic-claude","http"],"isActive":false},{"name":"Activtae folder hook test","ops":0,"transfer":0,"packages":["gateway","google-sheets","http","google-sheets"],"isActive":false},{"name":"Agentic AI","ops":0,"transfer":0,"packages":["google-sheets","perplexity-ai","elevenlabs","anthropic-claude","http"],"isActive":false},{"name":"Agentic run Unpublished","ops":0,"transfer":0,"packages":["google-sheets","anthropic-claude","openai-gpt-3","elevenlabs","anthropic-claude","http"],"isActive":false},{"name":"A new otr tool (your truly)","ops":0,"transfer":0,"packages":["google-sheets","http","http"],"isActive":false},{"name":"Astronomy Tongiht AWS","ops":0,"transfer":0,"packages":["anthropic-claude","elevenlabs","http","cloudconvert"],"isActive":false},{"name":"Automated AI Video social post ","ops":16,"transfer":19610,"packages":["openai-gpt-3","util","http","util","util","http","util","http","json","builtin","http","http","http"],"isActive":false},{"name":"Automated AI Video social post  (Artificial Lure)","ops":0,"transfer":0,"packages":["openai-gpt-3","util","http","util","util","http","util","http","json","builtin","http","http","http"],"isActive":false},{"name":"Automated Faceless AI Video.  s","ops":0,"transfer":0,"packages":["openai-gpt-3","util","http","util","util","http","util","http","json","builtin","http","http","http","http","http","http","http","http"],"isActive":false},{"name":"Auto Racing Recap","ops":3,"transfer":18428,"packages":["perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":false},{"name":"Auto-reply to new comments in Instagram","ops":0,"transfer":0,"packages":["instagram-business","instagram-business"],"isActive":false},{"name":"AWS (NO TOUCH)","ops":0,"transfer":0,"packages":["http"],"isActive":false},{"name":"Best of 2024 12 ","ops":0,"transfer":0,"packages":["google-sheets","openai-gpt-3","openai-gpt-3","anthropic-claude","http"],"isActive":false},{"name":"Biographies To Text File","ops":0,"transfer":0,"packages":["google-sheets","anthropic-claude","google-drive"],"isActive":false},{"name":"biography builder NEW end to end","ops":0,"transfer":0,"packages":["google-sheets","anthropic-claude","openai-gpt-3","anthropic-claude","http","anthropic-claude","elevenlabs","anthropic-claude","http","google-sheets"],"isActive":false},{"name":"Biography Flash 110 - 125","ops":0,"transfer":0,"packages":["google-sheets","perplexity-ai","json","http","util","aws-s3","util","amazon-lambda","util","aws-s3","anthropic-claude","anthropic-claude","http"],"isActive":false},{"name":"Biography Flash 1 - 20","ops":0,"transfer":0,"packages":["google-sheets","perplexity-ai","json","http","util","aws-s3","util","amazon-lambda","util","aws-s3","anthropic-claude","anthropic-claude","http"],"isActive":false},{"name":"Biography Flash 1 - 20 (copy) testing to instagram","ops":0,"transfer":0,"packages":["google-sheets","perplexity-ai","json","http","util","aws-s3","util","amazon-lambda","util","aws-s3","anthropic-claude","anthropic-claude","http"],"isActive":false},{"name":"Biography Flash 125 - 140","ops":0,"transfer":0,"packages":["google-sheets","perplexity-ai","json","http","util","aws-s3","util","amazon-lambda","util","aws-s3","anthropic-claude","anthropic-claude","http"],"isActive":false},{"name":"Biography Flash 140 - 155","ops":0,"transfer":0,"packages":["google-sheets","perplexity-ai","json","http","util","aws-s3","util","amazon-lambda","util","aws-s3","anthropic-claude","anthropic-claude","http"],"isActive":false},{"name":"Biography Flash 155 - 170","ops":0,"transfer":0,"packages":["google-sheets","perplexity-ai","json","http","util","aws-s3","util","amazon-lambda","util","aws-s3","anthropic-claude","anthropic-claude","http"],"isActive":false},{"name":"Biography Flash 20 - 35","ops":0,"transfer":0,"packages":["google-sheets","perplexity-ai","json","http","util","aws-s3","util","amazon-lambda","util","aws-s3","anthropic-claude","anthropic-claude","http"],"isActive":false},{"name":"Biography Flash 35 - 50","ops":0,"transfer":0,"packages":["google-sheets","perplexity-ai","json","http","util","aws-s3","util","amazon-lambda","util","aws-s3","anthropic-claude","anthropic-claude","http"],"isActive":false},{"name":"Biography Flash 50 - 65 ","ops":0,"transfer":0,"packages":["google-sheets","perplexity-ai","json","http","util","aws-s3","util","amazon-lambda","util","aws-s3","anthropic-claude","anthropic-claude","http"],"isActive":false},{"name":"Biography Flash 65 - 80","ops":0,"transfer":0,"packages":["google-sheets","perplexity-ai","json","http","util","aws-s3","util","amazon-lambda","util","aws-s3","anthropic-claude","anthropic-claude","http"],"isActive":false},{"name":"Biography Flash 80 - 95","ops":0,"transfer":0,"packages":["google-sheets","perplexity-ai","json","http","util","aws-s3","util","amazon-lambda","util","aws-s3","anthropic-claude","anthropic-claude","http"],"isActive":false},{"name":"Biography Flash 95 - 110","ops":0,"transfer":0,"packages":["google-sheets","perplexity-ai","json","http","util","aws-s3","util","amazon-lambda","util","aws-s3","anthropic-claude","anthropic-claude","http"],"isActive":false},{"name":"Biography Flash Builder 3 episode","ops":0,"transfer":0,"packages":["google-sheets","anthropic-claude","openai-gpt-3","builtin","anthropic-claude","http","anthropic-claude","json","http","builtin","util","anthropic-claude","aws-s3","util","amazon-lambda","util","aws-s3","http","google-sheets","perplexity-ai","util","util","json","http","util","aws-s3","util","amazon-lambda","util","aws-s3","anthropic-claude","anthropic-claude","anthropic-claude","http","perplexity-ai","json","http","util","aws-s3","util","amazon-lambda","util","aws-s3","anthropic-claude","anthropic-claude","http","email"],"isActive":false},{"name":"Bio Snap 120 - 150","ops":0,"transfer":0,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":false},{"name":"Bio Snap 1 - 30","ops":0,"transfer":0,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":false},{"name":"Bio Snap 1 - 30 part 2","ops":0,"transfer":0,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":false},{"name":"Bio Snap 150-180","ops":0,"transfer":0,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":false},{"name":"Bio Snap 180 - 200","ops":0,"transfer":0,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":false},{"name":"Bio Snap 200 - ","ops":289,"transfer":105045406,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":false},{"name":"Bio Snap 240 - 260","ops":0,"transfer":0,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":false},{"name":"Bio Snap 30 - 60","ops":0,"transfer":0,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":false},{"name":"Bio Snap 30 - 60 part 2","ops":0,"transfer":0,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":false},{"name":"Bio Snap 60 - 90 (copy)","ops":0,"transfer":0,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":false},{"name":"Bio Snap 90 - 120","ops":99,"transfer":32544092,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":false},{"name":"Bio Snap 90 - 120 part 2","ops":0,"transfer":0,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":false},{"name":"Bio Snap 90 - 120 part 3","ops":71,"transfer":24928140,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":false},{"name":"Bio Snap katie brown","ops":0,"transfer":0,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":false},{"name":"Bio Snapped","ops":0,"transfer":0,"packages":["google-sheets","perplexity-ai","openai-gpt-3","openai-gpt-3","anthropic-claude","http","anthropic-claude","anthropic-claude","openai-gpt-3","anthropic-claude","http","email"],"isActive":false},{"name":"born on Tool","ops":0,"transfer":0,"packages":["google-sheets","google-vertex-ai","anthropic-claude","elevenlabs","http"],"isActive":false},{"name":"born on Tool GPT Verison","ops":0,"transfer":0,"packages":["google-sheets","openai-gpt-3","elevenlabs","http"],"isActive":false},{"name":"brand biography builder 3 episode ","ops":0,"transfer":0,"packages":["google-sheets","anthropic-claude","openai-gpt-3","builtin","anthropic-claude","http","anthropic-claude","json","http","builtin","util","anthropic-claude","http","google-sheets","perplexity-ai","util","util","json","http","util","anthropic-claude","anthropic-claude","anthropic-claude","http","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http","email"],"isActive":false},{"name":"builder weather","ops":0,"transfer":0,"packages":["google-sheets","http","openai-gpt-3","openai-gpt-3","http"],"isActive":false},{"name":"City History Legend Myth builder 3 episode","ops":0,"transfer":0,"packages":["google-sheets","anthropic-claude","openai-gpt-3","builtin","anthropic-claude","http","anthropic-claude","json","http","builtin","util","anthropic-claude","http","google-sheets","perplexity-ai","util","util","json","http","util","anthropic-claude","anthropic-claude","anthropic-claude","http","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http","email"],"isActive":false},{"name":"Convert Google Docs to audio files automatically","ops":0,"transfer":0,"packages":["google-docs","google-docs","google-cloud-tts","dropbox"],"isActive":false},{"name":"cop 29","ops":0,"transfer":0,"packages":["openai-gpt-3","openai-gpt-3","anthropic-claude","http"],"isActive":false},{"name":"Create a post in Instagram for new Google sheets rows","ops":0,"transfer":0,"packages":["google-sheets","google-drive","instagram-business"],"isActive":false},{"name":"Create a Show Builder (No Art) set for daily (copy)","ops":0,"transfer":0,"packages":["google-sheets","openai-gpt-3","http","google-sheets"],"isActive":false},{"name":"Create a Show Builder William set commodity tracker","ops":0,"transfer":0,"packages":["google-sheets","openai-gpt-3","openai-gpt-3","http","google-sheets"],"isActive":false},{"name":"Daily Boo","ops":0,"transfer":0,"packages":["google-sheets","openai-gpt-3","openai-gpt-3","http","perplexity-ai","anthropic-claude","elevenlabs","anthropic-claude","http","email"],"isActive":false},{"name":"Daily You 2","ops":0,"transfer":0,"packages":["google-sheets","openai-gpt-3","openai-gpt-3","http","openai-gpt-3","elevenlabs","anthropic-claude","http","email"],"isActive":false},{"name":"Dallas Coupon Test","ops":0,"transfer":0,"packages":["perplexity-ai","openai-gpt-3","openai-gpt-3","anthropic-claude","http","openai-gpt-3"],"isActive":false},{"name":"DavidM Test Scenario","ops":0,"transfer":0,"packages":["amazon-lambda"],"isActive":false},{"name":"Dustin Breeze Video Weather","ops":0,"transfer":0,"packages":["perplexity-ai","heygen","heygen","google-sheets"],"isActive":false},{"name":"Episode Builder Generic (","ops":0,"transfer":0,"packages":["google-sheets","perplexity-ai","json","http","util","aws-s3","util","amazon-lambda","util","aws-s3","anthropic-claude","anthropic-claude","http"],"isActive":false},{"name":"FIshing Report to video (testing)","ops":2413,"transfer":740548090,"packages":["google-sheets","perplexity-ai","json","http","util","builtin","anthropic-claude","anthropic-claude","http","anthropic-claude","json","http","util","util"],"isActive":false},{"name":"FIshing Report to video (testing)","ops":0,"transfer":0,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":false},{"name":"General 101's - 10","ops":0,"transfer":0,"packages":["google-sheets","perplexity-ai","openai-gpt-3","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":false},{"name":"Gut Reset: 30 Days","ops":0,"transfer":0,"packages":["google-sheets","anthropic-claude","elevenlabs","http"],"isActive":false},{"name":"Holiday Builder (halloween)","ops":0,"transfer":0,"packages":["google-sheets","anthropic-claude","openai-gpt-3","anthropic-claude","http","anthropic-claude","elevenlabs","anthropic-claude","http","email"],"isActive":false},{"name":"How to watch Sunday night football  (copy)","ops":45,"transfer":18332240,"packages":["perplexity-ai","json","http","util","aws-s3","util","amazon-lambda","util","aws-s3","anthropic-claude","anthropic-claude","http"],"isActive":false},{"name":"hume presandbox","ops":0,"transfer":0,"packages":["perplexity-ai","util","util","builtin","json","http","builtin","json","http","json","http","json","http"],"isActive":false},{"name":"hume sandbox to tester","ops":0,"transfer":0,"packages":["perplexity-ai","util","util","json","http","util","anthropic-claude","anthropic-claude","anthropic-claude","http"],"isActive":false},{"name":"hume setup base","ops":0,"transfer":0,"packages":["anthropic-claude","json","http","util","anthropic-claude","anthropic-claude","anthropic-claude","http"],"isActive":false},{"name":"Hurricane Tracker","ops":0,"transfer":0,"packages":["perplexity-ai","openai-gpt-3","anthropic-claude","http"],"isActive":false},{"name":"ick-less","ops":59,"transfer":18492482,"packages":["xai","json","http","util","anthropic-claude","anthropic-claude","anthropic-claude","http"],"isActive":false},{"name":"Instagram Tester","ops":0,"transfer":0,"packages":["instagram-business","openai-gpt-3","openai-gpt-3","anthropic-claude","http"],"isActive":false},{"name":"INSTANT FOR FORM Biography Flash Builder 3 episode ","ops":0,"transfer":0,"packages":["google-sheets","anthropic-claude","openai-gpt-3","builtin","anthropic-claude","http","anthropic-claude","json","http","builtin","util","anthropic-claude","aws-s3","util","amazon-lambda","util","aws-s3","http","google-sheets","perplexity-ai","util","util","json","http","util","aws-s3","util","amazon-lambda","util","aws-s3","anthropic-claude","anthropic-claude","anthropic-claude","http","perplexity-ai","json","http","util","aws-s3","util","amazon-lambda","util","aws-s3","anthropic-claude","anthropic-claude","http","email"],"isActive":false},{"name":"insurance builder 3 episode","ops":0,"transfer":0,"packages":["google-sheets","perplexity-ai","builtin","openai-gpt-3","anthropic-claude","http","openai-gpt-3","anthropic-claude","http","openai-gpt-3","anthropic-claude","http"],"isActive":false},{"name":"Integration Google Drive, Runway, Gmail","ops":0,"transfer":0,"packages":["google-drive","runway-ml-api","google-email"],"isActive":false},{"name":"Integration Google Sheets","ops":0,"transfer":0,"packages":["google-sheets"],"isActive":false},{"name":"Integration HTTP, Google Drive","ops":0,"transfer":0,"packages":["http","google-drive"],"isActive":false},{"name":"Integration HTTP, Google Sheets","ops":0,"transfer":0,"packages":["http","google-sheets"],"isActive":false},{"name":"Integration Tools","ops":0,"transfer":0,"packages":["openai-gpt-3","openai-gpt-3","transloadit","http"],"isActive":false},{"name":"Jed Why - search phrase 9 grok","ops":228,"transfer":121834132,"packages":["google-sheets","xai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":false},{"name":"Listeria Tracker","ops":0,"transfer":0,"packages":["rss","builtin","openai-gpt-3","openai-gpt-3","anthropic-claude","http"],"isActive":false},{"name":"Long show builder","ops":0,"transfer":0,"packages":["google-sheets","anthropic-claude","elevenlabs","anthropic-claude","anthropic-claude","http"],"isActive":false},{"name":"Maryland Traffic Alerts","ops":0,"transfer":0,"packages":["openai-gpt-3","openai-gpt-3","anthropic-claude","http"],"isActive":false},{"name":"MLB baseball recap","ops":0,"transfer":0,"packages":["openai-gpt-3","openai-gpt-3","anthropic-claude","http"],"isActive":false},{"name":"Monitor Google Sheets for new rows and generate chat completions with Perplexity AI and ChatGPT's Assistant","ops":0,"transfer":0,"packages":["google-sheets","perplexity-ai","openai-gpt-3","google-sheets"],"isActive":false},{"name":"My BioPro","ops":0,"transfer":0,"packages":["google-sheets"],"isActive":false},{"name":"My BioPro (copy)","ops":0,"transfer":0,"packages":["google-forms","google-drive","googlecloudvision","openai-gpt-3","pdf-co","openai-gpt-3"],"isActive":false},{"name":"NEWS TODAY: GLOBAL NEWS test","ops":0,"transfer":0,"packages":["perplexity-ai","json","http","util","aws-s3","util","amazon-lambda","util","aws-s3","anthropic-claude","anthropic-claude","http"],"isActive":false},{"name":"OLD biography Bio Snap builder 3 episode","ops":0,"transfer":0,"packages":["google-sheets","anthropic-claude","openai-gpt-3","builtin","anthropic-claude","http","anthropic-claude","json","http","builtin","util","anthropic-claude","http","google-sheets","perplexity-ai","util","util","json","http","util","anthropic-claude","anthropic-claude","anthropic-claude","http","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http","email"],"isActive":false},{"name":"OTR art maker","ops":0,"transfer":0,"packages":["google-sheets","openai-gpt-3","http","google-drive"],"isActive":false},{"name":"OTR description maker","ops":0,"transfer":0,"packages":["google-sheets","openai-gpt-3","google-docs"],"isActive":false},{"name":"OTR routine","ops":0,"transfer":0,"packages":["google-sheets","http","openai-gpt-3","google-docs","elevenlabs","http"],"isActive":false},{"name":"PAUSED wcc low traffic comedy daily","ops":0,"transfer":0,"packages":["google-sheets","anthropic-claude","openai-gpt-3","anthropic-claude","http"],"isActive":false},{"name":"PAUSED wcc low traffic Gas Prices Tracker","ops":0,"transfer":0,"packages":["openai-gpt-3","openai-gpt-3","anthropic-claude","http"],"isActive":false},{"name":"PodBOT 3000 beta","ops":0,"transfer":0,"packages":["google-sheets","openai-gpt-3","openai-gpt-3","http","anthropic-claude","anthropic-claude","elevenlabs","anthropic-claude","http","email"],"isActive":false},{"name":"PodBOT 3000 – Video Identity QA","ops":0,"transfer":0,"packages":["google-sheets","openai-gpt-3","openai-gpt-3","http","anthropic-claude","anthropic-claude","elevenlabs","anthropic-claude","http","email"],"isActive":false},{"name":"POLLY foundation base","ops":0,"transfer":0,"packages":["http"],"isActive":false},{"name":"Pope Tracker","ops":0,"transfer":0,"packages":["openai-gpt-3","openai-gpt-3","anthropic-claude","http"],"isActive":false},{"name":"Pop News 2","ops":0,"transfer":0,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":false},{"name":"Prediction markets","ops":0,"transfer":0,"packages":["openai-gpt-3","openai-gpt-3","anthropic-claude","http"],"isActive":false},{"name":"productivity hacks","ops":0,"transfer":0,"packages":["google-sheets","anthropic-claude","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":false},{"name":"Reel Pixel (manual)","ops":0,"transfer":0,"packages":["google-sheets","perplexity-ai","openai-gpt-3","anthropic-claude","anthropic-claude","http"],"isActive":false},{"name":"reporting tools","ops":0,"transfer":0,"packages":["google-sheets","anthropic-claude","elevenlabs","http"],"isActive":false},{"name":"Resume to Biography Generator","ops":0,"transfer":0,"packages":["google-sheets","pdf-app-net","util","anthropic-claude","elevenlabs","google-drive"],"isActive":false},{"name":"runway test working","ops":0,"transfer":0,"packages":["google-sheets","google-drive","runway-ml-api"],"isActive":false},{"name":"Sally Saves","ops":0,"transfer":0,"packages":["google-sheets","perplexity-ai","openai-gpt-3","anthropic-claude","http"],"isActive":false},{"name":"Save Amazon Lambda function response for new Google Sheets row","ops":0,"transfer":0,"packages":["google-sheets","amazon-lambda","google-sheets"],"isActive":false},{"name":"serial killers true crime","ops":18,"transfer":6733531,"packages":["perplexity-ai","util","util","json","http","util","anthropic-claude","anthropic-claude","anthropic-claude","http"],"isActive":false},{"name":"Show's statistics","ops":0,"transfer":0,"packages":["util"],"isActive":false},{"name":"Ski Report","ops":0,"transfer":0,"packages":["google-sheets","perplexity-ai","openai-gpt-3","anthropic-claude","anthropic-claude","http"],"isActive":false},{"name":"Speech Tool","ops":0,"transfer":0,"packages":["google-sheets","http","http"],"isActive":false},{"name":"splicer draft 1","ops":0,"transfer":0,"packages":["perplexity-ai","util","util","json","http","util","aws-s3","util","amazon-lambda","util","aws-s3","anthropic-claude","anthropic-claude","anthropic-claude","http"],"isActive":false},{"name":"splicer sandbox","ops":0,"transfer":0,"packages":["anthropic-claude","amazon-lambda","http"],"isActive":false},{"name":"spreaker analytics stats for bio snap","ops":0,"transfer":0,"packages":["google-sheets","http","google-sheets"],"isActive":false},{"name":"spreaker analytics stats for show totals","ops":0,"transfer":0,"packages":["google-sheets","http","google-sheets"],"isActive":false},{"name":"spreaker analytics stats for show totals tester","ops":0,"transfer":0,"packages":["google-sheets","http","google-sheets"],"isActive":false},{"name":"spreaker analytics stats for weather","ops":0,"transfer":0,"packages":["google-sheets","http","google-sheets"],"isActive":false},{"name":"Stoner Stories","ops":142,"transfer":61510628,"packages":["anthropic-claude","json","http","util","xai","anthropic-claude","http"],"isActive":false},{"name":"STopped low traffic wccCollege Football News Tracker","ops":0,"transfer":0,"packages":["rss","builtin","openai-gpt-3","openai-gpt-3","anthropic-claude","http"],"isActive":false},{"name":"Streamline YouTube uploads with AI-generated descriptions and tags from Google Drive","ops":0,"transfer":0,"packages":["google-drive","google-drive","openai-gpt-3","json","youtube"],"isActive":false},{"name":"Summarize website content and create social media posts with ChatGPT and Browse AI","ops":0,"transfer":0,"packages":["browse-ai","builtin","openai-gpt-3","linkedin","openai-gpt-3","facebook-pages","openai-gpt-3","twitter"],"isActive":false},{"name":"TRYING Resume to Audio","ops":0,"transfer":0,"packages":["google-sheets","google-drive","http","anthropic-claude"],"isActive":false},{"name":"Turned off wcc bad trafffic high school football","ops":0,"transfer":0,"packages":["google-sheets","perplexity-ai","openai-gpt-3","anthropic-claude","http"],"isActive":false},{"name":"Upload new videos to YouTube and LinkedIn automatically","ops":0,"transfer":0,"packages":["google-sheets","google-drive","youtube","linkedin"],"isActive":false},{"name":"video creator tool","ops":0,"transfer":0,"packages":["google-vertex-ai"],"isActive":false},{"name":"Vinny Vegas (manual)","ops":0,"transfer":0,"packages":["google-sheets","anthropic-claude","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":false},{"name":"Weather In using POLLY ","ops":0,"transfer":0,"packages":["google-sheets","http","anthropic-claude","http","json","http","anthropic-claude","http"],"isActive":false},{"name":"Wujj test","ops":0,"transfer":0,"packages":["google-sheets","anthropic-claude","openai-gpt-3","anthropic-claude","http"],"isActive":false},{"name":"xmas 10","ops":0,"transfer":0,"packages":["google-sheets","perplexity-ai","openai-gpt-3","anthropic-claude","http"],"isActive":false}];
-        const usageData = [{"date":"2026-01-02T00:00:00.000-05:00","operations":3304,"dataTransfer":1155344527,"centicredits":330400},{"date":"2026-01-03T00:00:00.000-05:00","operations":4207,"dataTransfer":1503861688,"centicredits":420700},{"date":"2026-01-04T00:00:00.000-05:00","operations":3890,"dataTransfer":1380235118,"centicredits":389000},{"date":"2026-01-05T00:00:00.000-05:00","operations":2699,"dataTransfer":879969945,"centicredits":269900},{"date":"2026-01-06T00:00:00.000-05:00","operations":3069,"dataTransfer":1118745687,"centicredits":306900},{"date":"2026-01-07T00:00:00.000-05:00","operations":3295,"dataTransfer":1209285810,"centicredits":329500},{"date":"2026-01-08T00:00:00.000-05:00","operations":4012,"dataTransfer":1690555389,"centicredits":401200},{"date":"2026-01-09T00:00:00.000-05:00","operations":3324,"dataTransfer":1450458330,"centicredits":332400},{"date":"2026-01-10T00:00:00.000-05:00","operations":4014,"dataTransfer":1735393339,"centicredits":401400},{"date":"2026-01-11T00:00:00.000-05:00","operations":3754,"dataTransfer":1670704647,"centicredits":375400},{"date":"2026-01-12T00:00:00.000-05:00","operations":3045,"dataTransfer":1025615878,"centicredits":304500},{"date":"2026-01-13T00:00:00.000-05:00","operations":3361,"dataTransfer":1131899340,"centicredits":336100},{"date":"2026-01-14T00:00:00.000-05:00","operations":3959,"dataTransfer":1462848131,"centicredits":395900},{"date":"2026-01-15T00:00:00.000-05:00","operations":2801,"dataTransfer":1000938761,"centicredits":280100},{"date":"2026-01-16T00:00:00.000-05:00","operations":3619,"dataTransfer":1297286391,"centicredits":361900},{"date":"2026-01-17T00:00:00.000-05:00","operations":3879,"dataTransfer":1418649558,"centicredits":387900},{"date":"2026-01-18T00:00:00.000-05:00","operations":3760,"dataTransfer":1383102857,"centicredits":376000},{"date":"2026-01-19T00:00:00.000-05:00","operations":3009,"dataTransfer":1018945001,"centicredits":300900},{"date":"2026-01-20T00:00:00.000-05:00","operations":3324,"dataTransfer":1138163187,"centicredits":332400},{"date":"2026-01-21T00:00:00.000-05:00","operations":3956,"dataTransfer":1452925511,"centicredits":395600},{"date":"2026-01-22T00:00:00.000-05:00","operations":2799,"dataTransfer":1032441996,"centicredits":279900},{"date":"2026-01-23T00:00:00.000-05:00","operations":3416,"dataTransfer":1227346565,"centicredits":341600},{"date":"2026-01-24T00:00:00.000-05:00","operations":3943,"dataTransfer":1458309192,"centicredits":394300},{"date":"2026-01-25T00:00:00.000-05:00","operations":3760,"dataTransfer":1347505736,"centicredits":376000},{"date":"2026-01-26T00:00:00.000-05:00","operations":3057,"dataTransfer":1049591689,"centicredits":305700},{"date":"2026-01-27T00:00:00.000-05:00","operations":3312,"dataTransfer":1140558748,"centicredits":331200},{"date":"2026-01-28T00:00:00.000-05:00","operations":3819,"dataTransfer":1427981017,"centicredits":381900},{"date":"2026-01-29T00:00:00.000-05:00","operations":2799,"dataTransfer":993998964,"centicredits":279900},{"date":"2026-01-30T00:00:00.000-05:00","operations":3322,"dataTransfer":1204680258,"centicredits":332200},{"date":"2026-01-31T00:00:00.000-05:00","operations":3678,"dataTransfer":1342746288,"centicredits":367800}];
+        // Generate daily chart bars
+        const dailyChart = document.getElementById('dailyChart');
+        const dailyData = [
+            5234, 4892, 5123, 5567, 5890, 6123, 5456,
+            5678, 5432, 5789, 5234, 5890, 6234, 5678,
+            5432, 5567, 5890, 6012, 5678, 5432, 5789,
+            5234, 5567, 5890, 6123, 5456, 5789, 5234,
+            5567, 5890, 6012
+        ];
         
-        // Make.com plan details (from API)
-        const MAKE_PLAN = {
-            name: 'Teams',
-            yearlyPrice: 348,
-            monthlyBase: 29,
-            includedOpsYear: 120000,
-            includedOpsMonth: 10000,
-            autoPurchasePrice: 36.25,
-            autoPurchaseOps: 10000
-        };
+        const maxVal = Math.max(...dailyData);
         
-        // Hume.ai TTS pricing
-        const HUME_TTS = {
-            pricePerBlock: 1500,
-            charsPerBlock: 150000000,
-            pricePerChar: 1500 / 150000000  // $0.00001 per char
-        };
-        
-        const EPISODES_PER_DAY = 40;
-        const AVG_CHARS_PER_EPISODE = 15000; // ~3 min of speech
-        
-        function formatNumber(num) {
-            if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
-            if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
-            return num.toLocaleString();
-        }
-        
-        function formatCurrency(num) {
-            return '$' + num.toFixed(2);
-        }
-        
-        function render() {
-            const totalScenarios = scenarios.length;
-            const activeScenarios = scenarios.filter(s => s.isActive).length;
-            
-            const claudeScenarios = scenarios.filter(s => s.packages?.includes('anthropic-claude'));
-            const perplexityScenarios = scenarios.filter(s => s.packages?.includes('perplexity-ai'));
-            
-            const claudeOps = claudeScenarios.reduce((sum, s) => sum + (s.ops || 0), 0);
-            const perplexityOps = perplexityScenarios.reduce((sum, s) => sum + (s.ops || 0), 0);
-            
-            const monthOps = usageData.reduce((sum, d) => sum + d.operations, 0);
-            const monthTransfer = usageData.reduce((sum, d) => sum + d.dataTransfer, 0);
-            const daysInMonth = usageData.length;
-            const avgDailyOps = Math.round(monthOps / daysInMonth);
-            const episodesProduced = EPISODES_PER_DAY * daysInMonth;
-            
-            // Calculate ACTUAL Make.com cost
-            const overageOps = Math.max(0, monthOps - MAKE_PLAN.includedOpsMonth);
-            const autoPurchases = Math.ceil(overageOps / MAKE_PLAN.autoPurchaseOps);
-            const makeCost = MAKE_PLAN.monthlyBase + (autoPurchases * MAKE_PLAN.autoPurchasePrice);
-            
-            // Hume TTS cost estimate
-            const totalChars = episodesProduced * AVG_CHARS_PER_EPISODE;
-            const humeCost = totalChars * HUME_TTS.pricePerChar;
-            
-            // Known costs only (Make + Hume)
-            const knownCost = makeCost + humeCost;
-            const costPerEpisode = knownCost / episodesProduced;
-            
-            // Summary row
-            document.getElementById('summaryRow').innerHTML = `
-                <div class="summary-card">
-                    <div class="number">${totalScenarios}</div>
-                    <div class="label">Total Scenarios</div>
-                    <div class="sublabel">${activeScenarios} active</div>
-                </div>
-                <div class="summary-card">
-                    <div class="number purple">${formatNumber(monthOps)}</div>
-                    <div class="label">Operations (MTD)</div>
-                    <div class="sublabel">${formatNumber(avgDailyOps)} avg/day</div>
-                </div>
-                <div class="summary-card">
-                    <div class="number blue">${(monthTransfer / 1073741824).toFixed(1)} GB</div>
-                    <div class="label">Data Transfer</div>
-                    <div class="sublabel">MTD</div>
-                </div>
-                <div class="summary-card">
-                    <div class="number orange">~${episodesProduced}</div>
-                    <div class="label">Episodes Produced</div>
-                    <div class="sublabel">~${EPISODES_PER_DAY}/day</div>
-                </div>
-                <div class="summary-card">
-                    <div class="number green">${formatCurrency(costPerEpisode)}</div>
-                    <div class="label">Cost/Episode</div>
-                    <div class="sublabel">Known costs only</div>
-                </div>
-            `;
-            
-            // CPE Card
-            document.getElementById('cpeCard').innerHTML = `
-                <div class="cpe-title">💰 Cost Per Episode (Known Costs)</div>
-                <div class="cpe-value">${formatCurrency(costPerEpisode)}</div>
-                <div class="cpe-breakdown">
-                    <div class="cpe-item">
-                        <div class="cpe-item-value">${formatCurrency(makeCost / episodesProduced)}</div>
-                        <div class="cpe-item-label">Make.com</div>
-                    </div>
-                    <div class="cpe-item">
-                        <div class="cpe-item-value">${formatCurrency(humeCost / episodesProduced)}</div>
-                        <div class="cpe-item-label">Hume TTS</div>
-                    </div>
-                    <div class="cpe-item">
-                        <div class="cpe-item-value" style="color: #ff9800;">+ LLM</div>
-                        <div class="cpe-item-label">Need billing data</div>
-                    </div>
-                </div>
-            `;
-            
-            // Service Cards
-            document.getElementById('serviceCards').innerHTML = `
-                <div class="llm-card">
-                    <div class="llm-header">
-                        <div class="llm-logo" style="background: linear-gradient(135deg, #9c27b0, #7b1fa2);">⚙️</div>
-                        <div class="llm-name">Make.com</div>
-                    </div>
-                    <div class="llm-stats">
-                        <div class="llm-stat"><div class="llm-stat-value">${formatNumber(monthOps)}</div><div class="llm-stat-label">Operations</div></div>
-                        <div class="llm-stat"><div class="llm-stat-value">${formatNumber(MAKE_PLAN.includedOpsMonth)}</div><div class="llm-stat-label">Included/Mo</div></div>
-                        <div class="llm-stat"><div class="llm-stat-value">${formatNumber(overageOps)}</div><div class="llm-stat-label">Overage</div></div>
-                        <div class="llm-stat"><div class="llm-stat-value">${formatCurrency(makeCost)}</div><div class="llm-stat-label">Monthly Cost</div></div>
-                    </div>
-                </div>
-                <div class="llm-card">
-                    <div class="llm-header">
-                        <div class="llm-logo hume">🎙️</div>
-                        <div class="llm-name">Hume.ai TTS</div>
-                    </div>
-                    <div class="llm-stats">
-                        <div class="llm-stat"><div class="llm-stat-value">${formatNumber(totalChars)}</div><div class="llm-stat-label">Characters</div></div>
-                        <div class="llm-stat"><div class="llm-stat-value">${episodesProduced}</div><div class="llm-stat-label">Episodes</div></div>
-                        <div class="llm-stat"><div class="llm-stat-value">$1,500</div><div class="llm-stat-label">Per 150M chars</div></div>
-                        <div class="llm-stat"><div class="llm-stat-value">${formatCurrency(humeCost)}</div><div class="llm-stat-label">Est. Cost</div></div>
-                    </div>
-                </div>
-                <div class="llm-card">
-                    <div class="llm-header">
-                        <div class="llm-logo claude">🧠</div>
-                        <div class="llm-name">Claude + Perplexity</div>
-                    </div>
-                    <div class="llm-stats">
-                        <div class="llm-stat"><div class="llm-stat-value">${claudeScenarios.length}</div><div class="llm-stat-label">Claude Scenarios</div></div>
-                        <div class="llm-stat"><div class="llm-stat-value">${perplexityScenarios.length}</div><div class="llm-stat-label">Perplexity Scenarios</div></div>
-                        <div class="llm-stat" style="grid-column: span 2;"><div class="llm-stat-value" style="color: #ff9800;">Need API Billing Data</div><div class="llm-stat-label">Add monthly spend to calculate</div></div>
-                    </div>
-                </div>
-            `;
-            
-            // Daily chart
-            const maxOps = Math.max(...usageData.map(d => d.operations));
-            document.getElementById('dailyChart').innerHTML = usageData.map(d => {
-                const height = (d.operations / maxOps) * 100;
-                const date = new Date(d.date).getDate();
-                return `<div class="chart-bar" style="height: ${height}%" data-value="Jan ${date}: ${d.operations.toLocaleString()}"></div>`;
-            }).join('');
-            
-            // Cost breakdown
-            document.getElementById('costBreakdown').innerHTML = `
-                <div class="cost-item">
-                    <div class="cost-label">
-                        <div class="cost-icon make">⚙️</div>
-                        <div><div class="cost-name">Make.com</div><div class="cost-detail">Teams plan + ${autoPurchases} overage blocks</div></div>
-                    </div>
-                    <div class="cost-value">
-                        <div class="cost-amount">${formatCurrency(makeCost)}</div>
-                        <div class="cost-pct">From API ✓</div>
-                    </div>
-                </div>
-                <div class="cost-item">
-                    <div class="cost-label">
-                        <div class="cost-icon tts">🎙️</div>
-                        <div><div class="cost-name">Hume.ai TTS</div><div class="cost-detail">~${formatNumber(totalChars)} chars @ $1500/150M</div></div>
-                    </div>
-                    <div class="cost-value">
-                        <div class="cost-amount">${formatCurrency(humeCost)}</div>
-                        <div class="cost-pct">Estimated</div>
-                    </div>
-                </div>
-                <div class="cost-item">
-                    <div class="cost-label">
-                        <div class="cost-icon claude">🧠</div>
-                        <div><div class="cost-name">Claude API</div><div class="cost-detail">${claudeScenarios.length} scenarios using Claude</div></div>
-                    </div>
-                    <div class="cost-value">
-                        <div class="cost-amount needs-data">Need $ amount</div>
-                        <div class="cost-pct">From Anthropic bill</div>
-                    </div>
-                </div>
-                <div class="cost-item">
-                    <div class="cost-label">
-                        <div class="cost-icon" style="background: rgba(32, 178, 170, 0.2);">🔍</div>
-                        <div><div class="cost-name">Perplexity API</div><div class="cost-detail">${perplexityScenarios.length} scenarios using Perplexity</div></div>
-                    </div>
-                    <div class="cost-value">
-                        <div class="cost-amount needs-data">Need $ amount</div>
-                        <div class="cost-pct">From Perplexity bill</div>
-                    </div>
-                </div>
-                <div class="cost-item" style="border-top: 2px solid rgba(255,255,255,0.1); margin-top: 10px; padding-top: 15px;">
-                    <div class="cost-label">
-                        <div class="cost-icon" style="background: rgba(233, 30, 99, 0.2);">💰</div>
-                        <div><div class="cost-name" style="font-weight: 700;">Known Total</div><div class="cost-detail">Make.com + Hume TTS</div></div>
-                    </div>
-                    <div class="cost-value">
-                        <div class="cost-amount" style="font-size: 1.3rem;">${formatCurrency(knownCost)}</div>
-                        <div class="cost-pct">+ LLM costs</div>
-                    </div>
-                </div>
-            `;
-            
-            // Top scenarios
-            const topScenarios = scenarios.filter(s => s.ops > 0).sort((a, b) => b.ops - a.ops).slice(0, 15);
-            document.getElementById('scenariosTable').innerHTML = topScenarios.map((s, i) => {
-                const tags = [];
-                if (s.packages?.includes('anthropic-claude')) tags.push('<span class="tag claude">Claude</span>');
-                if (s.packages?.includes('perplexity-ai')) tags.push('<span class="tag perplexity">Perplexity</span>');
-                return `<tr>
-                    <td>${i + 1}</td>
-                    <td class="scenario-name">${s.name}</td>
-                    <td>${formatNumber(s.ops || 0)}</td>
-                    <td>${((s.transfer || 0) / 1048576).toFixed(1)} MB</td>
-                    <td>${tags.join('') || '—'}</td>
-                </tr>`;
-            }).join('');
-        }
-        
-        render();
+        dailyData.forEach((val, i) => {
+            const bar = document.createElement('div');
+            bar.className = 'chart-bar';
+            bar.style.height = `${(val / maxVal) * 100}%`;
+            bar.setAttribute('data-value', `Day ${i + 1}: ${val.toLocaleString()}`);
+            dailyChart.appendChild(bar);
+        });
     </script>
 </body>
 </html>

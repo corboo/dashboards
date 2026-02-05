@@ -3,64 +3,175 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inception Point AI - Podcast Asset Tracker</title>
+    <title>Content Performance — IPAI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --bg-primary: #2d2d2d;
+            --bg-secondary: #3a3a3a;
+            --bg-tertiary: #454545;
+            --silver: #a8a8a8;
+            --silver-light: #c5c5c5;
+            --gold: #d4af37;
+            --gold-light: #e8c547;
+            --gold-bright: #f5d742;
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.7);
+            --text-tertiary: rgba(255, 255, 255, 0.5);
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --glass-hover: rgba(255, 255, 255, 0.08);
+            --success: #34c759;
+            --warning: #ff9f0a;
+            --error: #ff453a;
+        }
+        
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 50%, #16213e 100%);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
             min-height: 100vh;
-            color: #fff;
-            padding: 20px;
+            color: var(--text-primary);
+            -webkit-font-smoothing: antialiased;
         }
         
-        .container { max-width: 1800px; margin: 0 auto; }
+        .bg-gradient {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: 
+                radial-gradient(ellipse at 20% 20%, rgba(168, 168, 168, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(212, 175, 55, 0.06) 0%, transparent 50%),
+                var(--bg-primary);
+            z-index: -1;
+        }
         
-        header { text-align: center; padding: 20px 0 30px; }
-        .logo { font-size: 2.5rem; margin-bottom: 8px; }
+        .container { max-width: 1800px; margin: 0 auto; padding: 48px 24px; }
+        
+        /* Back Link */
+        .back-link {
+            position: fixed;
+            top: 24px;
+            left: 24px;
+            font-size: 0.8125rem;
+            color: var(--text-tertiary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: color 0.2s;
+            z-index: 100;
+        }
+        
+        .back-link:hover { color: var(--gold); text-decoration: none; }
+        
+        /* Header */
+        header { text-align: center; margin-bottom: 40px; }
+        
+        .logo {
+            width: 72px;
+            height: 72px;
+            margin-bottom: 16px;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        
         h1 {
-            font-size: 2rem;
+            font-size: 2.25rem;
             font-weight: 700;
-            margin-bottom: 5px;
-            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            letter-spacing: -0.03em;
+            margin-bottom: 8px;
+            background: linear-gradient(180deg, var(--silver-light) 0%, var(--gold) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            background-clip: text;
         }
-        .subtitle { color: #8892b0; font-size: 1rem; }
-        .last-updated { color: #64ffda; font-size: 0.85rem; margin-top: 8px; }
         
+        .subtitle { font-size: 1rem; color: var(--text-secondary); margin-bottom: 8px; }
+        .updated { font-size: 0.8125rem; color: var(--gold); }
+        
+        /* Stats Bar */
         .stats-bar {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
             gap: 12px;
-            margin-bottom: 25px;
+            margin-bottom: 32px;
         }
         
         .stat-box {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 10px;
-            padding: 15px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 12px;
+            padding: 16px;
             text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--glass-border);
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
         }
         
-        .stat-box .number {
+        .stat-box:hover {
+            border-color: rgba(212, 175, 55, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        .stat-box.highlight {
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(168, 168, 168, 0.05) 100%);
+            border-color: rgba(212, 175, 55, 0.25);
+        }
+        
+        .stat-value {
             font-size: 1.5rem;
             font-weight: 700;
-            color: #64ffda;
+            background: linear-gradient(180deg, var(--silver) 0%, var(--gold-light) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.02em;
         }
         
-        .stat-box .label {
-            color: #8892b0;
-            font-size: 0.75rem;
+        .stat-label {
+            font-size: 0.625rem;
+            color: var(--text-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
             margin-top: 4px;
         }
         
+        /* Card */
+        .card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid var(--glass-border);
+            margin-bottom: 20px;
+            overflow-x: auto;
+        }
+        
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--glass-border);
+        }
+        
+        .card-title-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .card-icon { font-size: 1.25rem; }
+        .card-title { font-size: 1rem; font-weight: 600; letter-spacing: -0.01em; }
+        
+        /* Controls */
         .controls {
             display: flex;
-            gap: 15px;
+            gap: 16px;
             margin-bottom: 20px;
             flex-wrap: wrap;
             align-items: center;
@@ -73,97 +184,78 @@
         }
         
         .filter-group label {
-            color: #8892b0;
-            font-size: 0.85rem;
+            color: var(--text-tertiary);
+            font-size: 0.8125rem;
         }
         
         select, input[type="text"] {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            color: #fff;
-            padding: 8px 12px;
-            border-radius: 6px;
-            font-size: 0.9rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            color: var(--text-primary);
+            padding: 10px 14px;
+            border-radius: 10px;
+            font-size: 0.875rem;
+            font-family: inherit;
+            transition: all 0.2s;
         }
         
         select:focus, input:focus {
             outline: none;
-            border-color: #64ffda;
+            border-color: var(--gold);
+            background: rgba(255, 255, 255, 0.08);
         }
-        
-        .card {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 12px;
-            padding: 20px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            margin-bottom: 20px;
-            overflow-x: auto;
-        }
-        
-        .card-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 12px;
-            margin-bottom: 15px;
-            padding-bottom: 12px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        
-        .card-title-group {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .card-icon { font-size: 1.3rem; }
-        .card-title { font-size: 1rem; font-weight: 600; color: #fff; }
         
         .export-btn {
-            background: rgba(100, 255, 218, 0.2);
-            border: 1px solid #64ffda;
-            color: #64ffda;
-            padding: 6px 12px;
-            border-radius: 6px;
-            font-size: 0.8rem;
+            background: rgba(212, 175, 55, 0.15);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            color: var(--gold);
+            padding: 10px 16px;
+            border-radius: 10px;
+            font-size: 0.8125rem;
+            font-weight: 500;
             cursor: pointer;
+            transition: all 0.2s;
         }
         
-        .export-btn:hover { background: rgba(100, 255, 218, 0.3); }
+        .export-btn:hover {
+            background: rgba(212, 175, 55, 0.25);
+            border-color: var(--gold);
+        }
         
-        table { width: 100%; border-collapse: collapse; min-width: 1200px; }
+        /* Table */
+        table { width: 100%; border-collapse: collapse; min-width: 1100px; }
         
         th {
             text-align: left;
-            color: #8892b0;
-            font-size: 0.7rem;
+            font-size: 0.625rem;
+            font-weight: 600;
+            color: var(--text-tertiary);
             text-transform: uppercase;
-            letter-spacing: 0.5px;
-            padding: 10px 8px;
-            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+            letter-spacing: 0.05em;
+            padding: 12px 10px;
+            border-bottom: 1px solid var(--glass-border);
             cursor: pointer;
             white-space: nowrap;
             position: sticky;
             top: 0;
-            background: #1a1a2e;
+            background: var(--bg-primary);
+            transition: color 0.2s;
         }
         
-        th:hover { color: #64ffda; }
-        
-        th.sorted-asc::after { content: ' ↑'; color: #64ffda; }
-        th.sorted-desc::after { content: ' ↓'; color: #64ffda; }
+        th:hover { color: var(--gold); }
+        th.sorted-asc::after { content: ' ↑'; color: var(--gold); }
+        th.sorted-desc::after { content: ' ↓'; color: var(--gold); }
         
         td {
-            padding: 10px 8px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-            font-size: 0.85rem;
+            padding: 12px 10px;
+            font-size: 0.8125rem;
+            border-bottom: 1px solid rgba(255,255,255,0.03);
         }
         
-        tr:hover { background: rgba(255, 255, 255, 0.03); }
+        tr:hover { background: rgba(255,255,255,0.02); }
         
         .title-cell {
-            max-width: 250px;
+            max-width: 220px;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
@@ -172,28 +264,31 @@
         .number-cell {
             text-align: right;
             font-family: 'SF Mono', Monaco, monospace;
+            font-size: 0.8125rem;
         }
         
-        .number-cell.highlight { color: #64ffda; font-weight: 600; }
+        .number-cell.highlight { color: var(--gold); font-weight: 600; }
+        
+        /* Tags */
+        .tag {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 0.6875rem;
+            font-weight: 500;
+        }
         
         .category-tag {
-            display: inline-block;
-            padding: 3px 8px;
-            background: rgba(102, 126, 234, 0.2);
-            border-radius: 4px;
-            font-size: 0.75rem;
+            background: rgba(102, 126, 234, 0.15);
             color: #a8b2d1;
         }
         
         .network-tag {
-            display: inline-block;
-            padding: 3px 8px;
-            background: rgba(100, 255, 218, 0.15);
-            border-radius: 4px;
-            font-size: 0.75rem;
-            color: #64ffda;
+            background: rgba(212, 175, 55, 0.15);
+            color: var(--gold);
         }
         
+        /* Progress Bars */
         .pct-bar {
             display: flex;
             align-items: center;
@@ -201,80 +296,99 @@
         }
         
         .pct-bar-fill {
-            width: 60px;
+            width: 50px;
             height: 6px;
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.08);
             border-radius: 3px;
             overflow: hidden;
         }
         
         .pct-bar-inner {
             height: 100%;
-            background: linear-gradient(90deg, #667eea, #764ba2);
             border-radius: 3px;
         }
         
-        .pct-bar-inner.us { background: linear-gradient(90deg, #3b82f6, #1d4ed8); }
-        .pct-bar-inner.apple { background: linear-gradient(90deg, #64ffda, #06b6d4); }
-        
-        .date-cell {
-            color: #8892b0;
-            font-size: 0.8rem;
-        }
+        .pct-bar-inner.us { background: linear-gradient(90deg, var(--silver), var(--silver-light)); }
+        .pct-bar-inner.apple { background: linear-gradient(90deg, var(--gold), var(--gold-bright)); }
         
         .manual-input {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px dashed rgba(255, 255, 255, 0.2);
-            color: #8892b0;
-            padding: 4px 8px;
-            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px dashed rgba(255, 255, 255, 0.15);
+            color: var(--text-tertiary);
+            padding: 6px 10px;
+            border-radius: 6px;
             width: 70px;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             text-align: right;
+            font-family: inherit;
         }
         
         .manual-input:focus {
-            border-color: #64ffda;
-            color: #fff;
+            border-color: var(--gold);
+            color: var(--text-primary);
+            outline: none;
         }
         
+        /* Grid */
         .grid-2 {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
             gap: 20px;
         }
         
-        .category-section {
-            margin-bottom: 30px;
+        /* Status Indicators */
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 8px;
         }
         
-        .category-header {
+        .status-dot.green { background: var(--success); box-shadow: 0 0 8px rgba(52, 199, 89, 0.5); }
+        
+        .status-row {
             display: flex;
             align-items: center;
-            gap: 10px;
-            margin-bottom: 15px;
-            padding: 10px 15px;
-            background: rgba(102, 126, 234, 0.1);
+            gap: 8px;
+            padding: 12px 16px;
+            background: rgba(255, 255, 255, 0.02);
             border-radius: 8px;
-            border-left: 4px solid #667eea;
+            margin-bottom: 8px;
         }
         
-        .category-name {
-            font-size: 1.1rem;
-            font-weight: 600;
+        .status-label { font-size: 0.8125rem; color: var(--text-secondary); }
+        
+        /* Network Tags */
+        .network-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 12px;
         }
         
-        .category-count {
-            color: #8892b0;
-            font-size: 0.85rem;
+        .network-tag-item {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            border: 1px solid var(--glass-border);
+            background: rgba(255, 255, 255, 0.03);
+            color: var(--text-tertiary);
         }
         
+        .network-tag-item.active {
+            background: rgba(212, 175, 55, 0.15);
+            border-color: var(--gold);
+            color: var(--gold);
+        }
+        
+        /* Recommendations */
         .recommendation {
-            background: rgba(102, 126, 234, 0.1);
-            border: 1px solid rgba(102, 126, 234, 0.3);
-            border-radius: 10px;
-            padding: 12px;
-            margin-bottom: 10px;
+            background: rgba(102, 126, 234, 0.08);
+            border: 1px solid rgba(102, 126, 234, 0.2);
+            border-radius: 12px;
+            padding: 14px;
+            margin-bottom: 12px;
         }
         
         .rec-header {
@@ -285,96 +399,137 @@
         }
         
         .rec-type {
-            font-size: 0.65rem;
+            font-size: 0.625rem;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            padding: 2px 6px;
-            border-radius: 3px;
-            background: rgba(100, 255, 218, 0.2);
-            color: #64ffda;
+            padding: 3px 8px;
+            border-radius: 4px;
+            background: rgba(212, 175, 55, 0.2);
+            color: var(--gold);
         }
         
-        .rec-title { font-weight: 600; font-size: 0.9rem; }
-        .rec-desc { font-size: 0.8rem; color: #8892b0; line-height: 1.4; }
+        .rec-title { font-weight: 600; font-size: 0.875rem; }
+        .rec-desc { font-size: 0.8125rem; color: var(--text-secondary); line-height: 1.5; }
         
-        .show-titles { list-style: none; }
+        /* Revenue Section */
+        .revenue-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 12px;
+            margin-bottom: 20px;
+        }
         
-        .show-titles li {
-            padding: 8px 10px;
+        .revenue-card {
+            padding: 16px;
+            border-radius: 12px;
+            text-align: center;
+        }
+        
+        .revenue-card.primary {
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.15) 0%, rgba(168, 168, 168, 0.05) 100%);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+        }
+        
+        .revenue-card.secondary {
             background: rgba(255, 255, 255, 0.03);
-            border-radius: 6px;
-            margin-bottom: 6px;
-            font-size: 0.85rem;
-            border-left: 3px solid #667eea;
+            border: 1px solid var(--glass-border);
         }
         
+        .revenue-label { font-size: 0.6875rem; color: var(--text-tertiary); margin-bottom: 6px; }
+        .revenue-value { font-size: 1.5rem; font-weight: 700; color: var(--gold); }
+        .revenue-sub { font-size: 0.6875rem; color: var(--text-tertiary); margin-top: 4px; }
+        
+        /* Show Ideas */
+        .show-ideas { list-style: none; }
+        
+        .show-ideas li {
+            padding: 10px 14px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 8px;
+            margin-bottom: 8px;
+            font-size: 0.8125rem;
+            border-left: 3px solid var(--gold);
+        }
+        
+        .show-ideas li strong { color: var(--gold); }
+        
+        /* Footer */
         footer {
             text-align: center;
-            padding: 30px 20px;
-            color: #8892b0;
-            font-size: 0.8rem;
+            margin-top: 48px;
+            padding: 24px;
+            border-top: 1px solid var(--glass-border);
         }
+        
+        footer p { color: var(--text-tertiary); font-size: 0.8125rem; }
+        footer a { color: var(--gold); text-decoration: none; }
         
         .refresh-note {
             display: inline-block;
             padding: 6px 14px;
-            background: rgba(100, 255, 218, 0.1);
-            border-radius: 15px;
-            color: #64ffda;
-            margin-top: 8px;
+            background: rgba(212, 175, 55, 0.1);
+            border-radius: 20px;
+            color: var(--gold);
+            margin-top: 10px;
             font-size: 0.75rem;
         }
         
         @media (max-width: 768px) {
+            .back-link { position: static; margin-bottom: 24px; }
+            .container { padding: 32px 16px; }
+            h1 { font-size: 1.75rem; }
             .grid-2 { grid-template-columns: 1fr; }
-            h1 { font-size: 1.5rem; }
-            .stats-bar { grid-template-columns: repeat(3, 1fr); }
+            .stats-bar { grid-template-columns: repeat(4, 1fr); }
             .controls { flex-direction: column; align-items: stretch; }
         }
     </style>
 </head>
 <body>
+    <div class="bg-gradient"></div>
+    
+    <a href="index.html" class="back-link">← Dashboard Hub</a>
+    
     <div class="container">
         <header>
-            <div class="logo">🚀</div>
+            <img src="ipai-logo.jpg" alt="IPAI" class="logo">
             <h1>Inception Point AI</h1>
-            <p class="subtitle">Podcast Asset Tracker</p>
-            <p class="last-updated">Last Updated: February 3, 2026 at 8:25 AM PST</p>
+            <p class="subtitle">Content Performance Dashboard</p>
+            <p class="updated">Last Updated: February 3, 2026 at 8:25 AM PST</p>
         </header>
         
         <!-- Key Metrics Bar -->
         <div class="stats-bar">
             <div class="stat-box">
-                <div class="number">2,889</div>
-                <div class="label">Total Shows</div>
+                <div class="stat-value">2,889</div>
+                <div class="stat-label">Total Shows</div>
             </div>
             <div class="stat-box">
-                <div class="number">246,708</div>
-                <div class="label">Total Episodes</div>
+                <div class="stat-value">246,708</div>
+                <div class="stat-label">Total Episodes</div>
             </div>
             <div class="stat-box">
-                <div class="number">6</div>
-                <div class="label">Networks</div>
+                <div class="stat-value">6</div>
+                <div class="stat-label">Networks</div>
             </div>
             <div class="stat-box">
-                <div class="number">~340</div>
-                <div class="label">Eps/Day Avg</div>
+                <div class="stat-value">~340</div>
+                <div class="stat-label">Eps/Day Avg</div>
             </div>
             <div class="stat-box">
-                <div class="number">50,792</div>
-                <div class="label">Top Downloads</div>
+                <div class="stat-value">50,792</div>
+                <div class="stat-label">Top Downloads</div>
             </div>
             <div class="stat-box">
-                <div class="number">97%</div>
-                <div class="label">Best Apple%</div>
+                <div class="stat-value">97%</div>
+                <div class="stat-label">Best Apple%</div>
             </div>
-            <div class="stat-box" style="background: rgba(100, 255, 218, 0.1); border-color: #64ffda;">
-                <div class="number" id="totalRevenue">$4,111.54</div>
-                <div class="label">Est. Revenue (MTD)</div>
+            <div class="stat-box highlight">
+                <div class="stat-value" id="totalRevenue">$4,111.54</div>
+                <div class="stat-label">Est. Revenue (MTD)</div>
             </div>
             <div class="stat-box">
-                <div class="number" id="revenuePerK">$5.76</div>
-                <div class="label">Rev/1K Downloads</div>
+                <div class="stat-value" id="revenuePerK">$5.76</div>
+                <div class="stat-label">Rev/1K Downloads</div>
             </div>
         </div>
         
@@ -460,7 +615,7 @@
                             </div>
                         </td>
                         <td><input type="text" class="manual-input" placeholder="$0.00"></td>
-                        <td class="date-cell">Jan 30</td>
+                        <td style="color: var(--text-tertiary);">Jan 30</td>
                         <td><input type="text" class="manual-input" placeholder="0"></td>
                         <td><span class="network-tag">QP-1</span></td>
                     </tr>
@@ -482,7 +637,7 @@
                             </div>
                         </td>
                         <td><input type="text" class="manual-input" placeholder="$0.00"></td>
-                        <td class="date-cell">Jan 29</td>
+                        <td style="color: var(--text-tertiary);">Jan 29</td>
                         <td><input type="text" class="manual-input" placeholder="0"></td>
                         <td><span class="network-tag">QP-1</span></td>
                     </tr>
@@ -504,7 +659,7 @@
                             </div>
                         </td>
                         <td><input type="text" class="manual-input" placeholder="$0.00"></td>
-                        <td class="date-cell">Jan 28</td>
+                        <td style="color: var(--text-tertiary);">Jan 28</td>
                         <td><input type="text" class="manual-input" placeholder="0"></td>
                         <td><span class="network-tag">QP-1</span></td>
                     </tr>
@@ -526,7 +681,7 @@
                             </div>
                         </td>
                         <td><input type="text" class="manual-input" placeholder="$0.00"></td>
-                        <td class="date-cell">Nov 2023</td>
+                        <td style="color: var(--text-tertiary);">Nov 2023</td>
                         <td><input type="text" class="manual-input" placeholder="0"></td>
                         <td><span class="network-tag">QP-1</span></td>
                     </tr>
@@ -548,7 +703,7 @@
                             </div>
                         </td>
                         <td><input type="text" class="manual-input" placeholder="$0.00"></td>
-                        <td class="date-cell">Sep 2023</td>
+                        <td style="color: var(--text-tertiary);">Sep 2023</td>
                         <td><input type="text" class="manual-input" placeholder="0"></td>
                         <td><span class="network-tag">QP-1</span></td>
                     </tr>
@@ -570,7 +725,7 @@
                             </div>
                         </td>
                         <td><input type="text" class="manual-input" placeholder="$0.00"></td>
-                        <td class="date-cell">Jan 24</td>
+                        <td style="color: var(--text-tertiary);">Jan 24</td>
                         <td><input type="text" class="manual-input" placeholder="0"></td>
                         <td><span class="network-tag">QP-1</span></td>
                     </tr>
@@ -592,7 +747,7 @@
                             </div>
                         </td>
                         <td><input type="text" class="manual-input" placeholder="$0.00"></td>
-                        <td class="date-cell">May 2024</td>
+                        <td style="color: var(--text-tertiary);">May 2024</td>
                         <td><input type="text" class="manual-input" placeholder="0"></td>
                         <td><span class="network-tag">QP-1</span></td>
                     </tr>
@@ -614,7 +769,7 @@
                             </div>
                         </td>
                         <td><input type="text" class="manual-input" placeholder="$0.00"></td>
-                        <td class="date-cell">Jan 2024</td>
+                        <td style="color: var(--text-tertiary);">Jan 2024</td>
                         <td><input type="text" class="manual-input" placeholder="0"></td>
                         <td><span class="network-tag">QP-1</span></td>
                     </tr>
@@ -636,7 +791,7 @@
                             </div>
                         </td>
                         <td><input type="text" class="manual-input" placeholder="$0.00"></td>
-                        <td class="date-cell">Jan 2024</td>
+                        <td style="color: var(--text-tertiary);">Jan 2024</td>
                         <td><input type="text" class="manual-input" placeholder="0"></td>
                         <td><span class="network-tag">QP-1</span></td>
                     </tr>
@@ -658,7 +813,7 @@
                             </div>
                         </td>
                         <td><input type="text" class="manual-input" placeholder="$0.00"></td>
-                        <td class="date-cell">Sep 2023</td>
+                        <td style="color: var(--text-tertiary);">Sep 2023</td>
                         <td><input type="text" class="manual-input" placeholder="0"></td>
                         <td><span class="network-tag">QP-1</span></td>
                     </tr>
@@ -680,7 +835,7 @@
                             </div>
                         </td>
                         <td><input type="text" class="manual-input" placeholder="$0.00"></td>
-                        <td class="date-cell">Jan 29</td>
+                        <td style="color: var(--text-tertiary);">Jan 29</td>
                         <td><input type="text" class="manual-input" placeholder="0"></td>
                         <td><span class="network-tag">QP-Daily</span></td>
                     </tr>
@@ -702,7 +857,7 @@
                             </div>
                         </td>
                         <td><input type="text" class="manual-input" placeholder="$0.00"></td>
-                        <td class="date-cell">Jan 27</td>
+                        <td style="color: var(--text-tertiary);">Jan 27</td>
                         <td><input type="text" class="manual-input" placeholder="0"></td>
                         <td><span class="network-tag">QP-1</span></td>
                     </tr>
@@ -720,23 +875,23 @@
                         <span class="card-title">Networks Status</span>
                     </div>
                 </div>
-                <p style="color: #8892b0; font-size: 0.85rem; margin-bottom: 12px;">Your podcast empire spans 20+ networks:</p>
-                <div style="display: flex; flex-wrap: wrap; gap: 8px;">
-                    <span style="padding: 5px 10px; background: rgba(100, 255, 218, 0.2); border: 1px solid #64ffda; border-radius: 15px; font-size: 0.8rem; color: #64ffda;">✓ QP-1</span>
-                    <span style="padding: 5px 10px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255,255,255,0.2); border-radius: 15px; font-size: 0.8rem; color: #8892b0;">QP-2</span>
-                    <span style="padding: 5px 10px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255,255,255,0.2); border-radius: 15px; font-size: 0.8rem; color: #8892b0;">QP-3</span>
-                    <span style="padding: 5px 10px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255,255,255,0.2); border-radius: 15px; font-size: 0.8rem; color: #8892b0;">QP-4</span>
-                    <span style="padding: 5px 10px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255,255,255,0.2); border-radius: 15px; font-size: 0.8rem; color: #8892b0;">QP-5</span>
-                    <span style="padding: 5px 10px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255,255,255,0.2); border-radius: 15px; font-size: 0.8rem; color: #8892b0;">QP-Daily</span>
-                    <span style="padding: 5px 10px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255,255,255,0.2); border-radius: 15px; font-size: 0.8rem; color: #8892b0;">QP-Blended</span>
-                    <span style="padding: 5px 10px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255,255,255,0.2); border-radius: 15px; font-size: 0.8rem; color: #8892b0;">Katie Brown</span>
-                    <span style="padding: 5px 10px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255,255,255,0.2); border-radius: 15px; font-size: 0.8rem; color: #8892b0;">Katie Brown 2</span>
-                    <span style="padding: 5px 10px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255,255,255,0.2); border-radius: 15px; font-size: 0.8rem; color: #8892b0;">David McHealy</span>
-                    <span style="padding: 5px 10px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255,255,255,0.2); border-radius: 15px; font-size: 0.8rem; color: #8892b0;">QP-JNP</span>
-                    <span style="padding: 5px 10px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255,255,255,0.2); border-radius: 15px; font-size: 0.8rem; color: #8892b0;">QP-JP</span>
-                    <span style="padding: 5px 10px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255,255,255,0.2); border-radius: 15px; font-size: 0.8rem; color: #8892b0;">QP-JT2</span>
+                <p style="color: var(--text-tertiary); font-size: 0.8125rem; margin-bottom: 16px;">Your podcast empire spans 20+ networks:</p>
+                <div class="network-tags">
+                    <span class="network-tag-item active">✓ QP-1</span>
+                    <span class="network-tag-item">QP-2</span>
+                    <span class="network-tag-item">QP-3</span>
+                    <span class="network-tag-item">QP-4</span>
+                    <span class="network-tag-item">QP-5</span>
+                    <span class="network-tag-item">QP-Daily</span>
+                    <span class="network-tag-item">QP-Blended</span>
+                    <span class="network-tag-item">Katie Brown</span>
+                    <span class="network-tag-item">Katie Brown 2</span>
+                    <span class="network-tag-item">David McHealy</span>
+                    <span class="network-tag-item">QP-JNP</span>
+                    <span class="network-tag-item">QP-JP</span>
+                    <span class="network-tag-item">QP-JT2</span>
                 </div>
-                <p style="color: #64ffda; font-size: 0.75rem; margin-top: 12px;">✅ Tracking 6 networks: QP-1, QP-Daily, QP-3, QP-5, QP-JT2, Katie Brown 2</p>
+                <p style="color: var(--gold); font-size: 0.75rem; margin-top: 12px;">✅ Tracking 6 networks: QP-1, QP-Daily, QP-3, QP-5, QP-JT2, Katie Brown 2</p>
             </div>
             
             <!-- Health Status -->
@@ -747,109 +902,25 @@
                         <span class="card-title">System Health</span>
                     </div>
                 </div>
-                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 15px;">
-                    <div style="display: flex; align-items: center; gap: 8px; padding: 10px; background: rgba(255,255,255,0.03); border-radius: 6px;">
-                        <span style="width: 10px; height: 10px; border-radius: 50%; background: #64ffda; box-shadow: 0 0 8px #64ffda;"></span>
-                        <span style="font-size: 0.85rem;">Spreaker API</span>
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 8px; padding: 10px; background: rgba(255,255,255,0.03); border-radius: 6px;">
-                        <span style="width: 10px; height: 10px; border-radius: 50%; background: #64ffda; box-shadow: 0 0 8px #64ffda;"></span>
-                        <span style="font-size: 0.85rem;">Make.com Pipeline</span>
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 8px; padding: 10px; background: rgba(255,255,255,0.03); border-radius: 6px;">
-                        <span style="width: 10px; height: 10px; border-radius: 50%; background: #64ffda; box-shadow: 0 0 8px #64ffda;"></span>
-                        <span style="font-size: 0.85rem;">Publishing Active</span>
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 8px; padding: 10px; background: rgba(255,255,255,0.03); border-radius: 6px;">
-                        <span style="width: 10px; height: 10px; border-radius: 50%; background: #64ffda; box-shadow: 0 0 8px #64ffda;"></span>
-                        <span style="font-size: 0.85rem;">Spreaker Prime</span>
-                    </div>
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 16px;">
+                    <div class="status-row"><span class="status-dot green"></span><span class="status-label">Spreaker API</span></div>
+                    <div class="status-row"><span class="status-dot green"></span><span class="status-label">Make.com Pipeline</span></div>
+                    <div class="status-row"><span class="status-dot green"></span><span class="status-label">Publishing Active</span></div>
+                    <div class="status-row"><span class="status-dot green"></span><span class="status-label">Spreaker Prime</span></div>
                 </div>
-                <div style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 12px;">
-                    <div style="display: flex; justify-content: space-between; padding: 6px 0; font-size: 0.85rem;">
-                        <span style="color: #8892b0;">Last Episode</span>
-                        <span style="color: #64ffda;">Today 8:00 AM</span>
+                <div style="border-top: 1px solid var(--glass-border); padding-top: 12px;">
+                    <div style="display: flex; justify-content: space-between; padding: 8px 0; font-size: 0.8125rem;">
+                        <span style="color: var(--text-tertiary);">Last Episode</span>
+                        <span style="color: var(--gold);">Today 8:00 AM</span>
                     </div>
-                    <div style="display: flex; justify-content: space-between; padding: 6px 0; font-size: 0.85rem;">
-                        <span style="color: #8892b0;">Plan Valid Until</span>
+                    <div style="display: flex; justify-content: space-between; padding: 8px 0; font-size: 0.8125rem;">
+                        <span style="color: var(--text-tertiary);">Plan Valid Until</span>
                         <span>Feb 16, 2026</span>
                     </div>
-                    <div style="display: flex; justify-content: space-between; padding: 6px 0; font-size: 0.85rem;">
-                        <span style="color: #8892b0;">Daily Avg</span>
+                    <div style="display: flex; justify-content: space-between; padding: 8px 0; font-size: 0.8125rem;">
+                        <span style="color: var(--text-tertiary);">Daily Avg</span>
                         <span>~340 episodes</span>
                     </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Revenue Section -->
-        <div class="card" id="revenueCard">
-            <div class="card-header">
-                <div class="card-title-group">
-                    <span class="card-icon">💰</span>
-                    <span class="card-title">Top Earners</span>
-                </div>
-                <div style="display: flex; gap: 10px;">
-                    <label class="export-btn" style="cursor: pointer;">
-                        📤 Import CSV
-                        <input type="file" id="csvUpload" accept=".csv" style="display: none;" onchange="handleCSVUpload(event)">
-                    </label>
-                    <button class="export-btn" onclick="exportRevenueCSV()">📥 Export</button>
-                </div>
-            </div>
-            
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px;">
-                <div style="background: rgba(100, 255, 218, 0.1); border: 1px solid rgba(100, 255, 218, 0.3); border-radius: 10px; padding: 15px;">
-                    <div style="font-size: 0.75rem; color: #8892b0; margin-bottom: 5px;">This Month</div>
-                    <div style="font-size: 1.8rem; font-weight: 700; color: #64ffda;" id="monthRevenue">$4,111.54</div>
-                    <div style="font-size: 0.7rem; color: #8892b0; margin-top: 3px;">from <span id="earningShowCount">0</span> shows</div>
-                </div>
-                <div style="background: rgba(102, 126, 234, 0.1); border: 1px solid rgba(102, 126, 234, 0.3); border-radius: 10px; padding: 15px;">
-                    <div style="font-size: 0.75rem; color: #8892b0; margin-bottom: 5px;">Top Earner</div>
-                    <div style="font-size: 1.1rem; font-weight: 600; color: #fff;" id="topEarnerName">Katie Brown</div>
-                    <div style="font-size: 1.3rem; font-weight: 700; color: #667eea;" id="topEarnerAmount">$869.57</div>
-                </div>
-                <div style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 10px; padding: 15px;">
-                    <div style="font-size: 0.75rem; color: #8892b0; margin-bottom: 5px;">Avg per Show</div>
-                    <div style="font-size: 1.5rem; font-weight: 700; color: #fff;" id="avgRevenue">$228.42</div>
-                </div>
-                <div style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 10px; padding: 15px;">
-                    <div style="font-size: 0.75rem; color: #8892b0; margin-bottom: 5px;">Efficiency ($/1K DL)</div>
-                    <div style="font-size: 1.5rem; font-weight: 700; color: #fff;" id="efficiencyRate">$0.00</div>
-                </div>
-            </div>
-            
-            <div style="max-height: 350px; overflow-y: auto;">
-                <table id="revenueTable" style="min-width: auto;">
-                    <thead>
-                        <tr>
-                            <th style="width: 40px;">#</th>
-                            <th onclick="sortRevenueTable(1)">Show Title</th>
-                            <th onclick="sortRevenueTable(2)" class="number-cell" style="width: 100px;">Downloads</th>
-                            <th onclick="sortRevenueTable(3)" class="number-cell" style="width: 100px;">Revenue</th>
-                            <th onclick="sortRevenueTable(4)" class="number-cell" style="width: 80px;">$/1K</th>
-                            <th style="width: 80px;">Trend</th>
-                        </tr>
-                    </thead>
-                    <tbody id="revenueTableBody">
-                        <tr>
-                            <td colspan="6" style="text-align: center; color: #8892b0; padding: 40px;">
-                                <div style="font-size: 2rem; margin-bottom: 10px;">📊</div>
-                                <div>No revenue data yet</div>
-                                <div style="font-size: 0.8rem; margin-top: 8px;">Import a CSV from Spreaker or enter values manually in the main table</div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            
-            <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.1);">
-                <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-                    <span style="color: #8892b0; font-size: 0.8rem;">Quick Add:</span>
-                    <input type="text" id="quickAddTitle" placeholder="Show title" style="flex: 1; min-width: 150px;">
-                    <input type="number" id="quickAddRevenue" placeholder="Revenue $" style="width: 100px;">
-                    <input type="number" id="quickAddDownloads" placeholder="Downloads" style="width: 100px;">
-                    <button class="export-btn" onclick="quickAddRevenue()" style="background: rgba(100, 255, 218, 0.3);">+ Add</button>
                 </div>
             </div>
         </div>
@@ -908,7 +979,7 @@
                         <span class="card-title">New Show Ideas</span>
                     </div>
                 </div>
-                <ul class="show-titles">
+                <ul class="show-ideas">
                     <li><strong>Super Bowl Countdown</strong> — Daily game buildup</li>
                     <li><strong>Black History Heroes</strong> — Feb launch timing</li>
                     <li><strong>AI Money Moves</strong> — Capitalize on AI hustle trend</li>
@@ -921,7 +992,7 @@
         </div>
         
         <footer>
-            <p><strong>Inception Point AI</strong> ⚡ Podcast Asset Tracker</p>
+            <p><strong style="color: var(--text-primary);">Inception Point AI</strong> ⚡ Content Performance Dashboard</p>
             <div class="refresh-note">🔄 Auto-refreshes every 6 hours</div>
             <p style="margin-top: 10px; font-size: 0.75rem;">Data: QP-1 Network | Revenue syncs from manual entry or CSV import | Stored locally</p>
         </footer>
@@ -932,7 +1003,6 @@
             const table = document.getElementById("dataTable");
             let switching = true, shouldSwitch, dir = "asc", switchcount = 0;
             
-            // Remove existing sort indicators
             const headers = table.querySelectorAll("th");
             headers.forEach(h => h.classList.remove("sorted-asc", "sorted-desc"));
             
@@ -948,7 +1018,6 @@
                     let xVal = x.textContent.replace(/[,$%]/g, '').trim();
                     let yVal = y.textContent.replace(/[,$%]/g, '').trim();
                     
-                    // Try to parse as numbers
                     const xNum = parseFloat(xVal);
                     const yNum = parseFloat(yVal);
                     
@@ -997,295 +1066,27 @@
             }
         }
         
-        // Revenue Data Store
-        let revenueData = JSON.parse(localStorage.getItem('spreaker_revenue') || '[]');
-// Pre-populated from Spreaker stats (Feb 2, 2026)
-const initialRevenueData = [
-    {title: "Katie Brown", revenue: 869.57, downloads: 357070},
-    {title: "QP-2", revenue: 660.86, downloads: 276117},
-    {title: "QP-1", revenue: 632.98, downloads: 260719},
-    {title: "QP - Daily", revenue: 600.10, downloads: 242642},
-    {title: "QP-3", revenue: 378.99, downloads: 159123},
-    {title: "QP - Blended", revenue: 345.77, downloads: 139347},
-    {title: "Katie Brown 2", revenue: 206.98, downloads: 82151},
-    {title: "QP-4", revenue: 159.22, downloads: 65889},
-    {title: "QP-JT2", revenue: 108.18, downloads: 45225},
-    {title: "QP-5", revenue: 65.27, downloads: 27426},
-    {title: "David McHealy", revenue: 42.15, downloads: 14890},
-    {title: "QP-JP", revenue: 15.97, downloads: 6653},
-    {title: "Jason St Onge", revenue: 15.53, downloads: 5725},
-    {title: "John Peed", revenue: 2.91, downloads: 1146},
-    {title: "QP-JNP", revenue: 2.79, downloads: 1050},
-    {title: "Jeanine Wright", revenue: 2.73, downloads: 1104},
-    {title: "JNP-2", revenue: 1.27, downloads: 517},
-    {title: "Approov Mobile Security", revenue: 0.27, downloads: 101}
-];
-if (revenueData.length === 0) { revenueData = initialRevenueData; }
-        
-        function updateRevenueDisplay() {
-            const tbody = document.getElementById('revenueTableBody');
-            
-            if (revenueData.length === 0) {
-                tbody.innerHTML = `
-                    <tr>
-                        <td colspan="6" style="text-align: center; color: #8892b0; padding: 40px;">
-                            <div style="font-size: 2rem; margin-bottom: 10px;">📊</div>
-                            <div>No revenue data yet</div>
-                            <div style="font-size: 0.8rem; margin-top: 8px;">Import a CSV from Spreaker or enter values manually</div>
-                        </td>
-                    </tr>`;
-                document.getElementById('totalRevenue').textContent = '$0.00';
-                document.getElementById('revenuePerK').textContent = '$0.00';
-                document.getElementById('monthRevenue').textContent = '$0.00';
-                document.getElementById('earningShowCount').textContent = '0';
-                document.getElementById('topEarnerName').textContent = '—';
-                document.getElementById('topEarnerAmount').textContent = '$0.00';
-                document.getElementById('avgRevenue').textContent = '$0.00';
-                document.getElementById('efficiencyRate').textContent = '$0.00';
-                return;
-            }
-            
-            // Sort by revenue descending
-            const sorted = [...revenueData].sort((a, b) => b.revenue - a.revenue);
-            const totalRev = sorted.reduce((sum, r) => sum + r.revenue, 0);
-            const totalDL = sorted.reduce((sum, r) => sum + (r.downloads || 0), 0);
-            const avgRev = totalRev / sorted.length;
-            const efficiency = totalDL > 0 ? (totalRev / totalDL) * 1000 : 0;
-            
-            // Update summary stats
-            document.getElementById('totalRevenue').textContent = formatCurrency(totalRev);
-            document.getElementById('revenuePerK').textContent = formatCurrency(efficiency);
-            document.getElementById('monthRevenue').textContent = formatCurrency(totalRev);
-            document.getElementById('earningShowCount').textContent = sorted.filter(r => r.revenue > 0).length;
-            document.getElementById('topEarnerName').textContent = sorted[0]?.title || '—';
-            document.getElementById('topEarnerAmount').textContent = formatCurrency(sorted[0]?.revenue || 0);
-            document.getElementById('avgRevenue').textContent = formatCurrency(avgRev);
-            document.getElementById('efficiencyRate').textContent = formatCurrency(efficiency);
-            
-            // Build table rows
-            tbody.innerHTML = sorted.slice(0, 25).map((item, i) => {
-                const perK = item.downloads > 0 ? (item.revenue / item.downloads) * 1000 : 0;
-                const trendIcon = item.trend === 'up' ? '📈' : item.trend === 'down' ? '📉' : '➡️';
-                const rankBadge = i < 3 ? ['🥇', '🥈', '🥉'][i] : (i + 1);
-                
-                return `
-                    <tr>
-                        <td style="font-size: 1.1rem;">${rankBadge}</td>
-                        <td class="title-cell">${item.title}</td>
-                        <td class="number-cell">${item.downloads?.toLocaleString() || '—'}</td>
-                        <td class="number-cell highlight">${formatCurrency(item.revenue)}</td>
-                        <td class="number-cell" style="color: ${perK > efficiency ? '#64ffda' : '#8892b0'};">${formatCurrency(perK)}</td>
-                        <td style="text-align: center;">${trendIcon}</td>
-                    </tr>`;
-            }).join('');
-        }
-        
-        function formatCurrency(val) {
-            return '$' + val.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-        }
-        
-        function handleCSVUpload(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-            
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const text = e.target.result;
-                const lines = text.split('\n').filter(l => l.trim());
-                const headers = lines[0].toLowerCase();
-                
-                // Try to detect column indices
-                const cols = headers.split(',').map(h => h.trim().replace(/"/g, ''));
-                const titleIdx = cols.findIndex(c => c.includes('title') || c.includes('show') || c.includes('name'));
-                const revenueIdx = cols.findIndex(c => c.includes('revenue') || c.includes('earning') || c.includes('amount') || c.includes('$'));
-                const downloadIdx = cols.findIndex(c => c.includes('download') || c.includes('plays') || c.includes('listen'));
-                
-                if (titleIdx === -1 || revenueIdx === -1) {
-                    alert('CSV must have columns for show title and revenue. Looking for: title/show/name and revenue/earnings/amount');
-                    return;
-                }
-                
-                const imported = [];
-                for (let i = 1; i < lines.length; i++) {
-                    const row = parseCSVRow(lines[i]);
-                    if (row.length > Math.max(titleIdx, revenueIdx)) {
-                        const title = row[titleIdx]?.trim();
-                        const revenue = parseFloat(row[revenueIdx]?.replace(/[$,]/g, '')) || 0;
-                        const downloads = downloadIdx >= 0 ? parseInt(row[downloadIdx]?.replace(/,/g, '')) || 0 : 0;
-                        
-                        if (title && revenue > 0) {
-                            imported.push({ title, revenue, downloads, trend: 'none', importedAt: new Date().toISOString() });
-                        }
-                    }
-                }
-                
-                if (imported.length > 0) {
-                    revenueData = imported;
-                    localStorage.setItem('spreaker_revenue', JSON.stringify(revenueData));
-                    updateRevenueDisplay();
-                    alert(`Imported ${imported.length} shows with revenue data!`);
-                } else {
-                    alert('No valid revenue data found in CSV');
-                }
-            };
-            reader.readAsText(file);
-            event.target.value = '';
-        }
-        
-        function parseCSVRow(row) {
-            const result = [];
-            let current = '';
-            let inQuotes = false;
-            
-            for (let char of row) {
-                if (char === '"') {
-                    inQuotes = !inQuotes;
-                } else if (char === ',' && !inQuotes) {
-                    result.push(current.trim());
-                    current = '';
-                } else {
-                    current += char;
-                }
-            }
-            result.push(current.trim());
-            return result;
-        }
-        
-        function quickAddRevenue() {
-            const title = document.getElementById('quickAddTitle').value.trim();
-            const revenue = parseFloat(document.getElementById('quickAddRevenue').value) || 0;
-            const downloads = parseInt(document.getElementById('quickAddDownloads').value) || 0;
-            
-            if (!title) {
-                alert('Please enter a show title');
-                return;
-            }
-            
-            // Update existing or add new
-            const existing = revenueData.findIndex(r => r.title.toLowerCase() === title.toLowerCase());
-            if (existing >= 0) {
-                revenueData[existing].revenue = revenue;
-                revenueData[existing].downloads = downloads || revenueData[existing].downloads;
-            } else {
-                revenueData.push({ title, revenue, downloads, trend: 'none', addedAt: new Date().toISOString() });
-            }
-            
-            localStorage.setItem('spreaker_revenue', JSON.stringify(revenueData));
-            updateRevenueDisplay();
-            
-            // Clear inputs
-            document.getElementById('quickAddTitle').value = '';
-            document.getElementById('quickAddRevenue').value = '';
-            document.getElementById('quickAddDownloads').value = '';
-        }
-        
-        function exportRevenueCSV() {
-            if (revenueData.length === 0) {
-                alert('No revenue data to export');
-                return;
-            }
-            
-            const headers = ['Title', 'Downloads', 'Revenue', '$/1K Downloads'];
-            const rows = revenueData.map(r => {
-                const perK = r.downloads > 0 ? (r.revenue / r.downloads) * 1000 : 0;
-                return [
-                    '"' + r.title.replace(/"/g, '""') + '"',
-                    r.downloads || 0,
-                    r.revenue.toFixed(2),
-                    perK.toFixed(2)
-                ].join(',');
-            });
-            
-            const csv = [headers.join(','), ...rows].join('\n');
-            const blob = new Blob([csv], { type: 'text/csv' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'spreaker_revenue_' + new Date().toISOString().split('T')[0] + '.csv';
-            a.click();
-        }
-        
-        function sortRevenueTable(n) {
-            // Simple re-sort by column
-            if (n === 3) { // Revenue
-                revenueData.sort((a, b) => b.revenue - a.revenue);
-            } else if (n === 2) { // Downloads
-                revenueData.sort((a, b) => (b.downloads || 0) - (a.downloads || 0));
-            } else if (n === 4) { // Efficiency
-                revenueData.sort((a, b) => {
-                    const effA = a.downloads > 0 ? a.revenue / a.downloads : 0;
-                    const effB = b.downloads > 0 ? b.revenue / b.downloads : 0;
-                    return effB - effA;
-                });
-            } else if (n === 1) { // Title
-                revenueData.sort((a, b) => a.title.localeCompare(b.title));
-            }
-            updateRevenueDisplay();
-        }
-        
-        // Sync manual inputs from main table to revenue data
-        function syncManualRevenue() {
-            const mainTable = document.getElementById('dataTable');
-            const rows = mainTable.querySelectorAll('tbody tr');
-            
-            rows.forEach(row => {
-                const title = row.querySelector('.title-cell')?.textContent.trim();
-                const revenueInput = row.querySelector('.manual-input')?.value;
-                const downloadsCell = row.cells[3]?.textContent.replace(/,/g, '');
-                
-                if (title && revenueInput) {
-                    const revenue = parseFloat(revenueInput.replace(/[$,]/g, '')) || 0;
-                    const downloads = parseInt(downloadsCell) || 0;
-                    
-                    if (revenue > 0) {
-                        const existing = revenueData.findIndex(r => r.title === title);
-                        if (existing >= 0) {
-                            revenueData[existing].revenue = revenue;
-                            revenueData[existing].downloads = downloads;
-                        } else {
-                            revenueData.push({ title, revenue, downloads, trend: 'none' });
-                        }
-                    }
-                }
-            });
-            
-            localStorage.setItem('spreaker_revenue', JSON.stringify(revenueData));
-            updateRevenueDisplay();
-        }
-        
-        // Listen for manual input changes
-        document.querySelectorAll('.manual-input').forEach(input => {
-            input.addEventListener('change', syncManualRevenue);
-        });
-        
-        // Initialize on load
-        document.addEventListener('DOMContentLoaded', updateRevenueDisplay);
-        updateRevenueDisplay();
-        
         function exportToCSV() {
             const table = document.getElementById("dataTable");
             let csv = [];
             const rows = table.querySelectorAll("tr");
             
-            for (let row of rows) {
+            rows.forEach(row => {
                 const cols = row.querySelectorAll("td, th");
                 let rowData = [];
-                for (let col of cols) {
-                    let text = col.textContent.replace(/"/g, '""').trim();
-                    // Handle input fields
-                    const input = col.querySelector("input");
-                    if (input) text = input.value || "";
-                    rowData.push('"' + text + '"');
-                }
+                cols.forEach((col, idx) => {
+                    if (idx !== 6 && idx !== 8) {
+                        rowData.push('"' + col.textContent.trim().replace(/"/g, '""') + '"');
+                    }
+                });
                 csv.push(rowData.join(","));
-            }
+            });
             
-            const csvContent = csv.join("\n");
-            const blob = new Blob([csvContent], { type: "text/csv" });
+            const blob = new Blob([csv.join("\n")], { type: "text/csv" });
             const url = URL.createObjectURL(blob);
             const a = document.createElement("a");
             a.href = url;
-            a.download = "podcast_dashboard_" + new Date().toISOString().split("T")[0] + ".csv";
+            a.download = "ipai-content-performance.csv";
             a.click();
         }
     </script>
