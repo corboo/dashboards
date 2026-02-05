@@ -3,127 +3,304 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inception Point AI - Dashboards</title>
+    <title>IPAI Dashboard Hub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            min-height: 100vh;
-            color: #fff;
-            padding: 40px 20px;
+        :root {
+            --bg-primary: #2d2d2d;
+            --bg-secondary: #3a3a3a;
+            --silver: #a8a8a8;
+            --silver-light: #c5c5c5;
+            --gold: #d4af37;
+            --gold-light: #e8c547;
+            --gold-bright: #f5d742;
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.7);
+            --text-tertiary: rgba(255, 255, 255, 0.5);
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --glass-hover: rgba(255, 255, 255, 0.08);
         }
-        .container { max-width: 900px; margin: 0 auto; }
-        h1 {
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            min-height: 100vh;
+            color: var(--text-primary);
+            -webkit-font-smoothing: antialiased;
+        }
+        
+        .bg-gradient {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: 
+                radial-gradient(ellipse at 20% 20%, rgba(168, 168, 168, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(212, 175, 55, 0.06) 0%, transparent 50%),
+                var(--bg-primary);
+            z-index: -1;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 60px 24px;
+        }
+        
+        header {
             text-align: center;
+            margin-bottom: 56px;
+        }
+        
+        .logo {
+            width: 72px;
+            height: 72px;
+            margin-bottom: 20px;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        
+        h1 {
             font-size: 2.5rem;
-            margin-bottom: 10px;
-            background: linear-gradient(90deg, #00d4ff, #7b2ff7);
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            margin-bottom: 8px;
+            background: linear-gradient(180deg, var(--silver-light) 0%, var(--gold) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
-        .subtitle { text-align: center; color: #888; margin-bottom: 40px; }
-        .dashboard-grid {
+        
+        .subtitle {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+        }
+        
+        .section {
+            margin-bottom: 40px;
+        }
+        
+        .section-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-tertiary);
+            margin-bottom: 16px;
+            padding-left: 4px;
+        }
+        
+        .grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
+            gap: 12px;
         }
-        .dashboard-card {
-            background: rgba(255,255,255,0.05);
-            border-radius: 15px;
-            padding: 25px;
-            border: 1px solid rgba(255,255,255,0.1);
-            transition: all 0.3s;
+        
+        .card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 14px;
+            padding: 20px;
+            border: 1px solid var(--glass-border);
             text-decoration: none;
             color: inherit;
-            display: block;
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .dashboard-card:hover {
-            transform: translateY(-5px);
-            border-color: #00d4ff;
-            box-shadow: 0 10px 30px rgba(0,212,255,0.2);
+        
+        .card:hover {
+            background: var(--glass-hover);
+            border-color: rgba(212, 175, 55, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
         }
-        .dashboard-card.youtube:hover { border-color: #FF0000; box-shadow: 0 10px 30px rgba(255,0,0,0.2); }
-        .dashboard-card .icon { font-size: 2rem; margin-bottom: 10px; }
-        .dashboard-card h3 { font-size: 1.2rem; margin-bottom: 8px; }
-        .dashboard-card p { color: #888; font-size: 0.9rem; }
-        .section-title { color: #888; font-size: 0.9rem; margin: 30px 0 15px; text-transform: uppercase; letter-spacing: 1px; }
-        footer { text-align: center; margin-top: 50px; color: #666; font-size: 0.85rem; }
+        
+        .card.featured {
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.12) 0%, rgba(168, 168, 168, 0.05) 100%);
+            border-color: rgba(212, 175, 55, 0.25);
+        }
+        
+        .card.featured:hover {
+            border-color: rgba(212, 175, 55, 0.5);
+        }
+        
+        .card-icon {
+            font-size: 1.75rem;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--glass-bg);
+            border-radius: 10px;
+            flex-shrink: 0;
+        }
+        
+        .card-content {
+            flex-grow: 1;
+            min-width: 0;
+        }
+        
+        .card-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+            letter-spacing: -0.01em;
+        }
+        
+        .card-desc {
+            font-size: 0.8125rem;
+            color: var(--text-secondary);
+            line-height: 1.4;
+        }
+        
+        .card-badge {
+            font-size: 0.5625rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-bright) 100%);
+            color: var(--bg-primary);
+            padding: 3px 6px;
+            border-radius: 4px;
+            margin-left: 8px;
+            vertical-align: middle;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 60px;
+            padding-top: 24px;
+            border-top: 1px solid var(--glass-border);
+            font-size: 0.8125rem;
+            color: var(--text-tertiary);
+        }
+        
+        footer a {
+            color: var(--gold);
+            text-decoration: none;
+        }
+        
+        @media (max-width: 600px) {
+            .container { padding: 40px 16px; }
+            h1 { font-size: 2rem; }
+            .grid { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
+    <div class="bg-gradient"></div>
+    
     <div class="container">
-        <h1>🚀 Inception Point AI</h1>
-        <p class="subtitle">Dashboard Hub</p>
+        <header>
+            <img src="ipai-logo.jpg" alt="IPAI" class="logo">
+            <h1>Dashboard Hub</h1>
+            <p class="subtitle">Inception Point AI</p>
+        </header>
         
-        <div class="section-title">📻 Podcast Analytics</div>
-        <div class="dashboard-grid">
-            <a href="spreaker-tracker.html" class="dashboard-card">
-                <div class="icon">📊</div>
-                <h3>Spreaker Tracker</h3>
-                <p>Main podcast asset tracker with network overview and top performers.</p>
-            </a>
-            
-            <a href="ipai-dashboard.html" class="dashboard-card">
-                <div class="icon">🎯</div>
-                <h3>IPAI Dashboard</h3>
-                <p>Full content performance dashboard with filtering and analytics.</p>
-            </a>
-            
-            <a href="spreaker-analytics.html" class="dashboard-card">
-                <div class="icon">📈</div>
-                <h3>Spreaker Analytics</h3>
-                <p>Detailed Spreaker-specific analytics and metrics.</p>
-            </a>
-            
-            <a href="board-view.html" class="dashboard-card">
-                <div class="icon">📋</div>
-                <h3>Board View</h3>
-                <p>Executive board-style overview of podcast operations.</p>
-            </a>
+        <!-- TOOLS -->
+        <div class="section">
+            <div class="section-label">⚡ Tools & Apps</div>
+            <div class="grid">
+                <a href="https://qp1-tools-cxjt6gffvwuump8fsczqu8.streamlit.app/" class="card featured">
+                    <div class="card-icon">⚡</div>
+                    <div class="card-content">
+                        <div class="card-title">FORGE<span class="card-badge">New</span></div>
+                        <div class="card-desc">Audio to Video — Custom shots, styles, consistency controls</div>
+                    </div>
+                </a>
+                
+                <a href="apps.html" class="card">
+                    <div class="card-icon">🛠️</div>
+                    <div class="card-content">
+                        <div class="card-title">All Apps & Tools</div>
+                        <div class="card-desc">Complete directory of apps, dashboards, and repos</div>
+                    </div>
+                </a>
+            </div>
         </div>
         
-        <div class="section-title">📺 Video Analytics</div>
-        <div class="dashboard-grid">
-            <a href="youtube-dashboard.html" class="dashboard-card youtube">
-                <div class="icon">📺</div>
-                <h3>YouTube Dashboard</h3>
-                <p>Video content analytics across 5 YouTube channels. 6K+ views, 40 videos.</p>
-            </a>
+        <!-- PODCAST -->
+        <div class="section">
+            <div class="section-label">📻 Podcast Analytics</div>
+            <div class="grid">
+                <a href="spreaker-tracker.html" class="card">
+                    <div class="card-icon">📊</div>
+                    <div class="card-content">
+                        <div class="card-title">Spreaker Tracker</div>
+                        <div class="card-desc">Network overview and top performers</div>
+                    </div>
+                </a>
+                
+                <a href="ipai-dashboard.html" class="card">
+                    <div class="card-icon">🎯</div>
+                    <div class="card-content">
+                        <div class="card-title">IPAI Dashboard</div>
+                        <div class="card-desc">Full content performance with filtering</div>
+                    </div>
+                </a>
+                
+                <a href="spreaker-analytics.html" class="card">
+                    <div class="card-icon">📈</div>
+                    <div class="card-content">
+                        <div class="card-title">Spreaker Analytics</div>
+                        <div class="card-desc">Detailed metrics and analytics</div>
+                    </div>
+                </a>
+                
+                <a href="board-view.html" class="card">
+                    <div class="card-icon">📋</div>
+                    <div class="card-content">
+                        <div class="card-title">Board View</div>
+                        <div class="card-desc">Executive overview of operations</div>
+                    </div>
+                </a>
+            </div>
         </div>
         
-        <div class="section-title">⚙️ Operations</div>
-        <div class="dashboard-grid">
-            <a href="operations.html" class="dashboard-card">
-                <div class="icon">⚙️</div>
-                <h3>Operations</h3>
-                <p>Operations and workflow status dashboard.</p>
-            </a>
-            
-            <a href="make-operations.html" class="dashboard-card">
-                <div class="icon">🔧</div>
-                <h3>Make.com Operations</h3>
-                <p>Make.com automation pipeline status.</p>
-            </a>
+        <!-- VIDEO -->
+        <div class="section">
+            <div class="section-label">📺 Video Analytics</div>
+            <div class="grid">
+                <a href="youtube-dashboard.html" class="card">
+                    <div class="card-icon">📺</div>
+                    <div class="card-content">
+                        <div class="card-title">YouTube Dashboard</div>
+                        <div class="card-desc">5 channels • 6K+ views • 40 videos</div>
+                    </div>
+                </a>
+            </div>
         </div>
         
-        <div class="section-title">⚡ Tools & Apps</div>
-        <div class="dashboard-grid">
-            <a href="https://qp1-tools-cxjt6gffvwuump8fsczqu8.streamlit.app/" class="dashboard-card" style="border-color: rgba(255,193,7,0.3); background: rgba(255,193,7,0.05);">
-                <div class="icon">⚡</div>
-                <h3>FORGE — Audio to Video</h3>
-                <p>Transform audio into AI-generated video. Custom shots, styles, consistency controls. NEW v2.0!</p>
-            </a>
-            
-            <a href="apps.html" class="dashboard-card">
-                <div class="icon">🛠️</div>
-                <h3>All Apps & Tools</h3>
-                <p>Complete directory of all CB-built apps, dashboards, and GitHub repos.</p>
-            </a>
+        <!-- OPERATIONS -->
+        <div class="section">
+            <div class="section-label">⚙️ Operations</div>
+            <div class="grid">
+                <a href="operations.html" class="card">
+                    <div class="card-icon">⚙️</div>
+                    <div class="card-content">
+                        <div class="card-title">Operations</div>
+                        <div class="card-desc">Workflow status dashboard</div>
+                    </div>
+                </a>
+                
+                <a href="make-operations.html" class="card">
+                    <div class="card-icon">🔧</div>
+                    <div class="card-content">
+                        <div class="card-title">Make.com Operations</div>
+                        <div class="card-desc">Automation pipeline status</div>
+                    </div>
+                </a>
+            </div>
         </div>
         
         <footer>
-            Inception Point AI • Auto-updated via GitHub Pages
+            <a href="https://inceptionpoint.ai">Inception Point AI</a> • Auto-updated via GitHub Pages
         </footer>
     </div>
 </body>
