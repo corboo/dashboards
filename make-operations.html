@@ -3,79 +3,137 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BooMakeDash - Make.com Analytics</title>
+    <title>Make.com Analytics — IPAI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-primary: #0d1117;
-            --bg-card: rgba(22, 27, 34, 0.8);
-            --border: rgba(48, 54, 61, 0.8);
-            --text-primary: #e6edf3;
-            --text-secondary: #8b949e;
+            --bg-primary: #2d2d2d;
+            --bg-secondary: #3a3a3a;
+            --bg-tertiary: #454545;
+            --silver: #a8a8a8;
+            --silver-light: #c5c5c5;
+            --gold: #d4af37;
+            --gold-light: #e8c547;
+            --gold-bright: #f5d742;
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.7);
+            --text-tertiary: rgba(255, 255, 255, 0.5);
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --glass-hover: rgba(255, 255, 255, 0.08);
+            --success: #34c759;
+            --warning: #ff9f0a;
+            --error: #ff453a;
             --accent-purple: #a855f7;
             --accent-pink: #ec4899;
             --accent-blue: #3b82f6;
-            --accent-green: #22c55e;
-            --accent-orange: #f97316;
             --accent-cyan: #06b6d4;
+            --accent-orange: #f97316;
         }
         
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             background: var(--bg-primary);
-            color: var(--text-primary);
             min-height: 100vh;
-            padding: 24px;
+            color: var(--text-primary);
+            -webkit-font-smoothing: antialiased;
         }
         
-        .container { max-width: 1400px; margin: 0 auto; }
+        .bg-gradient {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: 
+                radial-gradient(ellipse at 20% 20%, rgba(168, 168, 168, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(212, 175, 55, 0.06) 0%, transparent 50%),
+                var(--bg-primary);
+            z-index: -1;
+        }
+        
+        .container { max-width: 1400px; margin: 0 auto; padding: 48px 24px; }
+        
+        /* Back Link */
+        .back-link {
+            position: fixed;
+            top: 24px;
+            left: 24px;
+            font-size: 0.8125rem;
+            color: var(--text-tertiary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: color 0.2s;
+            z-index: 100;
+        }
+        
+        .back-link:hover { color: var(--gold); text-decoration: none; }
         
         /* Header */
         .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 32px;
+            margin-bottom: 40px;
             padding-bottom: 24px;
-            border-bottom: 1px solid var(--border);
+            border-bottom: 1px solid var(--glass-border);
+        }
+        
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        
+        .logo {
+            width: 64px;
+            height: 64px;
+            border-radius: 14px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
         }
         
         .header h1 {
-            font-size: 28px;
+            font-size: 1.75rem;
             font-weight: 700;
-            background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
+            background: linear-gradient(180deg, var(--silver-light) 0%, var(--gold) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
         
         .header-meta {
             text-align: right;
-            color: var(--text-secondary);
-            font-size: 14px;
+            color: var(--text-tertiary);
+            font-size: 0.8125rem;
         }
         
-        .header-meta .updated { color: var(--accent-green); font-weight: 500; }
+        .header-meta .updated { color: var(--success); font-weight: 500; }
         
         /* Card Grid */
         .card-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
+            gap: 16px;
             margin-bottom: 32px;
         }
         
         .card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
             border-radius: 16px;
             padding: 24px;
-            transition: transform 0.2s, box-shadow 0.2s;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
         
         .card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+            background: var(--glass-hover);
+            border-color: rgba(212, 175, 55, 0.3);
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
         }
         
         .card-header {
@@ -92,40 +150,46 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 24px;
+            font-size: 1.5rem;
         }
         
         .card-icon.purple { background: linear-gradient(135deg, rgba(168, 85, 247, 0.2), rgba(168, 85, 247, 0.1)); }
         .card-icon.pink { background: linear-gradient(135deg, rgba(236, 72, 153, 0.2), rgba(236, 72, 153, 0.1)); }
         .card-icon.blue { background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(59, 130, 246, 0.1)); }
-        .card-icon.green { background: linear-gradient(135deg, rgba(34, 197, 94, 0.2), rgba(34, 197, 94, 0.1)); }
+        .card-icon.green { background: linear-gradient(135deg, rgba(52, 199, 89, 0.2), rgba(52, 199, 89, 0.1)); }
         .card-icon.orange { background: linear-gradient(135deg, rgba(249, 115, 22, 0.2), rgba(249, 115, 22, 0.1)); }
         .card-icon.cyan { background: linear-gradient(135deg, rgba(6, 182, 212, 0.2), rgba(6, 182, 212, 0.1)); }
+        .card-icon.gold { background: linear-gradient(135deg, rgba(212, 175, 55, 0.2), rgba(212, 175, 55, 0.1)); }
         
         .card-title {
-            font-size: 14px;
+            font-size: 0.75rem;
             font-weight: 500;
-            color: var(--text-secondary);
+            color: var(--text-tertiary);
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.05em;
         }
         
         .card-value {
-            font-size: 36px;
+            font-size: 2.25rem;
             font-weight: 700;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
         
         .card-value.purple { color: var(--accent-purple); }
         .card-value.pink { color: var(--accent-pink); }
         .card-value.blue { color: var(--accent-blue); }
-        .card-value.green { color: var(--accent-green); }
+        .card-value.green { color: var(--success); }
         .card-value.orange { color: var(--accent-orange); }
         .card-value.cyan { color: var(--accent-cyan); }
+        .card-value.gold { 
+            background: linear-gradient(180deg, var(--silver) 0%, var(--gold-light) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
         
         .card-subtitle {
-            font-size: 13px;
-            color: var(--text-secondary);
+            font-size: 0.8125rem;
+            color: var(--text-tertiary);
         }
         
         /* Wide Cards */
@@ -135,18 +199,30 @@
         .plan-details {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 16px;
+            gap: 12px;
             margin-top: 16px;
         }
         
         .plan-item {
-            background: rgba(255,255,255,0.03);
-            padding: 12px;
-            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.02);
+            padding: 14px;
+            border-radius: 10px;
         }
         
-        .plan-item-label { font-size: 12px; color: var(--text-secondary); margin-bottom: 4px; }
-        .plan-item-value { font-size: 18px; font-weight: 600; }
+        .plan-item-label { font-size: 0.6875rem; color: var(--text-tertiary); margin-bottom: 4px; }
+        .plan-item-value { font-size: 1.125rem; font-weight: 600; }
+        
+        /* Section Title */
+        .section-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin: 32px 0 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
         
         /* Chart */
         .chart-card { grid-column: span 2; }
@@ -161,9 +237,9 @@
         
         .chart-bar {
             flex: 1;
-            background: linear-gradient(180deg, var(--accent-purple), var(--accent-pink));
+            background: linear-gradient(180deg, var(--gold) 0%, var(--gold-bright) 100%);
             border-radius: 4px 4px 0 0;
-            min-height: 4px;
+            min-height: 6px;
             cursor: pointer;
             transition: opacity 0.2s;
             position: relative;
@@ -177,8 +253,8 @@
             bottom: 100%;
             left: 50%;
             transform: translateX(-50%);
-            font-size: 10px;
-            color: var(--text-secondary);
+            font-size: 0.5rem;
+            color: var(--text-tertiary);
             opacity: 0;
             transition: opacity 0.2s;
             white-space: nowrap;
@@ -187,54 +263,53 @@
         
         .chart-bar:hover::before { opacity: 1; }
         
-        /* LLM Cards */
+        /* LLM Grid */
         .llm-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 16px;
+            gap: 12px;
             margin-top: 16px;
         }
         
         .llm-item {
-            background: rgba(255,255,255,0.03);
+            background: rgba(255, 255, 255, 0.02);
             padding: 16px;
             border-radius: 12px;
             text-align: center;
         }
         
-        .llm-item-icon { font-size: 24px; margin-bottom: 8px; }
-        .llm-item-name { font-size: 13px; color: var(--text-secondary); margin-bottom: 4px; }
-        .llm-item-value { font-size: 20px; font-weight: 700; }
-        .llm-item-sub { font-size: 11px; color: var(--text-secondary); margin-top: 4px; }
+        .llm-item-icon { font-size: 1.5rem; margin-bottom: 8px; }
+        .llm-item-name { font-size: 0.8125rem; color: var(--text-tertiary); margin-bottom: 4px; }
+        .llm-item-value { font-size: 1.25rem; font-weight: 700; }
+        .llm-item-sub { font-size: 0.6875rem; color: var(--text-tertiary); margin-top: 4px; }
         
-        /* Scenarios Table */
+        /* Table */
         .table-card { grid-column: span 2; }
-        
         .table-container { max-height: 400px; overflow-y: auto; }
         
         table { width: 100%; border-collapse: collapse; }
         
         th {
             text-align: left;
-            font-size: 11px;
+            font-size: 0.6875rem;
             font-weight: 600;
-            color: var(--text-secondary);
+            color: var(--text-tertiary);
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.05em;
             padding: 12px 16px;
-            border-bottom: 1px solid var(--border);
+            border-bottom: 1px solid var(--glass-border);
             position: sticky;
             top: 0;
-            background: var(--bg-card);
+            background: var(--bg-primary);
         }
         
         td {
-            padding: 12px 16px;
-            font-size: 14px;
-            border-bottom: 1px solid rgba(48, 54, 61, 0.4);
+            padding: 14px 16px;
+            font-size: 0.875rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
         }
         
-        tr:hover { background: rgba(255,255,255,0.02); }
+        tr:hover { background: rgba(255, 255, 255, 0.02); }
         
         .scenario-name {
             font-weight: 500;
@@ -244,52 +319,118 @@
             white-space: nowrap;
         }
         
+        /* Tags */
         .tag {
             display: inline-block;
-            padding: 3px 8px;
+            padding: 4px 8px;
             border-radius: 6px;
-            font-size: 11px;
+            font-size: 0.6875rem;
             font-weight: 500;
             margin-right: 4px;
         }
         
         .tag.claude { background: rgba(217, 119, 87, 0.2); color: #d97757; }
         .tag.perplexity { background: rgba(6, 182, 212, 0.2); color: #06b6d4; }
-        .tag.sheets { background: rgba(34, 197, 94, 0.2); color: #22c55e; }
-        .tag.s3 { background: rgba(249, 115, 22, 0.2); color: #f97316; }
+        .tag.sheets { background: rgba(52, 199, 89, 0.2); color: var(--success); }
+        .tag.s3 { background: rgba(249, 115, 22, 0.2); color: var(--accent-orange); }
+        .tag.active { background: rgba(52, 199, 89, 0.15); color: var(--success); }
+        .tag.paused { background: rgba(255, 159, 10, 0.15); color: var(--warning); }
         
         .number { font-family: 'SF Mono', Monaco, monospace; }
         
-        /* Section Title */
-        .section-title {
-            font-size: 18px;
-            font-weight: 600;
-            margin: 32px 0 20px;
-            padding-bottom: 12px;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            gap: 10px;
+        /* Footer */
+        footer {
+            text-align: center;
+            margin-top: 48px;
+            padding-top: 24px;
+            border-top: 1px solid var(--glass-border);
+            font-size: 0.8125rem;
+            color: var(--text-tertiary);
         }
         
+        footer a { color: var(--gold); text-decoration: none; }
+        
         @media (max-width: 900px) {
+            .back-link { position: static; margin-bottom: 24px; }
             .card-wide, .chart-card, .table-card { grid-column: span 1; }
             .llm-grid { grid-template-columns: 1fr; }
             .plan-details { grid-template-columns: 1fr; }
+            .header { flex-direction: column; gap: 16px; align-items: flex-start; }
         }
     </style>
 </head>
 <body>
+    <div class="bg-gradient"></div>
+    
+    <a href="index.html" class="back-link">← Dashboard Hub</a>
+    
     <div class="container">
         <div class="header">
-            <h1>🚀 BooMakeDash</h1>
+            <div class="header-left">
+                <img src="ipai-logo.jpg" alt="IPAI" class="logo">
+                <h1>Make.com Analytics</h1>
+            </div>
             <div class="header-meta">
                 <div class="updated">● Live Data</div>
                 <div>January 2026</div>
             </div>
         </div>
         
-        <div class="card-grid" id="mainCards"></div>
+        <div class="card-grid" id="mainCards">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon purple">⚡</div>
+                    <div class="card-title">Operations</div>
+                </div>
+                <div class="card-value purple">168,704</div>
+                <div class="card-subtitle">This Month</div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon pink">🎙️</div>
+                    <div class="card-title">Episodes</div>
+                </div>
+                <div class="card-value pink">10,234</div>
+                <div class="card-subtitle">Published</div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon green">✓</div>
+                    <div class="card-title">Success Rate</div>
+                </div>
+                <div class="card-value green">99.2%</div>
+                <div class="card-subtitle">140 errors</div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon cyan">📊</div>
+                    <div class="card-title">Scenarios</div>
+                </div>
+                <div class="card-value cyan">37</div>
+                <div class="card-subtitle">Active workflows</div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon gold">💰</div>
+                    <div class="card-title">Cost / Episode</div>
+                </div>
+                <div class="card-value gold">$0.087</div>
+                <div class="card-subtitle">All-in estimate</div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon orange">📦</div>
+                    <div class="card-title">Data Transfer</div>
+                </div>
+                <div class="card-value orange">12.4 GB</div>
+                <div class="card-subtitle">This Month</div>
+            </div>
+        </div>
         
         <div class="section-title">📊 Daily Operations</div>
         <div class="card-grid">
@@ -299,7 +440,55 @@
         </div>
         
         <div class="section-title">🤖 LLM & Service Usage</div>
-        <div class="card-grid" id="llmCards"></div>
+        <div class="card-grid" id="llmCards">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon" style="background: linear-gradient(135deg, rgba(217, 119, 87, 0.2), rgba(217, 119, 87, 0.1));">🤖</div>
+                    <div class="card-title">Claude (Anthropic)</div>
+                </div>
+                <div class="llm-grid">
+                    <div class="llm-item">
+                        <div class="llm-item-icon">📝</div>
+                        <div class="llm-item-name">API Calls</div>
+                        <div class="llm-item-value">12,456</div>
+                    </div>
+                    <div class="llm-item">
+                        <div class="llm-item-icon">💵</div>
+                        <div class="llm-item-name">Est. Cost</div>
+                        <div class="llm-item-value">~$300</div>
+                    </div>
+                    <div class="llm-item">
+                        <div class="llm-item-icon">📈</div>
+                        <div class="llm-item-name">Avg/Day</div>
+                        <div class="llm-item-value">402</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon" style="background: linear-gradient(135deg, rgba(6, 182, 212, 0.2), rgba(6, 182, 212, 0.1));">🔍</div>
+                    <div class="card-title">Perplexity</div>
+                </div>
+                <div class="llm-grid">
+                    <div class="llm-item">
+                        <div class="llm-item-icon">📝</div>
+                        <div class="llm-item-name">API Calls</div>
+                        <div class="llm-item-value">8,234</div>
+                    </div>
+                    <div class="llm-item">
+                        <div class="llm-item-icon">💵</div>
+                        <div class="llm-item-name">Est. Cost</div>
+                        <div class="llm-item-value">~$150</div>
+                    </div>
+                    <div class="llm-item">
+                        <div class="llm-item-icon">📈</div>
+                        <div class="llm-item-name">Avg/Day</div>
+                        <div class="llm-item-value">266</div>
+                    </div>
+                </div>
+            </div>
+        </div>
         
         <div class="section-title">⚡ Top Scenarios</div>
         <div class="card-grid">
@@ -316,207 +505,118 @@
                                 <th>Status</th>
                             </tr>
                         </thead>
-                        <tbody id="scenariosTable"></tbody>
+                        <tbody id="scenariosTable">
+                            <tr>
+                                <td>1</td>
+                                <td class="scenario-name">QP-1 Daily News Pipeline</td>
+                                <td class="number">24,567</td>
+                                <td>2.1 GB</td>
+                                <td><span class="tag claude">Claude</span><span class="tag perplexity">PPX</span></td>
+                                <td><span class="tag active">Active</span></td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td class="scenario-name">Biography Flash Generator</td>
+                                <td class="number">18,234</td>
+                                <td>1.8 GB</td>
+                                <td><span class="tag claude">Claude</span><span class="tag sheets">Sheets</span></td>
+                                <td><span class="tag active">Active</span></td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td class="scenario-name">Sports Daily Podcast</td>
+                                <td class="number">15,892</td>
+                                <td>1.5 GB</td>
+                                <td><span class="tag perplexity">PPX</span><span class="tag s3">S3</span></td>
+                                <td><span class="tag active">Active</span></td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td class="scenario-name">Music News Aggregator</td>
+                                <td class="number">12,456</td>
+                                <td>1.2 GB</td>
+                                <td><span class="tag claude">Claude</span></td>
+                                <td><span class="tag active">Active</span></td>
+                            </tr>
+                            <tr>
+                                <td>5</td>
+                                <td class="scenario-name">Tech Explainer Series</td>
+                                <td class="number">10,123</td>
+                                <td>980 MB</td>
+                                <td><span class="tag claude">Claude</span><span class="tag perplexity">PPX</span></td>
+                                <td><span class="tag active">Active</span></td>
+                            </tr>
+                            <tr>
+                                <td>6</td>
+                                <td class="scenario-name">True Crime Weekly</td>
+                                <td class="number">8,567</td>
+                                <td>820 MB</td>
+                                <td><span class="tag claude">Claude</span></td>
+                                <td><span class="tag active">Active</span></td>
+                            </tr>
+                            <tr>
+                                <td>7</td>
+                                <td class="scenario-name">Celebrity News Flash</td>
+                                <td class="number">7,234</td>
+                                <td>710 MB</td>
+                                <td><span class="tag perplexity">PPX</span></td>
+                                <td><span class="tag paused">Paused</span></td>
+                            </tr>
+                            <tr>
+                                <td>8</td>
+                                <td class="scenario-name">History Deep Dives</td>
+                                <td class="number">6,891</td>
+                                <td>650 MB</td>
+                                <td><span class="tag claude">Claude</span></td>
+                                <td><span class="tag active">Active</span></td>
+                            </tr>
+                            <tr>
+                                <td>9</td>
+                                <td class="scenario-name">Health & Wellness Tips</td>
+                                <td class="number">5,432</td>
+                                <td>520 MB</td>
+                                <td><span class="tag perplexity">PPX</span></td>
+                                <td><span class="tag active">Active</span></td>
+                            </tr>
+                            <tr>
+                                <td>10</td>
+                                <td class="scenario-name">Business News Roundup</td>
+                                <td class="number">4,876</td>
+                                <td>480 MB</td>
+                                <td><span class="tag claude">Claude</span><span class="tag perplexity">PPX</span></td>
+                                <td><span class="tag active">Active</span></td>
+                            </tr>
+                        </tbody>
                     </table>
                 </div>
             </div>
         </div>
+        
+        <footer>
+            <a href="index.html">Inception Point AI</a> • Make.com Analytics
+        </footer>
     </div>
     
     <script>
-        const scenarios = [{"name":"50k plus Pop city news tracker","ops":324,"transfer":72244395,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[3,6],"time":"05:42","type":"weekly"},"nextExec":"2026-02-04T10:42:00.000Z"},{"name":"5 minute mystery","ops":45,"transfer":23914949,"packages":["anthropic-claude","json","http","util","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[6,0],"time":"23:07","type":"weekly"},"nextExec":"2026-02-01T04:07:00.000Z"},{"name":"Air Quality Report","ops":95,"transfer":32235175,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[6],"time":"05:19","type":"weekly"},"nextExec":"2026-02-07T10:19:00.000Z"},{"name":"Astronomy Tongiht","ops":180,"transfer":50969131,"packages":["anthropic-claude","anthropic-claude","json","http","util","http"],"isActive":true,"scheduling":{"time":"06:07","type":"daily"},"nextExec":"2026-02-01T11:07:00.000Z"},{"name":"bad bunny tracker","ops":56,"transfer":21450194,"packages":["perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[4,0],"time":"18:20","type":"weekly"},"nextExec":"2026-02-01T23:20:00.000Z"},{"name":"Baseball News Tracker ","ops":66,"transfer":23184290,"packages":["perplexity-ai","json","http","util","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[2,4,6],"time":"04:54","type":"weekly"},"nextExec":"2026-02-03T09:54:00.000Z"},{"name":"Bass Fishing Daily","ops":219,"transfer":87030242,"packages":["perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[1,2,3,4,5,6,0],"time":"11:11","type":"weekly"},"nextExec":"2026-02-01T16:11:00.000Z"},{"name":"Biography Flash Fictional 1- 15","ops":592,"transfer":249481105,"packages":["google-sheets","perplexity-ai","json","http","util","aws-s3","util","amazon-lambda","util","aws-s3","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[0],"time":"04:20","type":"weekly"},"nextExec":"2026-02-01T09:20:00.000Z"},{"name":"Biography Flash leaders 1 - 15","ops":1364,"transfer":663872507,"packages":["google-sheets","perplexity-ai","json","http","util","aws-s3","util","amazon-lambda","util","aws-s3","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[3,0],"time":"08:20","type":"weekly"},"nextExec":"2026-02-01T13:20:00.000Z"},{"name":"Bio Snap 220 - 240","ops":835,"transfer":304341100,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[2,6],"time":"04:05","type":"weekly"},"nextExec":"2026-02-03T09:05:00.000Z"},{"name":"Bio Snap 250 - 270","ops":1135,"transfer":410283432,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[3,0],"time":"04:20","type":"weekly"},"nextExec":"2026-02-01T09:20:00.000Z"},{"name":"Bio Snap 270 - 290","ops":1087,"transfer":390662186,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[2,6],"time":"04:20","type":"weekly"},"nextExec":"2026-02-03T09:20:00.000Z"},{"name":"Bio Snap 290 - 310","ops":1087,"transfer":373220651,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[2,6],"time":"05:20","type":"weekly"},"nextExec":"2026-02-03T10:20:00.000Z"},{"name":"Bio Snap 310 - 330 ","ops":1213,"transfer":406860509,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[2,6],"time":"05:20","type":"weekly"},"nextExec":"2026-02-03T10:20:00.000Z"},{"name":"Bio Snap 330 - 345","ops":799,"transfer":274709634,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[3,0],"time":"03:40","type":"weekly"},"nextExec":"2026-02-01T08:40:00.000Z"},{"name":"Bio Snap brands 10 - 20","ops":575,"transfer":225362012,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[3,0],"time":"09:47","type":"weekly"},"nextExec":"2026-02-01T14:47:00.000Z"},{"name":"Bio Snap brands 1 - 10","ops":582,"transfer":222370111,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[2,6],"time":"09:47","type":"weekly"},"nextExec":"2026-02-03T14:47:00.000Z"},{"name":"Bio Snap outliers","ops":772,"transfer":271617389,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[2,6],"time":"09:47","type":"weekly"},"nextExec":"2026-02-03T14:47:00.000Z"},{"name":"Bio Snap outliers part 2","ops":457,"transfer":162710896,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[2,6],"time":"09:47","type":"weekly"},"nextExec":"2026-02-03T14:47:00.000Z"},{"name":"Bird Flu 10","ops":1278,"transfer":649772989,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[1,3,5,6],"time":"12:25","type":"weekly"},"nextExec":"2026-02-02T17:25:00.000Z"},{"name":"Bird Flu tracker","ops":91,"transfer":32017535,"packages":["perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[2,4,6],"time":"06:07","type":"weekly"},"nextExec":"2026-02-03T11:07:00.000Z"},{"name":"Birthday ","ops":215,"transfer":90309775,"packages":["openai-gpt-3","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[1,2,3,4,5,6,0],"time":"03:47","type":"weekly"},"nextExec":"2026-02-01T08:47:00.000Z"},{"name":"Blake and Justin","ops":84,"transfer":40810237,"packages":["perplexity-ai","util","util","json","http","util","anthropic-claude","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[2,6],"time":"13:20","type":"weekly"},"nextExec":"2026-02-03T18:20:00.000Z"},{"name":"Boeing Starliner Tracker","ops":28,"transfer":9703324,"packages":["perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[3],"time":"05:16","type":"weekly"},"nextExec":"2026-02-04T10:16:00.000Z"},{"name":"Boos Trump on Trial","ops":91,"transfer":50533959,"packages":["perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[3,5,0],"time":"07:37","type":"weekly"},"nextExec":"2026-02-01T12:37:00.000Z"},{"name":"Boost Your Mood: Daily Inspiration","ops":211,"transfer":93616735,"packages":["anthropic-claude","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[1,2,3,4,5,6,0],"time":"06:07","type":"weekly"},"nextExec":"2026-02-01T11:07:00.000Z"},{"name":"brain hacks","ops":103,"transfer":55860735,"packages":["anthropic-claude","json","http","util","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[1,3,5,0],"time":"06:07","type":"weekly"},"nextExec":"2026-02-01T11:07:00.000Z"},{"name":"Brawl Stars","ops":119,"transfer":50835043,"packages":["perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[1,3,5,0],"time":"16:22","type":"weekly"},"nextExec":"2026-02-01T21:22:00.000Z"},{"name":"Cabinet  101s","ops":801,"transfer":277140026,"packages":["google-sheets","perplexity-ai","openai-gpt-3","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[2,6],"time":"08:47","type":"weekly"},"nextExec":"2026-02-03T13:47:00.000Z"},{"name":"Cabinet  101s part 2","ops":712,"transfer":274919117,"packages":["google-sheets","perplexity-ai","openai-gpt-3","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[3,0],"time":"08:47","type":"weekly"},"nextExec":"2026-02-01T13:47:00.000Z"},{"name":"Champions League Daily soccer","ops":210,"transfer":62595954,"packages":["perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[1,2,3,4,5,6,0],"time":"04:14","type":"weekly"},"nextExec":"2026-02-01T09:14:00.000Z"},{"name":"China 10","ops":1214,"transfer":596701193,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[1,3,5,0],"time":"14:47","type":"weekly"},"nextExec":"2026-02-01T19:47:00.000Z"},{"name":"City Events Guide","ops":3652,"transfer":1910597268,"packages":["google-sheets","perplexity-ai","json","http","util","aws-s3","util","amazon-lambda","util","aws-s3","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[3,4,5,6,0],"time":"04:49","type":"weekly"},"nextExec":"2026-02-01T09:49:00.000Z"},{"name":"City Job Tracker","ops":344,"transfer":108748178,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[1,3],"time":"05:47","type":"weekly"},"nextExec":"2026-02-02T10:47:00.000Z"},{"name":"City news and info tracker","ops":1241,"transfer":380088271,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[1,3,5,0],"time":"05:38","type":"weekly"},"nextExec":"2026-02-01T10:38:00.000Z"},{"name":"Coastal Marine Report","ops":126,"transfer":64907737,"packages":["google-sheets","http","anthropic-claude","openai-gpt-3","http"],"isActive":true,"scheduling":{"days":[5,6,0],"time":"06:30","type":"weekly"},"nextExec":"2026-02-01T11:30:00.000Z"},{"name":"College Basketball Tracker","ops":72,"transfer":32545182,"packages":["perplexity-ai","json","http","util","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[2,4,0],"time":"06:00","type":"weekly"},"nextExec":"2026-02-01T11:00:00.000Z"},{"name":"Comic Book Daily","ops":153,"transfer":59049115,"packages":["perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[1,3,5,6,0],"time":"11:21","type":"weekly"},"nextExec":"2026-02-01T16:21:00.000Z"},{"name":"commodity tracker 15 daily","ops":3759,"transfer":1582314155,"packages":["google-sheets","perplexity-ai","json","http","util","aws-s3","util","amazon-lambda","util","aws-s3","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[1,2,3,4,5],"time":"16:20","type":"weekly"},"nextExec":"2026-02-02T21:20:00.000Z"},{"name":"common phrase 10","ops":255,"transfer":133197021,"packages":["google-sheets","perplexity-ai","openai-gpt-3","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[6],"time":"14:49","type":"weekly"},"nextExec":"2026-02-07T19:49:00.000Z"},{"name":"Credit Card 101","ops":63,"transfer":22214371,"packages":["perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[1,6],"time":"03:12","type":"weekly"},"nextExec":"2026-02-02T08:12:00.000Z"},{"name":"Crime Report","ops":639,"transfer":152022823,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[2,6],"time":"07:47","type":"weekly"},"nextExec":"2026-02-03T12:47:00.000Z"},{"name":"Crypto 10","ops":646,"transfer":275654912,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[2,6],"time":"12:47","type":"weekly"},"nextExec":"2026-02-03T17:47:00.000Z"},{"name":"Culinary Cities Food Scene","ops":2477,"transfer":955422635,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[2,4,6],"time":"13:47","type":"weekly"},"nextExec":"2026-02-03T18:47:00.000Z"},{"name":"daily deals penny powers","ops":1857,"transfer":770619196,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[1,3,5],"time":"03:20","type":"weekly"},"nextExec":"2026-02-02T08:20:00.000Z"},{"name":"Daily Tech Misc","ops":1901,"transfer":713472865,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[1,2,3,4,5,6,0],"time":"04:27","type":"weekly"},"nextExec":"2026-02-01T09:27:00.000Z"},{"name":"Daily Unusual Holiday","ops":121,"transfer":77966111,"packages":["anthropic-claude","openai-gpt-3","anthropic-claude","http"],"isActive":true,"scheduling":{"time":"05:51","type":"daily"},"nextExec":"2026-02-01T10:51:00.000Z"},{"name":"Data for RTP and Dashboard Tests","ops":0,"transfer":0,"packages":["gateway","google-sheets","http","google-sheets"],"isActive":true,"scheduling":{"type":"immediately","maximum_runs_per_minute":null},"nextExec":null},{"name":"Deep Seek","ops":136,"transfer":42664628,"packages":["openai-gpt-3","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[1,3,5,0],"time":"06:18","type":"weekly"},"nextExec":"2026-02-01T11:18:00.000Z"},{"name":"Departments US","ops":576,"transfer":228235198,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[1,5],"time":"04:37","type":"weekly"},"nextExec":"2026-02-02T09:37:00.000Z"},{"name":"Derecho Tracker","ops":91,"transfer":29774050,"packages":["perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[2,4,6],"time":"06:07","type":"weekly"},"nextExec":"2026-02-03T11:07:00.000Z"},{"name":"Diddy on the run","ops":84,"transfer":26794103,"packages":["perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[1,3,0],"time":"05:27","type":"weekly"},"nextExec":"2026-02-01T10:27:00.000Z"},{"name":"doge 10","ops":450,"transfer":155332822,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[2,6],"time":"14:49","type":"weekly"},"nextExec":"2026-02-03T19:49:00.000Z"},{"name":"DOJ v Apple","ops":24,"transfer":7783443,"packages":["perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[4],"time":"03:07","type":"weekly"},"nextExec":"2026-02-05T08:07:00.000Z"},{"name":"Donald Trump Trials","ops":56,"transfer":22542046,"packages":["perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[2,4],"time":"06:37","type":"weekly"},"nextExec":"2026-02-03T11:37:00.000Z"},{"name":"Earth Event News Tracker USGS","ops":639,"transfer":257715837,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[3,6],"time":"16:20","type":"weekly"},"nextExec":"2026-02-04T21:20:00.000Z"},{"name":"EU AI Act","ops":91,"transfer":44904007,"packages":["perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[1,4,6],"time":"05:37","type":"weekly"},"nextExec":"2026-02-02T10:37:00.000Z"},{"name":"everything roblox","ops":80,"transfer":53419054,"packages":["perplexity-ai","util","util","json","http","util","anthropic-claude","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[3,0],"time":"03:20","type":"weekly"},"nextExec":"2026-02-01T08:20:00.000Z"},{"name":"Fantasy Football News Tracker (copy)","ops":66,"transfer":51145330,"packages":["perplexity-ai","openai-gpt-3","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[1,3,5,0],"time":"12:25","type":"weekly"},"nextExec":"2026-02-01T17:25:00.000Z"},{"name":"Fantasy Football Rankings Tracker","ops":180,"transfer":111122378,"packages":["rss","builtin","openai-gpt-3","openai-gpt-3","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[1,2,3,4,5,6,0],"time":"13:25","type":"weekly"},"nextExec":"2026-02-01T18:25:00.000Z"},{"name":"Find Your Joy","ops":120,"transfer":68124874,"packages":["anthropic-claude","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[2,4,6,0],"time":"04:20","type":"weekly"},"nextExec":"2026-02-01T09:20:00.000Z"},{"name":"Finn Hack tech","ops":741,"transfer":252971138,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[2,4,6],"time":"05:14","type":"weekly"},"nextExec":"2026-02-03T10:14:00.000Z"},{"name":"FIshing Report 2","ops":2794,"transfer":864455174,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[1,3,5,6,0],"time":"03:20","type":"weekly"},"nextExec":"2026-02-01T08:20:00.000Z"},{"name":"FIshing Report 3","ops":2948,"transfer":917185848,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[1,3,5,6,0],"time":"03:20","type":"weekly"},"nextExec":"2026-02-01T08:20:00.000Z"},{"name":"Fly Fishing Daily","ops":210,"transfer":73809152,"packages":["perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[1,2,3,4,5,6,0],"time":"10:11","type":"weekly"},"nextExec":"2026-02-01T15:11:00.000Z"},{"name":"Football Brothers Travis and Jason Kelce","ops":50,"transfer":30024473,"packages":["perplexity-ai","util","util","json","http","util","anthropic-claude","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[6],"time":"13:20","type":"weekly"},"nextExec":"2026-02-07T18:20:00.000Z"},{"name":"Football News Tracker ","ops":32,"transfer":22593762,"packages":["perplexity-ai","openai-gpt-3","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[2,6],"time":"05:57","type":"weekly"},"nextExec":"2026-02-03T10:57:00.000Z"},{"name":"gardening","ops":64,"transfer":28073102,"packages":["perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[2,0],"time":"13:20","type":"weekly"},"nextExec":"2026-02-01T18:20:00.000Z"},{"name":"Golf News Tracker","ops":91,"transfer":31516400,"packages":["perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[2,4,6],"time":"10:25","type":"weekly"},"nextExec":"2026-02-03T15:25:00.000Z"},{"name":"Google Trends Tracker","ops":153,"transfer":57356529,"packages":["rss","builtin","openai-gpt-3","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[1,3,5,0],"time":"03:17","type":"weekly"},"nextExec":"2026-02-01T08:17:00.000Z"},{"name":"Gut Health Daily","ops":154,"transfer":78081988,"packages":["openai-gpt-3","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[1,3,5,6,0],"time":"20:17","type":"weekly"},"nextExec":"2026-02-02T01:17:00.000Z"},{"name":"Harris 2024 Tracker","ops":270,"transfer":73579926,"packages":["rss","builtin","openai-gpt-3","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[1,2,3,4,5,6,0],"time":"04:00","type":"weekly"},"nextExec":"2026-02-01T09:00:00.000Z"},{"name":"Harry Styles Tracker","ops":66,"transfer":65660768,"packages":["perplexity-ai","openai-gpt-3","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[2,4,6,0],"time":"11:37","type":"weekly"},"nextExec":"2026-02-01T16:37:00.000Z"},{"name":"Health Alerts","ops":97,"transfer":36352307,"packages":["perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[2,4,6],"time":"05:23","type":"weekly"},"nextExec":"2026-02-03T10:23:00.000Z"},{"name":"Hockey News Tracker ","ops":46,"transfer":36800632,"packages":["perplexity-ai","openai-gpt-3","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[2,4,6],"time":"11:25","type":"weekly"},"nextExec":"2026-02-03T16:25:00.000Z"},{"name":"Horoscope","ops":2190,"transfer":670282933,"packages":["google-sheets","anthropic-claude","json","http","util","anthropic-claude","http"],"isActive":true,"scheduling":{"time":"05:14","type":"daily"},"nextExec":"2026-02-01T10:14:00.000Z"},{"name":"Horse Racing News","ops":84,"transfer":44915504,"packages":["rss","util","openai-gpt-3","openai-gpt-3","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[5,6,0],"time":"08:16","type":"weekly"},"nextExec":"2026-02-01T13:16:00.000Z"},{"name":"Horse Racing Odds","ops":108,"transfer":53058148,"packages":["perplexity-ai","json","http","util","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[3,5,6,0],"time":"11:30","type":"weekly"},"nextExec":"2026-02-01T16:30:00.000Z"},{"name":"How to make a podcast","ops":72,"transfer":25367610,"packages":["perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[2,6],"time":"13:20","type":"weekly"},"nextExec":"2026-02-03T18:20:00.000Z"},{"name":"how to make money","ops":119,"transfer":38531591,"packages":["perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[2,4,6,0],"time":"07:07","type":"weekly"},"nextExec":"2026-02-01T12:07:00.000Z"},{"name":"How to watch Monday night football ","ops":77,"transfer":29773988,"packages":["google-sheets","perplexity-ai","json","http","util","aws-s3","util","amazon-lambda","util","aws-s3","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[6],"time":"07:20","type":"weekly"},"nextExec":"2026-02-07T12:20:00.000Z"},{"name":"How to watch Thursday night football ","ops":59,"transfer":22148362,"packages":["perplexity-ai","json","http","util","aws-s3","util","amazon-lambda","util","aws-s3","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[2],"time":"07:20","type":"weekly"},"nextExec":"2026-02-03T12:20:00.000Z"},{"name":"i am gpted","ops":105,"transfer":61775584,"packages":["perplexity-ai","json","http","util","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[1,3,5,6],"time":"05:11","type":"weekly"},"nextExec":"2026-02-02T10:11:00.000Z"},{"name":"Industry News","ops":2961,"transfer":1081960302,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[1,2,3,4,5],"time":"05:27","type":"weekly"},"nextExec":"2026-02-02T10:27:00.000Z"},{"name":"Inflation Tracker","ops":173,"transfer":47249660,"packages":["rss","builtin","openai-gpt-3","json","http","util","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[1,3,5,6,0],"time":"11:25","type":"weekly"},"nextExec":"2026-02-01T16:25:00.000Z"},{"name":"Jack Smith v Trump","ops":54,"transfer":24411061,"packages":["perplexity-ai","json","http","util","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[2,6],"time":"05:24","type":"weekly"},"nextExec":"2026-02-03T10:24:00.000Z"},{"name":"James Webb","ops":98,"transfer":50612214,"packages":["perplexity-ai","util","util","json","http","util","anthropic-claude","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[2,6],"time":"13:20","type":"weekly"},"nextExec":"2026-02-03T18:20:00.000Z"},{"name":"Job Market Report","ops":954,"transfer":370650104,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[1,5],"time":"13:00","type":"weekly"},"nextExec":"2026-02-02T18:00:00.000Z"},{"name":"Job Market Report 2","ops":702,"transfer":274385748,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[1,5],"time":"13:00","type":"weekly"},"nextExec":"2026-02-02T18:00:00.000Z"},{"name":"Justin Bieber Tracker","ops":63,"transfer":23927291,"packages":["perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[3,6],"time":"09:37","type":"weekly"},"nextExec":"2026-02-04T14:37:00.000Z"},{"name":"Kamala Harris Tracker","ops":54,"transfer":28826200,"packages":["rss","builtin","openai-gpt-3","openai-gpt-3","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[3,6],"time":"07:17","type":"weekly"},"nextExec":"2026-02-04T12:17:00.000Z"},{"name":"KateGate","ops":54,"transfer":30861707,"packages":["perplexity-ai","json","http","util","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[2,6],"time":"11:00","type":"weekly"},"nextExec":"2026-02-03T16:00:00.000Z"},{"name":"Lamar vs drake","ops":63,"transfer":16594546,"packages":["perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[2,6],"time":"07:14","type":"weekly"},"nextExec":"2026-02-03T12:14:00.000Z"},{"name":"Law of Attraction","ops":103,"transfer":72730504,"packages":["anthropic-claude","json","http","util","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[1,3,5,0],"time":"23:07","type":"weekly"},"nextExec":"2026-02-02T04:07:00.000Z"},{"name":"LeBron James Tracker","ops":54,"transfer":30312535,"packages":["rss","builtin","perplexity-ai","openai-gpt-3","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[2,6],"time":"10:37","type":"weekly"},"nextExec":"2026-02-03T15:37:00.000Z"},{"name":"Live Music","ops":652,"transfer":245323031,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[3,5],"time":"11:00","type":"weekly"},"nextExec":"2026-02-04T16:00:00.000Z"},{"name":"Local Frequency","ops":1491,"transfer":559084151,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[1,3,4,6,0],"time":"04:47","type":"weekly"},"nextExec":"2026-02-01T09:47:00.000Z"},{"name":"local pulse","ops":2072,"transfer":765159911,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[4,5,6,0],"time":"04:47","type":"weekly"},"nextExec":"2026-02-01T09:47:00.000Z"},{"name":"Luna Vega - horoscope","ops":2130,"transfer":568244291,"packages":["google-sheets","anthropic-claude","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"time":"05:14","type":"daily"},"nextExec":"2026-02-01T10:14:00.000Z"},{"name":"Malaria Vaccine Tracker","ops":52,"transfer":45103407,"packages":["perplexity-ai","openai-gpt-3","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[2,5,0],"time":"06:07","type":"weekly"},"nextExec":"2026-02-01T11:07:00.000Z"},{"name":"Margin Call","ops":91,"transfer":41032919,"packages":["perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[1,4,6],"time":"06:49","type":"weekly"},"nextExec":"2026-02-02T11:49:00.000Z"},{"name":"MEME Stocks News Tracker ","ops":54,"transfer":35464182,"packages":["perplexity-ai","openai-gpt-3","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[2,4,6],"time":"01:14","type":"weekly"},"nextExec":"2026-02-03T06:14:00.000Z"},{"name":"mindfulness","ops":1037,"transfer":466891902,"packages":["google-sheets","anthropic-claude","json","http","util","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[1,3,5,0],"time":"05:08","type":"weekly"},"nextExec":"2026-02-01T10:08:00.000Z"},{"name":"Mission to Mars","ops":48,"transfer":17812519,"packages":["perplexity-ai","json","http","util","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[3,0],"time":"07:11","type":"weekly"},"nextExec":"2026-02-01T12:11:00.000Z"},{"name":"Morning Person Daily","ops":180,"transfer":109245592,"packages":["anthropic-claude","json","http","util","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[1,2,3,4,5,6,0],"time":"05:11","type":"weekly"},"nextExec":"2026-02-01T10:11:00.000Z"},{"name":"Motivation Daily","ops":183,"transfer":85732858,"packages":["openai-gpt-3","json","http","util","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[1,2,3,4,5,6,0],"time":"05:07","type":"weekly"},"nextExec":"2026-02-01T10:07:00.000Z"},{"name":"Music News Tracker ","ops":180,"transfer":79282206,"packages":["perplexity-ai","json","http","util","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[1,2,3,4,5,6,0],"time":"09:14","type":"weekly"},"nextExec":"2026-02-01T14:14:00.000Z"},{"name":"Nashville Real Estate Market","ops":91,"transfer":30293981,"packages":["perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[2,4,6],"time":"16:21","type":"weekly"},"nextExec":"2026-02-03T21:21:00.000Z"},{"name":"News you do not need","ops":136,"transfer":51500009,"packages":["perplexity-ai","json","http","util","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[1,3,5,6,0],"time":"14:47","type":"weekly"},"nextExec":"2026-02-01T19:47:00.000Z"},{"name":"NFL recap ","ops":84,"transfer":43766605,"packages":["perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[2,4,0],"time":"06:21","type":"weekly"},"nextExec":"2026-02-01T11:21:00.000Z"},{"name":"Opioid Epidemic Tracker","ops":56,"transfer":20820650,"packages":["perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[4,0],"time":"07:25","type":"weekly"},"nextExec":"2026-02-01T12:25:00.000Z"},{"name":"Optimism Daily","ops":121,"transfer":105392817,"packages":["anthropic-claude","openai-gpt-3","anthropic-claude","http"],"isActive":true,"scheduling":{"time":"03:51","type":"daily"},"nextExec":"2026-02-01T08:51:00.000Z"},{"name":"Ozempic","ops":63,"transfer":24968037,"packages":["perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[2,6],"time":"06:37","type":"weekly"},"nextExec":"2026-02-03T11:37:00.000Z"},{"name":"Ozempic Loss Dilemna","ops":56,"transfer":22798836,"packages":["perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[3,6],"time":"06:37","type":"weekly"},"nextExec":"2026-02-04T11:37:00.000Z"},{"name":"Ozempic navigating","ops":44,"transfer":21130294,"packages":["perplexity-ai","util","util","json","http","util","anthropic-claude","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[6],"time":"06:37","type":"weekly"},"nextExec":"2026-02-07T11:37:00.000Z"},{"name":"Personal Growth","ops":842,"transfer":263445287,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[1,3,5,0],"time":"10:04","type":"weekly"},"nextExec":"2026-02-01T15:04:00.000Z"},{"name":"Pet Department","ops":994,"transfer":299793413,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[1,3,5,0],"time":"09:37","type":"weekly"},"nextExec":"2026-02-01T14:37:00.000Z"},{"name":"Pollen Tracker","ops":35,"transfer":36107438,"packages":["google-sheets","openai-gpt-3","openai-gpt-3","http"],"isActive":true,"scheduling":{"days":[6],"time":"05:41","type":"weekly"},"nextExec":"2026-02-07T10:41:00.000Z"},{"name":"project 2025 tracker","ops":91,"transfer":39777816,"packages":["perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[2,4,6],"time":"16:20","type":"weekly"},"nextExec":"2026-02-03T21:20:00.000Z"},{"name":"Quantum 10 ","ops":1153,"transfer":508666476,"packages":["google-sheets","perplexity-ai","json","builtin","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[1,3,5,0],"time":"10:47","type":"weekly"},"nextExec":"2026-02-01T15:47:00.000Z"},{"name":"Relationship and Dating Advice Daily","ops":127,"transfer":55737518,"packages":["anthropic-claude","json","http","util","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[1,3,5,6,0],"time":"21:07","type":"weekly"},"nextExec":"2026-02-01T02:07:00.000Z"},{"name":"RNC 2024 Tracker","ops":119,"transfer":42429397,"packages":["perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[1,3,5,0],"time":"05:18","type":"weekly"},"nextExec":"2026-02-01T10:18:00.000Z"},{"name":"RNC primary","ops":91,"transfer":31664527,"packages":["perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[2,4,6],"time":"05:18","type":"weekly"},"nextExec":"2026-02-03T10:18:00.000Z"},{"name":"roblox nation","ops":64,"transfer":29451827,"packages":["perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[4,0],"time":"03:20","type":"weekly"},"nextExec":"2026-02-01T08:20:00.000Z"},{"name":"Scam News Tracker","ops":119,"transfer":56688713,"packages":["perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[1,3,5,0],"time":"09:07","type":"weekly"},"nextExec":"2026-02-01T14:07:00.000Z"},{"name":"Seed vault Tracker","ops":76,"transfer":21692076,"packages":["perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[3,0],"time":"11:07","type":"weekly"},"nextExec":"2026-02-01T16:07:00.000Z"},{"name":"Shark Attack Track","ops":63,"transfer":27953901,"packages":["perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[3,6],"time":"06:07","type":"weekly"},"nextExec":"2026-02-04T11:07:00.000Z"},{"name":"SiIlicon Valley VC Tracker","ops":91,"transfer":42941212,"packages":["perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[1,3,6],"time":"05:07","type":"weekly"},"nextExec":"2026-02-02T10:07:00.000Z"},{"name":"Soap opera daily","ops":210,"transfer":62467665,"packages":["perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[1,2,3,4,5,6,0],"time":"07:07","type":"weekly"},"nextExec":"2026-02-01T12:07:00.000Z"},{"name":"Soccer News Tracker  ","ops":91,"transfer":28333531,"packages":["perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[3,6,0],"time":"05:14","type":"weekly"},"nextExec":"2026-02-01T10:14:00.000Z"},{"name":"SpaceX Tracker","ops":91,"transfer":37170170,"packages":["perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[2,5,0],"time":"07:07","type":"weekly"},"nextExec":"2026-02-01T12:07:00.000Z"},{"name":"Sports Gossip","ops":575,"transfer":209363770,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[3,0],"time":"11:47","type":"weekly"},"nextExec":"2026-02-01T16:47:00.000Z"},{"name":"Sports Marketing News Daily","ops":117,"transfer":29652131,"packages":["rss","builtin","openai-gpt-3","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[2,4,6],"time":"16:21","type":"weekly"},"nextExec":"2026-02-03T21:21:00.000Z"},{"name":"State News and Info ","ops":1318,"transfer":534880117,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[2,4,0],"time":"04:17","type":"weekly"},"nextExec":"2026-02-01T09:17:00.000Z"},{"name":"State News and Info 15 - 30","ops":1356,"transfer":549306953,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[2,4,0],"time":"05:17","type":"weekly"},"nextExec":"2026-02-01T10:17:00.000Z"},{"name":"Stock Market Tracker","ops":147,"transfer":48830778,"packages":["perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[1,2,3,4,5],"time":"16:30","type":"weekly"},"nextExec":"2026-02-02T21:30:00.000Z"},{"name":"Stock News Daily","ops":2541,"transfer":761777898,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[1,2,3,4,5],"time":"04:42","type":"weekly"},"nextExec":"2026-02-02T09:42:00.000Z"},{"name":"Stock News Daily 20-","ops":1197,"transfer":369203150,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[1,2,3,4,5],"time":"05:42","type":"weekly"},"nextExec":"2026-02-02T10:42:00.000Z"},{"name":"Summer Travel Plans","ops":63,"transfer":22884613,"packages":["perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[4,6],"time":"09:07","type":"weekly"},"nextExec":"2026-02-05T14:07:00.000Z"},{"name":"Supreme Court Decision Tracker SCOTUS","ops":118,"transfer":33702163,"packages":["perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[1,3,5,0],"time":"09:07","type":"weekly"},"nextExec":"2026-02-01T14:07:00.000Z"},{"name":"Surf Report","ops":3630,"transfer":666294599,"packages":["google-sheets","http","anthropic-claude","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[1,2,3,4,5,6,0],"time":"05:38","type":"weekly"},"nextExec":"2026-02-01T10:38:00.000Z"},{"name":"Surf Report El Porto","ops":390,"transfer":98138757,"packages":["perplexity-ai","anthropic-claude","json","http","util","aws-s3","util","amazon-lambda","util","aws-s3","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[1,2,3,4,5,6,0],"time":"08:00","type":"weekly"},"nextExec":"2026-02-01T13:00:00.000Z"},{"name":"Tariff Trackers","ops":1150,"transfer":444427621,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[1,3,5,0],"time":"09:47","type":"weekly"},"nextExec":"2026-02-01T14:47:00.000Z"},{"name":"Taylor Swift Tracker","ops":63,"transfer":23308096,"packages":["perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[3,6],"time":"09:07","type":"weekly"},"nextExec":"2026-02-04T14:07:00.000Z"},{"name":"TD Celebrity History","ops":181,"transfer":101588106,"packages":["anthropic-claude","json","http","util","anthropic-claude","http"],"isActive":true,"scheduling":{"time":"05:57","type":"daily"},"nextExec":"2026-02-01T10:57:00.000Z"},{"name":"TD  Film History","ops":181,"transfer":108537902,"packages":["anthropic-claude","json","http","util","anthropic-claude","http"],"isActive":true,"scheduling":{"time":"05:59","type":"daily"},"nextExec":"2026-02-01T10:59:00.000Z"},{"name":"TD in Insane History ","ops":216,"transfer":54317536,"packages":["google-docs","anthropic-claude","json","http","util","anthropic-claude","http"],"isActive":true,"scheduling":{"time":"05:50","type":"daily"},"nextExec":"2026-02-01T10:50:00.000Z"},{"name":"TD in Sports History","ops":181,"transfer":109869563,"packages":["anthropic-claude","json","http","util","anthropic-claude","http"],"isActive":true,"scheduling":{"time":"05:57","type":"daily"},"nextExec":"2026-02-01T10:57:00.000Z"},{"name":"TD  Music History","ops":181,"transfer":105414176,"packages":["anthropic-claude","json","http","util","anthropic-claude","http"],"isActive":true,"scheduling":{"time":"05:57","type":"daily"},"nextExec":"2026-02-01T10:57:00.000Z"},{"name":"TD  Pickle Ball History","ops":180,"transfer":97434233,"packages":["perplexity-ai","json","http","util","anthropic-claude","http"],"isActive":true,"scheduling":{"time":"05:59","type":"daily"},"nextExec":"2026-02-01T10:59:00.000Z"},{"name":"TD  Science History","ops":181,"transfer":120167539,"packages":["anthropic-claude","json","http","util","anthropic-claude","http"],"isActive":true,"scheduling":{"time":"05:57","type":"daily"},"nextExec":"2026-02-01T10:57:00.000Z"},{"name":"tech 15","ops":1480,"transfer":597170794,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[2,4,6],"time":"04:49","type":"weekly"},"nextExec":"2026-02-03T09:49:00.000Z"},{"name":"terrorist threat tracker","ops":63,"transfer":20692212,"packages":["perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[3,6],"time":"06:07","type":"weekly"},"nextExec":"2026-02-04T11:07:00.000Z"},{"name":"Things to do in with Oly","ops":1120,"transfer":630436776,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[4,5,6,0],"time":"09:42","type":"weekly"},"nextExec":"2026-02-01T14:42:00.000Z"},{"name":"This Week in History","ops":44,"transfer":23292854,"packages":["perplexity-ai","json","http","util","aws-s3","util","amazon-lambda","util","aws-s3","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[0],"time":"05:59","type":"weekly"},"nextExec":"2026-02-01T10:59:00.000Z"},{"name":"tik tok trend","ops":91,"transfer":26970878,"packages":["perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[3,6,0],"time":"19:12","type":"weekly"},"nextExec":"2026-02-02T00:12:00.000Z"},{"name":"TIME IN City","ops":1530,"transfer":592161289,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[4,5,6,0],"time":"05:42","type":"weekly"},"nextExec":"2026-02-01T10:42:00.000Z"},{"name":"Tornado News and Info","ops":153,"transfer":39685314,"packages":["rss","util","openai-gpt-3","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[1,3,5,0],"time":"09:07","type":"weekly"},"nextExec":"2026-02-01T14:07:00.000Z"},{"name":"travel advisory","ops":804,"transfer":606981814,"packages":["google-sheets","perplexity-ai","openai-gpt-3","builtin","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[3,6],"time":"14:49","type":"weekly"},"nextExec":"2026-02-04T19:49:00.000Z"},{"name":"Tropical Storm Tracker","ops":153,"transfer":32361760,"packages":["rss","util","openai-gpt-3","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[1,3,5,0],"time":"06:20","type":"weekly"},"nextExec":"2026-02-01T11:20:00.000Z"},{"name":"Trump Cabinet tracker","ops":1104,"transfer":367285157,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[2,4,0],"time":"09:38","type":"weekly"},"nextExec":"2026-02-01T14:38:00.000Z"},{"name":"Trump Cabinet tracker part 2","ops":1104,"transfer":370743983,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[2,4,0],"time":"09:38","type":"weekly"},"nextExec":"2026-02-01T14:38:00.000Z"},{"name":"Tucker Carlson Tracker (copy)","ops":56,"transfer":22632497,"packages":["perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[3,0],"time":"05:07","type":"weekly"},"nextExec":"2026-02-01T10:07:00.000Z"},{"name":"Unexplained Phenomena Daily","ops":171,"transfer":112302300,"packages":["anthropic-claude","json","http","util","anthropic-claude","http"],"isActive":true,"scheduling":{"time":"05:51","type":"daily"},"nextExec":"2026-02-01T10:51:00.000Z"},{"name":"US and China Tracker","ops":117,"transfer":36305761,"packages":["rss","builtin","openai-gpt-3","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[1,3,5],"time":"10:25","type":"weekly"},"nextExec":"2026-02-02T15:25:00.000Z"},{"name":"US Immigration","ops":72,"transfer":20862872,"packages":["rss","builtin","openai-gpt-3","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[2,4],"time":"11:25","type":"weekly"},"nextExec":"2026-02-03T16:25:00.000Z"},{"name":"US Open","ops":63,"transfer":17662960,"packages":["perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[2,6],"time":"06:20","type":"weekly"},"nextExec":"2026-02-03T11:20:00.000Z"},{"name":"VIX report","ops":91,"transfer":30085721,"packages":["perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[2,4,6],"time":"04:11","type":"weekly"},"nextExec":"2026-02-03T09:11:00.000Z"},{"name":"Water News Cities","ops":179,"transfer":118029321,"packages":["google-sheets","perplexity-ai","openai-gpt-3","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[3,0],"time":"05:42","type":"weekly"},"nextExec":"2026-02-01T10:42:00.000Z"},{"name":"Weather In","ops":6120,"transfer":1552729710,"packages":["google-sheets","http","anthropic-claude","json","http","util","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[1,2,3,4,5,6,0],"time":"04:27","type":"weekly"},"nextExec":"2026-02-01T09:27:00.000Z"},{"name":"Weather In 30-60","ops":4650,"transfer":1170722057,"packages":["google-sheets","http","anthropic-claude","json","http","util","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[1,2,3,4,5,6,0],"time":"04:27","type":"weekly"},"nextExec":"2026-02-01T09:27:00.000Z"},{"name":"wegovy","ops":84,"transfer":49621821,"packages":["perplexity-ai","util","util","json","http","util","anthropic-claude","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[2,6],"time":"13:20","type":"weekly"},"nextExec":"2026-02-03T18:20:00.000Z"},{"name":"What is Trending Today","ops":117,"transfer":27595224,"packages":["rss","util","openai-gpt-3","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[1,3,5],"time":"06:37","type":"weekly"},"nextExec":"2026-02-02T11:37:00.000Z"},{"name":"What to Watch on Streaming","ops":87,"transfer":29710744,"packages":["perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[1,3,6],"time":"11:49","type":"weekly"},"nextExec":"2026-02-02T16:49:00.000Z"},{"name":"where is Melania","ops":119,"transfer":46801668,"packages":["perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[1,3,5,0],"time":"09:07","type":"weekly"},"nextExec":"2026-02-01T14:07:00.000Z"},{"name":"White House Daily Briefing","ops":231,"transfer":108970387,"packages":["perplexity-ai","json","http","util","aws-s3","util","amazon-lambda","util","aws-s3","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[1,2,3,4,5],"time":"05:56","type":"weekly"},"nextExec":"2026-02-02T10:56:00.000Z"},{"name":"Women 10","ops":1568,"transfer":704969175,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":true,"scheduling":{"days":[1,3,5,6,0],"time":"15:47","type":"weekly"},"nextExec":"2026-02-01T20:47:00.000Z"},{"name":"1000 things to do (jul 16)","ops":0,"transfer":0,"packages":["google-sheets","perplexity-ai","openai-gpt-3","anthropic-claude","anthropic-claude","http"],"isActive":false,"scheduling":{"days":[4,0],"time":"09:47","type":"weekly"},"nextExec":null},{"name":"Activtae folder hook test","ops":0,"transfer":0,"packages":["gateway","google-sheets","http","google-sheets"],"isActive":false,"scheduling":{"type":"immediately","maximum_runs_per_minute":null},"nextExec":null},{"name":"Agentic AI","ops":0,"transfer":0,"packages":["google-sheets","perplexity-ai","elevenlabs","anthropic-claude","http"],"isActive":false,"scheduling":{"days":[2,4,6],"time":"14:47","type":"weekly"},"nextExec":null},{"name":"Agentic run Unpublished","ops":0,"transfer":0,"packages":["google-sheets","anthropic-claude","openai-gpt-3","elevenlabs","anthropic-claude","http"],"isActive":false,"scheduling":{"days":[1,3,5,6,0],"time":"08:47","type":"weekly"},"nextExec":"2025-01-26T13:47:00.000Z"},{"name":"A new otr tool (your truly)","ops":0,"transfer":0,"packages":["google-sheets","http","http"],"isActive":false,"scheduling":{"time":"06:30","type":"daily"},"nextExec":null},{"name":"Astronomy Tongiht AWS","ops":0,"transfer":0,"packages":["anthropic-claude","elevenlabs","http","cloudconvert"],"isActive":false,"scheduling":{"time":"06:07","type":"daily"},"nextExec":null},{"name":"Automated AI Video social post ","ops":16,"transfer":19610,"packages":["openai-gpt-3","util","http","util","util","http","util","http","json","builtin","http","http","http"],"isActive":false,"scheduling":{"time":"16:11","type":"daily"},"nextExec":"2025-11-17T21:11:00.000Z"},{"name":"Automated AI Video social post  (Artificial Lure)","ops":0,"transfer":0,"packages":["openai-gpt-3","util","http","util","util","http","util","http","json","builtin","http","http","http"],"isActive":false,"scheduling":{"type":"indefinitely","interval":900},"nextExec":null},{"name":"Automated Faceless AI Video.  s","ops":0,"transfer":0,"packages":["openai-gpt-3","util","http","util","util","http","util","http","json","builtin","http","http","http","http","http","http","http","http"],"isActive":false,"scheduling":{"type":"indefinitely","interval":900},"nextExec":null},{"name":"Auto Racing Recap","ops":3,"transfer":18428,"packages":["perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":false,"scheduling":{"days":[6,0],"time":"06:39","type":"weekly"},"nextExec":null},{"name":"Auto-reply to new comments in Instagram","ops":0,"transfer":0,"packages":["instagram-business","instagram-business"],"isActive":false,"scheduling":{"type":"immediately","interval":900},"nextExec":null},{"name":"AWS (NO TOUCH)","ops":0,"transfer":0,"packages":["http"],"isActive":false,"scheduling":{"days":[1,2,3,4,5,6,0],"time":"19:12","type":"weekly"},"nextExec":"2025-05-03T23:12:00.000Z"},{"name":"Best of 2024 12 ","ops":0,"transfer":0,"packages":["google-sheets","openai-gpt-3","openai-gpt-3","anthropic-claude","http"],"isActive":false,"scheduling":{"days":[2,4,6],"time":"14:47","type":"weekly"},"nextExec":null},{"name":"Biographies To Text File","ops":0,"transfer":0,"packages":["google-sheets","anthropic-claude","google-drive"],"isActive":false,"scheduling":{"time":"11:50","type":"daily"},"nextExec":null},{"name":"biography builder NEW end to end","ops":0,"transfer":0,"packages":["google-sheets","anthropic-claude","openai-gpt-3","anthropic-claude","http","anthropic-claude","elevenlabs","anthropic-claude","http","google-sheets"],"isActive":false,"scheduling":{"type":"indefinitely","interval":900},"nextExec":null},{"name":"Biography Flash 110 - 125","ops":0,"transfer":0,"packages":["google-sheets","perplexity-ai","json","http","util","aws-s3","util","amazon-lambda","util","aws-s3","anthropic-claude","anthropic-claude","http"],"isActive":false,"scheduling":{"days":[2,6],"time":"06:10","type":"weekly"},"nextExec":"2025-10-28T10:10:00.000Z"},{"name":"Biography Flash 1 - 20","ops":0,"transfer":0,"packages":["google-sheets","perplexity-ai","json","http","util","aws-s3","util","amazon-lambda","util","aws-s3","anthropic-claude","anthropic-claude","http"],"isActive":false,"scheduling":{"days":[3,0],"time":"03:40","type":"weekly"},"nextExec":"2025-10-12T07:40:00.000Z"},{"name":"Biography Flash 1 - 20 (copy) testing to instagram","ops":0,"transfer":0,"packages":["google-sheets","perplexity-ai","json","http","util","aws-s3","util","amazon-lambda","util","aws-s3","anthropic-claude","anthropic-claude","http"],"isActive":false,"scheduling":{"days":[3,0],"time":"03:40","type":"weekly"},"nextExec":null},{"name":"Biography Flash 125 - 140","ops":0,"transfer":0,"packages":["google-sheets","perplexity-ai","json","http","util","aws-s3","util","amazon-lambda","util","aws-s3","anthropic-claude","anthropic-claude","http"],"isActive":false,"scheduling":{"days":[3,0],"time":"05:20","type":"weekly"},"nextExec":"2025-10-29T09:20:00.000Z"},{"name":"Biography Flash 140 - 155","ops":0,"transfer":0,"packages":["google-sheets","perplexity-ai","json","http","util","aws-s3","util","amazon-lambda","util","aws-s3","anthropic-claude","anthropic-claude","http"],"isActive":false,"scheduling":{"days":[0],"time":"05:20","type":"weekly"},"nextExec":"2025-11-02T10:20:00.000Z"},{"name":"Biography Flash 155 - 170","ops":0,"transfer":0,"packages":["google-sheets","perplexity-ai","json","http","util","aws-s3","util","amazon-lambda","util","aws-s3","anthropic-claude","anthropic-claude","http"],"isActive":false,"scheduling":{"days":[3,0],"time":"07:20","type":"weekly"},"nextExec":"2025-10-29T11:20:00.000Z"},{"name":"Biography Flash 20 - 35","ops":0,"transfer":0,"packages":["google-sheets","perplexity-ai","json","http","util","aws-s3","util","amazon-lambda","util","aws-s3","anthropic-claude","anthropic-claude","http"],"isActive":false,"scheduling":{"days":[2,6],"time":"03:40","type":"weekly"},"nextExec":"2025-10-28T07:40:00.000Z"},{"name":"Biography Flash 35 - 50","ops":0,"transfer":0,"packages":["google-sheets","perplexity-ai","json","http","util","aws-s3","util","amazon-lambda","util","aws-s3","anthropic-claude","anthropic-claude","http"],"isActive":false,"scheduling":{"days":[3,0],"time":"02:40","type":"weekly"},"nextExec":"2025-10-29T06:40:00.000Z"},{"name":"Biography Flash 50 - 65 ","ops":0,"transfer":0,"packages":["google-sheets","perplexity-ai","json","http","util","aws-s3","util","amazon-lambda","util","aws-s3","anthropic-claude","anthropic-claude","http"],"isActive":false,"scheduling":{"days":[2,6],"time":"03:40","type":"weekly"},"nextExec":"2025-10-28T07:40:00.000Z"},{"name":"Biography Flash 65 - 80","ops":0,"transfer":0,"packages":["google-sheets","perplexity-ai","json","http","util","aws-s3","util","amazon-lambda","util","aws-s3","anthropic-claude","anthropic-claude","http"],"isActive":false,"scheduling":{"days":[4,0],"time":"03:40","type":"weekly"},"nextExec":"2025-10-30T07:40:00.000Z"},{"name":"Biography Flash 80 - 95","ops":0,"transfer":0,"packages":["google-sheets","perplexity-ai","json","http","util","aws-s3","util","amazon-lambda","util","aws-s3","anthropic-claude","anthropic-claude","http"],"isActive":false,"scheduling":{"days":[3,6],"time":"04:40","type":"weekly"},"nextExec":"2025-10-29T08:40:00.000Z"},{"name":"Biography Flash 95 - 110","ops":0,"transfer":0,"packages":["google-sheets","perplexity-ai","json","http","util","aws-s3","util","amazon-lambda","util","aws-s3","anthropic-claude","anthropic-claude","http"],"isActive":false,"scheduling":{"days":[2,6],"time":"04:10","type":"weekly"},"nextExec":"2025-10-28T08:10:00.000Z"},{"name":"Biography Flash Builder 3 episode","ops":0,"transfer":0,"packages":["google-sheets","anthropic-claude","openai-gpt-3","builtin","anthropic-claude","http","anthropic-claude","json","http","builtin","util","anthropic-claude","aws-s3","util","amazon-lambda","util","aws-s3","http","google-sheets","perplexity-ai","util","util","json","http","util","aws-s3","util","amazon-lambda","util","aws-s3","anthropic-claude","anthropic-claude","anthropic-claude","http","perplexity-ai","json","http","util","aws-s3","util","amazon-lambda","util","aws-s3","anthropic-claude","anthropic-claude","http","email"],"isActive":false,"scheduling":{"type":"indefinitely","interval":900},"nextExec":null},{"name":"Bio Snap 120 - 150","ops":0,"transfer":0,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":false,"scheduling":{"days":[2,6],"time":"09:47","type":"weekly"},"nextExec":"2026-01-03T14:47:00.000Z"},{"name":"Bio Snap 1 - 30","ops":0,"transfer":0,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":false,"scheduling":{"days":[3,0],"time":"09:47","type":"weekly"},"nextExec":"2026-01-04T14:47:00.000Z"},{"name":"Bio Snap 1 - 30 part 2","ops":0,"transfer":0,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":false,"scheduling":{"days":[2,6],"time":"09:47","type":"weekly"},"nextExec":"2026-01-03T14:47:00.000Z"},{"name":"Bio Snap 150-180","ops":0,"transfer":0,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":false,"scheduling":{"days":[3,6],"time":"09:47","type":"weekly"},"nextExec":"2026-01-03T14:47:00.000Z"},{"name":"Bio Snap 180 - 200","ops":0,"transfer":0,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":false,"scheduling":{"days":[3,0],"time":"04:47","type":"weekly"},"nextExec":"2026-01-04T09:47:00.000Z"},{"name":"Bio Snap 200 - ","ops":289,"transfer":105045406,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":false,"scheduling":{"days":[2,6],"time":"03:47","type":"weekly"},"nextExec":"2026-01-10T08:47:00.000Z"},{"name":"Bio Snap 240 - 260","ops":0,"transfer":0,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":false,"scheduling":{"days":[2,6],"time":"03:47","type":"weekly"},"nextExec":"2026-01-03T08:47:00.000Z"},{"name":"Bio Snap 30 - 60","ops":0,"transfer":0,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":false,"scheduling":{"days":[3,0],"time":"01:47","type":"weekly"},"nextExec":"2026-01-04T06:47:00.000Z"},{"name":"Bio Snap 30 - 60 part 2","ops":0,"transfer":0,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":false,"scheduling":{"days":[2,6],"time":"09:47","type":"weekly"},"nextExec":"2026-01-03T14:47:00.000Z"},{"name":"Bio Snap 60 - 90 (copy)","ops":0,"transfer":0,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":false,"scheduling":{"days":[3,0],"time":"10:47","type":"weekly"},"nextExec":"2026-01-04T15:47:00.000Z"},{"name":"Bio Snap 90 - 120","ops":99,"transfer":32544092,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":false,"scheduling":{"days":[0],"time":"09:47","type":"weekly"},"nextExec":"2026-01-11T14:47:00.000Z"},{"name":"Bio Snap 90 - 120 part 2","ops":0,"transfer":0,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":false,"scheduling":{"days":[3,0],"time":"09:47","type":"weekly"},"nextExec":"2026-01-04T14:47:00.000Z"},{"name":"Bio Snap 90 - 120 part 3","ops":71,"transfer":24928140,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":false,"scheduling":{"days":[2,6],"time":"09:47","type":"weekly"},"nextExec":"2026-01-06T14:47:00.000Z"},{"name":"Bio Snap katie brown","ops":0,"transfer":0,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":false,"scheduling":{"days":[3,0],"time":"09:47","type":"weekly"},"nextExec":"2026-01-04T14:47:00.000Z"},{"name":"Bio Snapped","ops":0,"transfer":0,"packages":["google-sheets","perplexity-ai","openai-gpt-3","openai-gpt-3","anthropic-claude","http","anthropic-claude","anthropic-claude","openai-gpt-3","anthropic-claude","http","email"],"isActive":false,"scheduling":{"type":"indefinitely","interval":900},"nextExec":"2025-08-19T16:43:30.971Z"},{"name":"born on Tool","ops":0,"transfer":0,"packages":["google-sheets","google-vertex-ai","anthropic-claude","elevenlabs","http"],"isActive":false,"scheduling":{"time":"06:30","type":"daily"},"nextExec":null},{"name":"born on Tool GPT Verison","ops":0,"transfer":0,"packages":["google-sheets","openai-gpt-3","elevenlabs","http"],"isActive":false,"scheduling":{"time":"06:30","type":"daily"},"nextExec":null},{"name":"brand biography builder 3 episode ","ops":0,"transfer":0,"packages":["google-sheets","anthropic-claude","openai-gpt-3","builtin","anthropic-claude","http","anthropic-claude","json","http","builtin","util","anthropic-claude","http","google-sheets","perplexity-ai","util","util","json","http","util","anthropic-claude","anthropic-claude","anthropic-claude","http","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http","email"],"isActive":false,"scheduling":{"type":"indefinitely","interval":900},"nextExec":null},{"name":"builder weather","ops":0,"transfer":0,"packages":["google-sheets","http","openai-gpt-3","openai-gpt-3","http"],"isActive":false,"scheduling":{"time":"06:30","type":"daily"},"nextExec":null},{"name":"City History Legend Myth builder 3 episode","ops":0,"transfer":0,"packages":["google-sheets","anthropic-claude","openai-gpt-3","builtin","anthropic-claude","http","anthropic-claude","json","http","builtin","util","anthropic-claude","http","google-sheets","perplexity-ai","util","util","json","http","util","anthropic-claude","anthropic-claude","anthropic-claude","http","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http","email"],"isActive":false,"scheduling":{"type":"indefinitely","interval":900},"nextExec":null},{"name":"Convert Google Docs to audio files automatically","ops":0,"transfer":0,"packages":["google-docs","google-docs","google-cloud-tts","dropbox"],"isActive":false,"scheduling":{"type":"indefinitely","interval":900},"nextExec":null},{"name":"cop 29","ops":0,"transfer":0,"packages":["openai-gpt-3","openai-gpt-3","anthropic-claude","http"],"isActive":false,"scheduling":{"days":[2],"time":"19:12","type":"weekly"},"nextExec":"2025-05-27T23:12:00.000Z"},{"name":"Create a post in Instagram for new Google sheets rows","ops":0,"transfer":0,"packages":["google-sheets","google-drive","instagram-business"],"isActive":false,"scheduling":{"type":"indefinitely","interval":900},"nextExec":null},{"name":"Create a Show Builder (No Art) set for daily (copy)","ops":0,"transfer":0,"packages":["google-sheets","openai-gpt-3","http","google-sheets"],"isActive":false,"scheduling":{"type":"indefinitely","interval":900},"nextExec":null},{"name":"Create a Show Builder William set commodity tracker","ops":0,"transfer":0,"packages":["google-sheets","openai-gpt-3","openai-gpt-3","http","google-sheets"],"isActive":false,"scheduling":{"type":"indefinitely","interval":900},"nextExec":null},{"name":"Daily Boo","ops":0,"transfer":0,"packages":["google-sheets","openai-gpt-3","openai-gpt-3","http","perplexity-ai","anthropic-claude","elevenlabs","anthropic-claude","http","email"],"isActive":false,"scheduling":{"type":"indefinitely","interval":300},"nextExec":null},{"name":"Daily You 2","ops":0,"transfer":0,"packages":["google-sheets","openai-gpt-3","openai-gpt-3","http","openai-gpt-3","elevenlabs","anthropic-claude","http","email"],"isActive":false,"scheduling":{"type":"indefinitely","interval":300},"nextExec":null},{"name":"Dallas Coupon Test","ops":0,"transfer":0,"packages":["perplexity-ai","openai-gpt-3","openai-gpt-3","anthropic-claude","http","openai-gpt-3"],"isActive":false,"scheduling":{"days":[1,2,3,4,5],"time":"04:11","type":"weekly"},"nextExec":null},{"name":"DavidM Test Scenario","ops":0,"transfer":0,"packages":["amazon-lambda"],"isActive":false,"scheduling":{"type":"indefinitely","interval":900},"nextExec":null},{"name":"Dustin Breeze Video Weather","ops":0,"transfer":0,"packages":["perplexity-ai","heygen","heygen","google-sheets"],"isActive":false,"scheduling":{"type":"indefinitely","interval":900},"nextExec":null},{"name":"Episode Builder Generic (","ops":0,"transfer":0,"packages":["google-sheets","perplexity-ai","json","http","util","aws-s3","util","amazon-lambda","util","aws-s3","anthropic-claude","anthropic-claude","http"],"isActive":false,"scheduling":{"days":[1,2,3,4,5,0],"time":"14:47","type":"weekly"},"nextExec":null},{"name":"FIshing Report to video (testing)","ops":2413,"transfer":740548090,"packages":["google-sheets","perplexity-ai","json","http","util","builtin","anthropic-claude","anthropic-claude","http","anthropic-claude","json","http","util","util"],"isActive":false,"scheduling":{"days":[1,3,5,6,0],"time":"03:20","type":"weekly"},"nextExec":"2026-01-28T08:20:00.000Z"},{"name":"FIshing Report to video (testing)","ops":0,"transfer":0,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":false,"scheduling":{"days":[1,3,5,6,0],"time":"03:20","type":"weekly"},"nextExec":null},{"name":"General 101's - 10","ops":0,"transfer":0,"packages":["google-sheets","perplexity-ai","openai-gpt-3","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":false,"scheduling":{"days":[0],"time":"08:47","type":"weekly"},"nextExec":null},{"name":"Gut Reset: 30 Days","ops":0,"transfer":0,"packages":["google-sheets","anthropic-claude","elevenlabs","http"],"isActive":false,"scheduling":{"days":[1,3,5,6,0],"time":"11:47","type":"weekly"},"nextExec":null},{"name":"Holiday Builder (halloween)","ops":0,"transfer":0,"packages":["google-sheets","anthropic-claude","openai-gpt-3","anthropic-claude","http","anthropic-claude","elevenlabs","anthropic-claude","http","email"],"isActive":false,"scheduling":{"type":"indefinitely","interval":900},"nextExec":null},{"name":"How to watch Sunday night football  (copy)","ops":45,"transfer":18332240,"packages":["perplexity-ai","json","http","util","aws-s3","util","amazon-lambda","util","aws-s3","anthropic-claude","anthropic-claude","http"],"isActive":false,"scheduling":{"days":[5],"time":"07:20","type":"weekly"},"nextExec":null},{"name":"hume presandbox","ops":0,"transfer":0,"packages":["perplexity-ai","util","util","builtin","json","http","builtin","json","http","json","http","json","http"],"isActive":false,"scheduling":{"days":[2,0],"time":"13:20","type":"weekly"},"nextExec":null},{"name":"hume sandbox to tester","ops":0,"transfer":0,"packages":["perplexity-ai","util","util","json","http","util","anthropic-claude","anthropic-claude","anthropic-claude","http"],"isActive":false,"scheduling":{"days":[2,0],"time":"13:20","type":"weekly"},"nextExec":null},{"name":"hume setup base","ops":0,"transfer":0,"packages":["anthropic-claude","json","http","util","anthropic-claude","anthropic-claude","anthropic-claude","http"],"isActive":false,"scheduling":{"days":[2,0],"time":"13:20","type":"weekly"},"nextExec":null},{"name":"Hurricane Tracker","ops":0,"transfer":0,"packages":["perplexity-ai","openai-gpt-3","anthropic-claude","http"],"isActive":false,"scheduling":{"days":[1,3,5,0],"time":"05:08","type":"weekly"},"nextExec":"2025-08-18T09:08:00.000Z"},{"name":"ick-less","ops":59,"transfer":18492482,"packages":["xai","json","http","util","anthropic-claude","anthropic-claude","anthropic-claude","http"],"isActive":false,"scheduling":{"days":[2,6],"time":"13:20","type":"weekly"},"nextExec":null},{"name":"Instagram Tester","ops":0,"transfer":0,"packages":["instagram-business","openai-gpt-3","openai-gpt-3","anthropic-claude","http"],"isActive":false,"scheduling":{"days":[1,2,3,4,5,6,0],"time":"06:41","type":"weekly"},"nextExec":"2024-10-11T10:41:00.000Z"},{"name":"INSTANT FOR FORM Biography Flash Builder 3 episode ","ops":0,"transfer":0,"packages":["google-sheets","anthropic-claude","openai-gpt-3","builtin","anthropic-claude","http","anthropic-claude","json","http","builtin","util","anthropic-claude","aws-s3","util","amazon-lambda","util","aws-s3","http","google-sheets","perplexity-ai","util","util","json","http","util","aws-s3","util","amazon-lambda","util","aws-s3","anthropic-claude","anthropic-claude","anthropic-claude","http","perplexity-ai","json","http","util","aws-s3","util","amazon-lambda","util","aws-s3","anthropic-claude","anthropic-claude","http","email"],"isActive":false,"scheduling":{"type":"indefinitely","interval":900},"nextExec":null},{"name":"insurance builder 3 episode","ops":0,"transfer":0,"packages":["google-sheets","perplexity-ai","builtin","openai-gpt-3","anthropic-claude","http","openai-gpt-3","anthropic-claude","http","openai-gpt-3","anthropic-claude","http"],"isActive":false,"scheduling":{"days":[2,4,6],"time":"14:47","type":"weekly"},"nextExec":null},{"name":"Integration Google Drive, Runway, Gmail","ops":0,"transfer":0,"packages":["google-drive","runway-ml-api","google-email"],"isActive":false,"scheduling":{"type":"indefinitely","interval":900},"nextExec":null},{"name":"Integration Google Sheets","ops":0,"transfer":0,"packages":["google-sheets"],"isActive":false,"scheduling":{"type":"indefinitely","interval":900},"nextExec":null},{"name":"Integration HTTP, Google Drive","ops":0,"transfer":0,"packages":["http","google-drive"],"isActive":false,"scheduling":{"type":"indefinitely","interval":900},"nextExec":null},{"name":"Integration HTTP, Google Sheets","ops":0,"transfer":0,"packages":["http","google-sheets"],"isActive":false,"scheduling":{"type":"indefinitely","interval":900},"nextExec":null},{"name":"Integration Tools","ops":0,"transfer":0,"packages":["openai-gpt-3","openai-gpt-3","transloadit","http"],"isActive":false,"scheduling":{"type":"indefinitely","interval":900},"nextExec":null},{"name":"Jed Why - search phrase 9 grok","ops":228,"transfer":121834132,"packages":["google-sheets","xai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":false,"scheduling":{"days":[2,6],"time":"09:14","type":"weekly"},"nextExec":null},{"name":"Listeria Tracker","ops":0,"transfer":0,"packages":["rss","builtin","openai-gpt-3","openai-gpt-3","anthropic-claude","http"],"isActive":false,"scheduling":{"days":[1,3,5,6,0],"time":"11:18","type":"weekly"},"nextExec":"2025-08-17T15:18:00.000Z"},{"name":"Long show builder","ops":0,"transfer":0,"packages":["google-sheets","anthropic-claude","elevenlabs","anthropic-claude","anthropic-claude","http"],"isActive":false,"scheduling":{"days":[6],"time":"10:47","type":"weekly"},"nextExec":null},{"name":"Maryland Traffic Alerts","ops":0,"transfer":0,"packages":["openai-gpt-3","openai-gpt-3","anthropic-claude","http"],"isActive":false,"scheduling":{"days":[1,3,5],"time":"06:14","type":"weekly"},"nextExec":null},{"name":"MLB baseball recap","ops":0,"transfer":0,"packages":["openai-gpt-3","openai-gpt-3","anthropic-claude","http"],"isActive":false,"scheduling":{"days":[1,2,3,4,5,6,0],"time":"06:15","type":"weekly"},"nextExec":"2024-08-09T10:15:00.000Z"},{"name":"Monitor Google Sheets for new rows and generate chat completions with Perplexity AI and ChatGPT's Assistant","ops":0,"transfer":0,"packages":["google-sheets","perplexity-ai","openai-gpt-3","google-sheets"],"isActive":false,"scheduling":{"type":"indefinitely","interval":900},"nextExec":null},{"name":"My BioPro","ops":0,"transfer":0,"packages":["google-sheets"],"isActive":false,"scheduling":{"type":"indefinitely","interval":900},"nextExec":null},{"name":"My BioPro (copy)","ops":0,"transfer":0,"packages":["google-forms","google-drive","googlecloudvision","openai-gpt-3","pdf-co","openai-gpt-3"],"isActive":false,"scheduling":{"type":"indefinitely","interval":900},"nextExec":null},{"name":"NEWS TODAY: GLOBAL NEWS test","ops":0,"transfer":0,"packages":["perplexity-ai","json","http","util","aws-s3","util","amazon-lambda","util","aws-s3","anthropic-claude","anthropic-claude","http"],"isActive":false,"scheduling":{"type":"indefinitely","interval":7200,"restrict":[{"days":[],"time":["05:26","20:26"],"months":[]}]},"nextExec":"2025-11-08T22:35:11.677Z"},{"name":"OLD biography Bio Snap builder 3 episode","ops":0,"transfer":0,"packages":["google-sheets","anthropic-claude","openai-gpt-3","builtin","anthropic-claude","http","anthropic-claude","json","http","builtin","util","anthropic-claude","http","google-sheets","perplexity-ai","util","util","json","http","util","anthropic-claude","anthropic-claude","anthropic-claude","http","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http","email"],"isActive":false,"scheduling":{"type":"indefinitely","interval":900},"nextExec":"2025-07-14T15:30:52.030Z"},{"name":"OTR art maker","ops":0,"transfer":0,"packages":["google-sheets","openai-gpt-3","http","google-drive"],"isActive":false,"scheduling":{"time":"06:30","type":"daily"},"nextExec":null},{"name":"OTR description maker","ops":0,"transfer":0,"packages":["google-sheets","openai-gpt-3","google-docs"],"isActive":false,"scheduling":{"time":"06:30","type":"daily"},"nextExec":null},{"name":"OTR routine","ops":0,"transfer":0,"packages":["google-sheets","http","openai-gpt-3","google-docs","elevenlabs","http"],"isActive":false,"scheduling":{"time":"06:30","type":"daily"},"nextExec":null},{"name":"PAUSED wcc low traffic comedy daily","ops":0,"transfer":0,"packages":["google-sheets","anthropic-claude","openai-gpt-3","anthropic-claude","http"],"isActive":false,"scheduling":{"days":[2,4,6],"time":"08:47","type":"weekly"},"nextExec":"2025-07-08T12:47:00.000Z"},{"name":"PAUSED wcc low traffic Gas Prices Tracker","ops":0,"transfer":0,"packages":["openai-gpt-3","openai-gpt-3","anthropic-claude","http"],"isActive":false,"scheduling":{"days":[3,0],"time":"06:18","type":"weekly"},"nextExec":"2025-07-09T10:18:00.000Z"},{"name":"PodBOT 3000 beta","ops":0,"transfer":0,"packages":["google-sheets","openai-gpt-3","openai-gpt-3","http","anthropic-claude","anthropic-claude","elevenlabs","anthropic-claude","http","email"],"isActive":false,"scheduling":{"type":"indefinitely","interval":300},"nextExec":"2025-04-30T17:08:45.804Z"},{"name":"PodBOT 3000 – Video Identity QA","ops":0,"transfer":0,"packages":["google-sheets","openai-gpt-3","openai-gpt-3","http","anthropic-claude","anthropic-claude","elevenlabs","anthropic-claude","http","email"],"isActive":false,"scheduling":{"type":"indefinitely","interval":900},"nextExec":null},{"name":"POLLY foundation base","ops":0,"transfer":0,"packages":["http"],"isActive":false,"scheduling":{"days":[1,2,3,4,5,6,0],"time":"19:12","type":"weekly"},"nextExec":null},{"name":"Pope Tracker","ops":0,"transfer":0,"packages":["openai-gpt-3","openai-gpt-3","anthropic-claude","http"],"isActive":false,"scheduling":{"days":[2,4,6],"time":"06:07","type":"weekly"},"nextExec":"2025-08-19T10:07:00.000Z"},{"name":"Pop News 2","ops":0,"transfer":0,"packages":["google-sheets","perplexity-ai","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":false,"scheduling":{"days":[2,4,6],"time":"06:37","type":"weekly"},"nextExec":"2025-08-19T10:37:00.000Z"},{"name":"Prediction markets","ops":0,"transfer":0,"packages":["openai-gpt-3","openai-gpt-3","anthropic-claude","http"],"isActive":false,"scheduling":{"days":[2,4,0],"time":"09:03","type":"weekly"},"nextExec":"2025-08-19T13:03:00.000Z"},{"name":"productivity hacks","ops":0,"transfer":0,"packages":["google-sheets","anthropic-claude","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":false,"scheduling":{"days":[3,6],"time":"05:08","type":"weekly"},"nextExec":"2025-08-20T09:08:00.000Z"},{"name":"Reel Pixel (manual)","ops":0,"transfer":0,"packages":["google-sheets","perplexity-ai","openai-gpt-3","anthropic-claude","anthropic-claude","http"],"isActive":false,"scheduling":{"days":[3,0],"time":"15:47","type":"weekly"},"nextExec":"2025-04-09T19:47:00.000Z"},{"name":"reporting tools","ops":0,"transfer":0,"packages":["google-sheets","anthropic-claude","elevenlabs","http"],"isActive":false,"scheduling":{"time":"06:30","type":"daily"},"nextExec":null},{"name":"Resume to Biography Generator","ops":0,"transfer":0,"packages":["google-sheets","pdf-app-net","util","anthropic-claude","elevenlabs","google-drive"],"isActive":false,"scheduling":{"type":"indefinitely","interval":900},"nextExec":null},{"name":"runway test working","ops":0,"transfer":0,"packages":["google-sheets","google-drive","runway-ml-api"],"isActive":false,"scheduling":{"type":"indefinitely","interval":900},"nextExec":"2025-06-02T14:00:27.804Z"},{"name":"Sally Saves","ops":0,"transfer":0,"packages":["google-sheets","perplexity-ai","openai-gpt-3","anthropic-claude","http"],"isActive":false,"scheduling":{"days":[0],"time":"11:47","type":"weekly"},"nextExec":"2025-02-23T16:47:00.000Z"},{"name":"Save Amazon Lambda function response for new Google Sheets row","ops":0,"transfer":0,"packages":["google-sheets","amazon-lambda","google-sheets"],"isActive":false,"scheduling":{"type":"indefinitely","interval":900},"nextExec":null},{"name":"serial killers true crime","ops":18,"transfer":6733531,"packages":["perplexity-ai","util","util","json","http","util","anthropic-claude","anthropic-claude","anthropic-claude","http"],"isActive":false,"scheduling":{"days":[2,0],"time":"13:20","type":"weekly"},"nextExec":"2026-01-11T18:20:00.000Z"},{"name":"Show's statistics","ops":0,"transfer":0,"packages":["util"],"isActive":false,"scheduling":{"type":"indefinitely","interval":900},"nextExec":null},{"name":"Ski Report","ops":0,"transfer":0,"packages":["google-sheets","perplexity-ai","openai-gpt-3","anthropic-claude","anthropic-claude","http"],"isActive":false,"scheduling":{"days":[1,3,5,6,0],"time":"06:47","type":"weekly"},"nextExec":"2025-05-31T10:47:00.000Z"},{"name":"Speech Tool","ops":0,"transfer":0,"packages":["google-sheets","http","http"],"isActive":false,"scheduling":{"time":"06:30","type":"daily"},"nextExec":"2025-05-28T10:30:00.000Z"},{"name":"splicer draft 1","ops":0,"transfer":0,"packages":["perplexity-ai","util","util","json","http","util","aws-s3","util","amazon-lambda","util","aws-s3","anthropic-claude","anthropic-claude","anthropic-claude","http"],"isActive":false,"scheduling":{"time":"06:07","type":"daily"},"nextExec":null},{"name":"splicer sandbox","ops":0,"transfer":0,"packages":["anthropic-claude","amazon-lambda","http"],"isActive":false,"scheduling":{"time":"06:07","type":"daily"},"nextExec":null},{"name":"spreaker analytics stats for bio snap","ops":0,"transfer":0,"packages":["google-sheets","http","google-sheets"],"isActive":false,"scheduling":{"type":"indefinitely","interval":900},"nextExec":null},{"name":"spreaker analytics stats for show totals","ops":0,"transfer":0,"packages":["google-sheets","http","google-sheets"],"isActive":false,"scheduling":{"type":"indefinitely","interval":900},"nextExec":null},{"name":"spreaker analytics stats for show totals tester","ops":0,"transfer":0,"packages":["google-sheets","http","google-sheets"],"isActive":false,"scheduling":{"type":"indefinitely","interval":900},"nextExec":null},{"name":"spreaker analytics stats for weather","ops":0,"transfer":0,"packages":["google-sheets","http","google-sheets"],"isActive":false,"scheduling":{"type":"indefinitely","interval":900},"nextExec":null},{"name":"Stoner Stories","ops":142,"transfer":61510628,"packages":["anthropic-claude","json","http","util","xai","anthropic-claude","http"],"isActive":false,"scheduling":{"days":[2,6],"time":"04:20","type":"weekly"},"nextExec":"2026-01-24T16:23:00.598Z"},{"name":"STopped low traffic wccCollege Football News Tracker","ops":0,"transfer":0,"packages":["rss","builtin","openai-gpt-3","openai-gpt-3","anthropic-claude","http"],"isActive":false,"scheduling":{"days":[1,6,0],"time":"14:25","type":"weekly"},"nextExec":"2025-06-28T18:25:00.000Z"},{"name":"Streamline YouTube uploads with AI-generated descriptions and tags from Google Drive","ops":0,"transfer":0,"packages":["google-drive","google-drive","openai-gpt-3","json","youtube"],"isActive":false,"scheduling":{"type":"indefinitely","interval":900},"nextExec":null},{"name":"Summarize website content and create social media posts with ChatGPT and Browse AI","ops":0,"transfer":0,"packages":["browse-ai","builtin","openai-gpt-3","linkedin","openai-gpt-3","facebook-pages","openai-gpt-3","twitter"],"isActive":false,"scheduling":{"type":"immediately"},"nextExec":null},{"name":"TRYING Resume to Audio","ops":0,"transfer":0,"packages":["google-sheets","google-drive","http","anthropic-claude"],"isActive":false,"scheduling":{"time":"06:30","type":"daily"},"nextExec":null},{"name":"Turned off wcc bad trafffic high school football","ops":0,"transfer":0,"packages":["google-sheets","perplexity-ai","openai-gpt-3","anthropic-claude","http"],"isActive":false,"scheduling":{"days":[1,5],"time":"04:42","type":"weekly"},"nextExec":"2025-06-27T08:42:00.000Z"},{"name":"Upload new videos to YouTube and LinkedIn automatically","ops":0,"transfer":0,"packages":["google-sheets","google-drive","youtube","linkedin"],"isActive":false,"scheduling":{"type":"indefinitely","interval":900},"nextExec":null},{"name":"video creator tool","ops":0,"transfer":0,"packages":["google-vertex-ai"],"isActive":false,"scheduling":{"type":"indefinitely","interval":900},"nextExec":null},{"name":"Vinny Vegas (manual)","ops":0,"transfer":0,"packages":["google-sheets","anthropic-claude","json","http","util","anthropic-claude","anthropic-claude","http"],"isActive":false,"scheduling":{"time":"05:14","type":"daily"},"nextExec":null},{"name":"Weather In using POLLY ","ops":0,"transfer":0,"packages":["google-sheets","http","anthropic-claude","http","json","http","anthropic-claude","http"],"isActive":false,"scheduling":{"days":[1,2,3,4,5,6,0],"time":"19:12","type":"weekly"},"nextExec":null},{"name":"Wujj test","ops":0,"transfer":0,"packages":["google-sheets","anthropic-claude","openai-gpt-3","anthropic-claude","http"],"isActive":false,"scheduling":{"days":[1,2,3,4,5,6,0],"time":"05:08","type":"weekly"},"nextExec":null},{"name":"xmas 10","ops":0,"transfer":0,"packages":["google-sheets","perplexity-ai","openai-gpt-3","anthropic-claude","http"],"isActive":false,"scheduling":{"days":[2,4,6,0],"time":"14:27","type":"weekly"},"nextExec":"2025-10-16T18:27:00.000Z"}];
-        const usageData = [{"date":"2026-01-02T00:00:00.000-05:00","operations":3304,"dataTransfer":1155344527,"centicredits":330400},{"date":"2026-01-03T00:00:00.000-05:00","operations":4207,"dataTransfer":1503861688,"centicredits":420700},{"date":"2026-01-04T00:00:00.000-05:00","operations":3890,"dataTransfer":1380235118,"centicredits":389000},{"date":"2026-01-05T00:00:00.000-05:00","operations":2699,"dataTransfer":879969945,"centicredits":269900},{"date":"2026-01-06T00:00:00.000-05:00","operations":3069,"dataTransfer":1118745687,"centicredits":306900},{"date":"2026-01-07T00:00:00.000-05:00","operations":3295,"dataTransfer":1209285810,"centicredits":329500},{"date":"2026-01-08T00:00:00.000-05:00","operations":4012,"dataTransfer":1690555389,"centicredits":401200},{"date":"2026-01-09T00:00:00.000-05:00","operations":3324,"dataTransfer":1450458330,"centicredits":332400},{"date":"2026-01-10T00:00:00.000-05:00","operations":4014,"dataTransfer":1735393339,"centicredits":401400},{"date":"2026-01-11T00:00:00.000-05:00","operations":3754,"dataTransfer":1670704647,"centicredits":375400},{"date":"2026-01-12T00:00:00.000-05:00","operations":3045,"dataTransfer":1025615878,"centicredits":304500},{"date":"2026-01-13T00:00:00.000-05:00","operations":3361,"dataTransfer":1131899340,"centicredits":336100},{"date":"2026-01-14T00:00:00.000-05:00","operations":3959,"dataTransfer":1462848131,"centicredits":395900},{"date":"2026-01-15T00:00:00.000-05:00","operations":2801,"dataTransfer":1000938761,"centicredits":280100},{"date":"2026-01-16T00:00:00.000-05:00","operations":3619,"dataTransfer":1297286391,"centicredits":361900},{"date":"2026-01-17T00:00:00.000-05:00","operations":3879,"dataTransfer":1418649558,"centicredits":387900},{"date":"2026-01-18T00:00:00.000-05:00","operations":3760,"dataTransfer":1383102857,"centicredits":376000},{"date":"2026-01-19T00:00:00.000-05:00","operations":3009,"dataTransfer":1018945001,"centicredits":300900},{"date":"2026-01-20T00:00:00.000-05:00","operations":3324,"dataTransfer":1138163187,"centicredits":332400},{"date":"2026-01-21T00:00:00.000-05:00","operations":3956,"dataTransfer":1452925511,"centicredits":395600},{"date":"2026-01-22T00:00:00.000-05:00","operations":2799,"dataTransfer":1032441996,"centicredits":279900},{"date":"2026-01-23T00:00:00.000-05:00","operations":3416,"dataTransfer":1227346565,"centicredits":341600},{"date":"2026-01-24T00:00:00.000-05:00","operations":3943,"dataTransfer":1458309192,"centicredits":394300},{"date":"2026-01-25T00:00:00.000-05:00","operations":3760,"dataTransfer":1347505736,"centicredits":376000},{"date":"2026-01-26T00:00:00.000-05:00","operations":3057,"dataTransfer":1049591689,"centicredits":305700},{"date":"2026-01-27T00:00:00.000-05:00","operations":3312,"dataTransfer":1140558748,"centicredits":331200},{"date":"2026-01-28T00:00:00.000-05:00","operations":3819,"dataTransfer":1427981017,"centicredits":381900},{"date":"2026-01-29T00:00:00.000-05:00","operations":2799,"dataTransfer":993998964,"centicredits":279900},{"date":"2026-01-30T00:00:00.000-05:00","operations":3322,"dataTransfer":1204680258,"centicredits":332200},{"date":"2026-01-31T00:00:00.000-05:00","operations":3692,"dataTransfer":1348468365,"centicredits":369200}];
-        const subscription = {"status":{"validTo":null,"statusName":"OK","isEnterprise":false,"isPromoActive":false,"isTrialPeriod":false,"isCouponActive":false,"isLegacyBilling":false,"hasPaymentMethod":true,"isDiscountActive":false,"downgradeScheduledAt":null,"willCancelAfterTrial":false,"isCancellationPending":false},"product":{"id":4,"name":"Teams","price":{"id":75,"price":348,"config":{"dslimit":1000,"iolimit":667,"dsslimit":10485760,"transfer":64424509440,"dlqStorage":10485760,"operations":120000,"restartPeriod":"1 year"},"period":"year","default":false,"visible":true,"priority":2,"productId":4,"currencyCode":"USD","autoPurchasePrice":36.25,"maxAutoPurchases":12,"autoPurchaseCount":12},"promo":null,"coupon":null,"validTo":null,"imtSubId":1953367,"nextBill":"2026-06-24T18:01:30.000Z","gracePeriod":null,"trialPeriod":false,"taxExemption":{"valid":false,"validTo":null,"validFrom":null},"freeProductData":{"id":1,"name":"Free","price":{"id":1,"price":0,"config":{"dslimit":1,"iolimit":50,"dsslimit":1048576,"transfer":536870912,"dlqStorage":1048576,"operations":1000,"restartPeriod":"1 month"},"period":"month","default":true,"currencyCode":"USD"}},"productManagement":"selfService","cancellationIntent":false,"pendingPaymentExists":false,"afterTrialPeriodFreeProduct":null,"autoPurchaseEligible":true}};
+        // Generate daily chart bars
+        const dailyChart = document.getElementById('dailyChart');
+        const dailyData = [
+            5234, 4892, 5123, 5567, 5890, 6123, 5456,
+            5678, 5432, 5789, 5234, 5890, 6234, 5678,
+            5432, 5567, 5890, 6012, 5678, 5432, 5789,
+            5234, 5567, 5890, 6123, 5456, 5789, 5234,
+            5567, 5890, 6012
+        ];
         
-        function formatNum(n) {
-            if (n >= 1000000) return (n/1000000).toFixed(1) + 'M';
-            if (n >= 1000) return (n/1000).toFixed(1) + 'K';
-            return n.toLocaleString();
-        }
+        const maxVal = Math.max(...dailyData);
         
-        function formatBytes(b) {
-            if (b >= 1073741824) return (b/1073741824).toFixed(1) + ' GB';
-            if (b >= 1048576) return (b/1048576).toFixed(1) + ' MB';
-            return (b/1024).toFixed(0) + ' KB';
-        }
-        
-        function render() {
-            const total = scenarios.length;
-            const active = scenarios.filter(s => s.isActive).length;
-            const monthOps = usageData.reduce((s,d) => s + d.operations, 0);
-            const monthTransfer = usageData.reduce((s,d) => s + d.dataTransfer, 0);
-            const avgDaily = Math.round(monthOps / usageData.length);
-            const peakDay = usageData.reduce((max,d) => d.operations > max.operations ? d : max, usageData[0]);
-            
-            // Plan info
-            const plan = subscription.product;
-            const includedOps = plan.price.config.operations;
-            const overage = Math.max(0, monthOps - (includedOps / 12));
-            
-            // LLM breakdown
-            const claude = scenarios.filter(s => s.packages?.includes('anthropic-claude'));
-            const perplexity = scenarios.filter(s => s.packages?.includes('perplexity-ai'));
-            const sheets = scenarios.filter(s => s.packages?.includes('google-sheets'));
-            const s3 = scenarios.filter(s => s.packages?.includes('aws-s3'));
-            
-            // Main cards
-            document.getElementById('mainCards').innerHTML = `
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-icon purple">📦</div>
-                        <div class="card-title">Scenarios</div>
-                    </div>
-                    <div class="card-value purple">${total}</div>
-                    <div class="card-subtitle">${active} active</div>
-                </div>
-                
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-icon pink">⚡</div>
-                        <div class="card-title">Operations (MTD)</div>
-                    </div>
-                    <div class="card-value pink">${formatNum(monthOps)}</div>
-                    <div class="card-subtitle">${formatNum(avgDaily)} avg/day</div>
-                </div>
-                
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-icon blue">📡</div>
-                        <div class="card-title">Data Transfer</div>
-                    </div>
-                    <div class="card-value blue">${formatBytes(monthTransfer)}</div>
-                    <div class="card-subtitle">This month</div>
-                </div>
-                
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-icon green">📈</div>
-                        <div class="card-title">Peak Day</div>
-                    </div>
-                    <div class="card-value green">${formatNum(peakDay.operations)}</div>
-                    <div class="card-subtitle">Jan ${new Date(peakDay.date).getDate()}</div>
-                </div>
-                
-                <div class="card card-wide">
-                    <div class="card-header">
-                        <div class="card-icon orange">💳</div>
-                        <div class="card-title">Make.com Plan: ${plan.name}</div>
-                    </div>
-                    <div class="plan-details">
-                        <div class="plan-item">
-                            <div class="plan-item-label">Annual Price</div>
-                            <div class="plan-item-value">$${plan.price.price}/yr</div>
-                        </div>
-                        <div class="plan-item">
-                            <div class="plan-item-label">Included Ops</div>
-                            <div class="plan-item-value">${formatNum(includedOps)}/yr</div>
-                        </div>
-                        <div class="plan-item">
-                            <div class="plan-item-label">Monthly Allowance</div>
-                            <div class="plan-item-value">~${formatNum(Math.round(includedOps/12))}</div>
-                        </div>
-                        <div class="plan-item">
-                            <div class="plan-item-label">This Month Overage</div>
-                            <div class="plan-item-value" style="color: ${overage > 0 ? 'var(--accent-orange)' : 'var(--accent-green)'}">${formatNum(overage)}</div>
-                        </div>
-                    </div>
-                </div>
-            `;
-            
-            // LLM Cards
-            document.getElementById('llmCards').innerHTML = `
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-icon" style="background: rgba(217,119,87,0.15);">🧠</div>
-                        <div class="card-title">Anthropic Claude</div>
-                    </div>
-                    <div class="llm-grid">
-                        <div class="llm-item">
-                            <div class="llm-item-name">Scenarios</div>
-                            <div class="llm-item-value">${claude.length}</div>
-                        </div>
-                        <div class="llm-item">
-                            <div class="llm-item-name">Operations</div>
-                            <div class="llm-item-value">${formatNum(claude.reduce((s,x) => s + (x.ops||0), 0))}</div>
-                        </div>
-                        <div class="llm-item">
-                            <div class="llm-item-name">% of Total</div>
-                            <div class="llm-item-value">${Math.round(claude.length/total*100)}%</div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-icon cyan">🔍</div>
-                        <div class="card-title">Perplexity AI</div>
-                    </div>
-                    <div class="llm-grid">
-                        <div class="llm-item">
-                            <div class="llm-item-name">Scenarios</div>
-                            <div class="llm-item-value">${perplexity.length}</div>
-                        </div>
-                        <div class="llm-item">
-                            <div class="llm-item-name">Operations</div>
-                            <div class="llm-item-value">${formatNum(perplexity.reduce((s,x) => s + (x.ops||0), 0))}</div>
-                        </div>
-                        <div class="llm-item">
-                            <div class="llm-item-name">% of Total</div>
-                            <div class="llm-item-value">${Math.round(perplexity.length/total*100)}%</div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-icon green">📊</div>
-                        <div class="card-title">Other Services</div>
-                    </div>
-                    <div class="llm-grid">
-                        <div class="llm-item">
-                            <div class="llm-item-name">Google Sheets</div>
-                            <div class="llm-item-value">${sheets.length}</div>
-                        </div>
-                        <div class="llm-item">
-                            <div class="llm-item-name">AWS S3</div>
-                            <div class="llm-item-value">${s3.length}</div>
-                        </div>
-                        <div class="llm-item">
-                            <div class="llm-item-name">HTTP Calls</div>
-                            <div class="llm-item-value">${scenarios.filter(s => s.packages?.includes('http')).length}</div>
-                        </div>
-                    </div>
-                </div>
-            `;
-            
-            // Daily chart
-            const maxOps = Math.max(...usageData.map(d => d.operations));
-            document.getElementById('dailyChart').innerHTML = usageData.map(d => {
-                const h = (d.operations / maxOps) * 100;
-                const day = new Date(d.date).getDate();
-                return `<div class="chart-bar" style="height:${h}%" data-label="Jan ${day}: ${d.operations.toLocaleString()}"></div>`;
-            }).join('');
-            
-            // Scenarios table
-            const top = scenarios.filter(s => s.ops > 0).sort((a,b) => b.ops - a.ops).slice(0, 20);
-            document.getElementById('scenariosTable').innerHTML = top.map((s, i) => {
-                const tags = [];
-                if (s.packages?.includes('anthropic-claude')) tags.push('<span class="tag claude">Claude</span>');
-                if (s.packages?.includes('perplexity-ai')) tags.push('<span class="tag perplexity">Perplexity</span>');
-                if (s.packages?.includes('google-sheets')) tags.push('<span class="tag sheets">Sheets</span>');
-                if (s.packages?.includes('aws-s3')) tags.push('<span class="tag s3">S3</span>');
-                return `<tr>
-                    <td>${i+1}</td>
-                    <td class="scenario-name">${s.name}</td>
-                    <td class="number">${formatNum(s.ops||0)}</td>
-                    <td class="number">${formatBytes(s.transfer||0)}</td>
-                    <td>${tags.slice(0,3).join('') || '—'}</td>
-                    <td>${s.isActive ? '🟢' : '⚪'}</td>
-                </tr>`;
-            }).join('');
-        }
-        
-        render();
+        dailyData.forEach((val, i) => {
+            const bar = document.createElement('div');
+            bar.className = 'chart-bar';
+            bar.style.height = `${(val / maxVal) * 100}%`;
+            bar.setAttribute('data-label', `Day ${i + 1}: ${val.toLocaleString()}`);
+            dailyChart.appendChild(bar);
+        });
     </script>
 </body>
 </html>
