@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Engineering Dashboard — IPAI</title>
+    <title>Tech Leadership — IPAI</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -27,12 +27,12 @@
             --glass-hover: rgba(255, 255, 255, 0.08);
             --success: #34c759;
             --warning: #ff9f0a;
-            --error: #ff453a;
-            --accent-blue: #3b82f6;
-            --accent-purple: #a855f7;
+            --danger: #ff453a;
+            --info: #3b82f6;
             --go-color: #00ADD8;
             --elixir-color: #9B72AA;
             --make-color: #6366f1;
+            --python-color: #3776ab;
         }
         
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -55,15 +55,10 @@
             z-index: -1;
         }
         
-        .container { max-width: 1400px; margin: 0 auto; padding: 48px 24px; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 48px 24px; }
         
         /* Header */
-        header { 
-            text-align: center; 
-            margin-bottom: 40px;
-            padding-bottom: 24px;
-            border-bottom: 1px solid var(--glass-border);
-        }
+        header { text-align: center; margin-bottom: 48px; }
         
         .logo {
             width: 72px;
@@ -86,1120 +81,875 @@
         .subtitle { font-size: 1rem; color: var(--text-secondary); margin-bottom: 8px; }
         .updated { font-size: 0.8125rem; color: var(--gold); }
         
-        .header-status {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 12px;
-            margin-top: 16px;
-        }
-        
-        .status-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 500;
-        }
-        
-        .status-healthy { 
-            background: rgba(52, 199, 89, 0.15); 
-            color: var(--success);
-            border: 1px solid rgba(52, 199, 89, 0.3);
-        }
-        .status-warning { 
-            background: rgba(255, 159, 10, 0.15); 
-            color: var(--warning);
-            border: 1px solid rgba(255, 159, 10, 0.3);
-        }
-        .status-critical { 
-            background: rgba(255, 69, 58, 0.15); 
-            color: var(--error);
-            border: 1px solid rgba(255, 69, 58, 0.3);
-        }
-        
-        .status-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: currentColor;
-            box-shadow: 0 0 8px currentColor;
-            animation: pulse 2s infinite;
-        }
-        
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-        
-        /* Stats Bar */
-        .stats-bar {
+        /* Stats Grid */
+        .stats-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
             gap: 12px;
-            margin-bottom: 32px;
+            margin-bottom: 40px;
         }
         
-        @media (max-width: 900px) {
-            .stats-bar { grid-template-columns: repeat(2, 1fr); }
-        }
-        
-        @media (max-width: 500px) {
-            .stats-bar { grid-template-columns: 1fr; }
-        }
-        
-        .stat-box {
+        .stat-card {
             background: var(--glass-bg);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            border-radius: 14px;
-            padding: 20px;
-            text-align: center;
             border: 1px solid var(--glass-border);
+            border-radius: 14px;
+            padding: 16px;
+            text-align: center;
             transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
         }
         
-        .stat-box:hover {
+        .stat-card:hover {
             background: var(--glass-hover);
             border-color: rgba(212, 175, 55, 0.3);
             transform: translateY(-2px);
         }
         
-        .stat-box.highlight {
-            background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(168, 168, 168, 0.05) 100%);
-            border-color: rgba(212, 175, 55, 0.25);
+        .stat-label { 
+            color: var(--text-tertiary); 
+            font-size: 0.6875rem; 
+            text-transform: uppercase; 
+            letter-spacing: 0.05em; 
         }
-        
-        .stat-value {
-            font-size: 1.75rem;
-            font-weight: 700;
+        .stat-value { 
+            font-size: 1.5rem; 
+            font-weight: 700; 
+            margin-top: 4px;
             background: linear-gradient(180deg, var(--silver) 0%, var(--gold-light) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            letter-spacing: -0.02em;
         }
+        .stat-sub { color: var(--text-secondary); font-size: 0.75rem; margin-top: 4px; }
         
-        .stat-value.trend-up {
-            background: linear-gradient(180deg, #4ade80 0%, var(--success) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        
-        .stat-value.success {
-            background: linear-gradient(180deg, #4ade80 0%, var(--success) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        
-        .stat-label {
-            font-size: 0.6875rem;
-            color: var(--text-tertiary);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            margin-top: 6px;
-        }
-        
-        .stat-subtitle {
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-            margin-top: 4px;
-        }
-        
-        /* Sections */
-        .section { margin-bottom: 32px; }
-        
-        .section-title {
-            font-size: 1.125rem;
-            font-weight: 600;
-            letter-spacing: -0.01em;
-            margin-bottom: 16px;
-            display: flex;
-            align-items: center;
+        /* Section */
+        .section { margin-bottom: 40px; }
+        .section-title { 
+            font-size: 1.125rem; 
+            font-weight: 600; 
+            margin-bottom: 20px; 
+            display: flex; 
+            align-items: center; 
             gap: 8px;
-            color: var(--text-primary);
+            letter-spacing: -0.01em;
         }
-        
-        .section-title .tag {
+        .section-title .note {
             font-size: 0.8rem;
             font-weight: 400;
             color: var(--text-tertiary);
         }
         
-        /* Glass Card */
-        .card {
+        /* System Tiles */
+        .system-tile {
             background: var(--glass-bg);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
             border-radius: 16px;
             padding: 24px;
-            border: 1px solid var(--glass-border);
             margin-bottom: 16px;
             transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
         }
         
-        .card:hover {
+        .system-tile:hover {
             background: var(--glass-hover);
             border-color: rgba(212, 175, 55, 0.2);
         }
         
-        /* System Tiles */
-        .system-tile {
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .system-tile.go {
-            border-color: rgba(0, 173, 216, 0.3);
+        .system-tile.go { 
+            border-color: rgba(0, 173, 216, 0.4);
             background: linear-gradient(135deg, rgba(0, 173, 216, 0.08) 0%, var(--glass-bg) 100%);
         }
-        
-        .system-tile.elixir {
-            opacity: 0.85;
-            border-color: rgba(155, 114, 170, 0.3);
+        .system-tile.elixir { 
+            opacity: 0.85; 
+            border-color: rgba(155, 114, 170, 0.4);
         }
-        
-        .system-tile.make {
-            border-color: rgba(99, 102, 241, 0.3);
+        .system-tile.make { 
+            border-color: rgba(99, 102, 241, 0.4);
             background: linear-gradient(135deg, rgba(99, 102, 241, 0.08) 0%, var(--glass-bg) 100%);
         }
         
-        .repo-header {
+        .tile-header {
             display: flex;
             justify-content: space-between;
-            align-items: center;
+            align-items: flex-start;
+            margin-bottom: 16px;
             flex-wrap: wrap;
             gap: 12px;
-            margin-bottom: 16px;
         }
         
-        .repo-name {
-            font-size: 1.375rem;
+        .tile-name { 
+            font-size: 1.375rem; 
             font-weight: 700;
             letter-spacing: -0.02em;
             background: linear-gradient(180deg, var(--silver-light) 0%, var(--gold) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
+        .tile-badges { display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
         
-        .primary-lang {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 16px;
-            padding: 12px 16px;
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 12px;
-            border: 1px solid var(--glass-border);
+        .badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.6875rem;
+            font-weight: 600;
+            text-transform: uppercase;
         }
         
-        .primary-lang-icon {
+        .badge-go { background: var(--go-color); color: #000; }
+        .badge-elixir { background: var(--elixir-color); color: #fff; }
+        .badge-make { background: var(--make-color); color: #fff; }
+        .badge-active { background: var(--success); color: #000; }
+        .badge-deprecated { background: var(--danger); color: #fff; }
+        .badge-operational { background: var(--info); color: #fff; }
+        
+        .tile-stats {
             display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 40px;
-            height: 40px;
-            border-radius: 10px;
+            gap: 24px;
+            text-align: center;
+        }
+        
+        .tile-stat-value { 
+            font-size: 1.375rem; 
             font-weight: 700;
-            font-size: 0.875rem;
-            color: white;
+            background: linear-gradient(180deg, var(--silver) 0%, var(--gold-light) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
+        .tile-stat-label { font-size: 0.625rem; color: var(--text-tertiary); text-transform: uppercase; }
         
-        .primary-lang-label {
+        .tile-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+            margin: 16px 0;
             font-size: 0.875rem;
             color: var(--text-secondary);
         }
         
-        .primary-lang-label strong {
-            color: var(--text-primary);
-        }
+        .tile-info strong { color: var(--text-primary); }
         
-        .timeline-info {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 16px;
-            margin-bottom: 16px;
+        .deprecation-notice {
+            background: rgba(255, 69, 58, 0.1);
+            border: 1px solid rgba(255, 69, 58, 0.3);
+            border-radius: 10px;
             padding: 12px 16px;
-            background: rgba(255, 255, 255, 0.02);
-            border-radius: 12px;
-            border: 1px solid var(--glass-border);
+            margin-bottom: 16px;
+            font-size: 0.8rem;
+            color: #fca5a5;
         }
-        
-        .timeline-item {
-            display: flex;
-            flex-direction: column;
-            min-width: 120px;
-        }
-        
-        .timeline-label {
-            font-size: 0.6875rem;
-            text-transform: uppercase;
-            color: var(--text-tertiary);
-            letter-spacing: 0.05em;
-        }
-        
-        .timeline-value {
-            font-size: 1rem;
-            font-weight: 600;
-            color: var(--text-primary);
-        }
-        
-        .highlight-green { color: var(--success) !important; }
         
         /* Tech Stack */
-        .tech-section {
+        .tile-section {
+            padding-top: 16px;
+            border-top: 1px solid var(--glass-border);
             margin-top: 16px;
         }
         
-        .tech-section-title {
-            font-size: 0.8125rem;
-            font-weight: 600;
-            color: var(--text-secondary);
-            margin-bottom: 8px;
+        .tile-section-title {
+            font-size: 0.6875rem;
+            color: var(--text-tertiary);
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            letter-spacing: 0.05em;
         }
         
-        .tech-stack-box {
+        .tech-tags, .int-tags {
             display: flex;
             flex-wrap: wrap;
-            gap: 8px;
-            padding: 12px;
-            background: rgba(0, 0, 0, 0.15);
-            border-radius: 10px;
+            gap: 6px;
+        }
+        
+        .tag {
+            font-size: 0.6875rem;
+            padding: 5px 10px;
+            border-radius: 6px;
+            background: rgba(255,255,255,0.06);
+            color: var(--text-secondary);
             border: 1px solid var(--glass-border);
         }
         
-        .stack-tag {
-            display: inline-block;
-            padding: 6px 12px;
-            border-radius: 8px;
-            font-size: 0.75rem;
-            font-weight: 600;
+        .tag.primary { font-weight: 600; }
+        .tag.go { background: var(--go-color); color: #000; border: none; }
+        .tag.elixir { background: var(--elixir-color); color: #fff; border: none; }
+        .tag.int { background: rgba(212, 175, 55, 0.15); color: var(--gold-light); border-color: rgba(212, 175, 55, 0.3); }
+        
+        /* Language Bar */
+        .lang-bar {
+            height: 6px;
+            border-radius: 3px;
+            overflow: hidden;
+            display: flex;
+            margin-top: 10px;
         }
+        
+        .lang-segment { height: 100%; }
         
         /* Chart */
         .chart-container {
-            height: 300px;
-            margin-top: 16px;
-        }
-        
-        /* Table */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.875rem;
-        }
-        
-        th, td {
-            padding: 12px 16px;
-            text-align: left;
-            border-bottom: 1px solid var(--glass-border);
-        }
-        
-        th {
-            color: var(--text-tertiary);
-            font-weight: 500;
-            text-transform: uppercase;
-            font-size: 0.6875rem;
-            letter-spacing: 0.05em;
-        }
-        
-        td { color: var(--text-secondary); }
-        td strong { color: var(--text-primary); }
-        
-        .lang-tag {
-            display: inline-block;
-            padding: 4px 10px;
-            border-radius: 6px;
-            font-size: 0.6875rem;
-            font-weight: 500;
-            margin-right: 4px;
-            margin-bottom: 4px;
-        }
-        
-        /* Commits */
-        .recent-commits { max-height: 220px; overflow-y: auto; }
-        
-        .commit {
-            padding: 12px 0;
-            border-bottom: 1px solid var(--glass-border);
-            font-size: 0.875rem;
-        }
-        
-        .commit:last-child { border-bottom: none; }
-        
-        .commit-message {
-            color: var(--text-primary);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        
-        .commit-meta {
-            color: var(--text-tertiary);
-            font-size: 0.75rem;
-            margin-top: 4px;
-        }
-        
-        /* Contributors Grid */
-        .contrib-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 16px;
-        }
-        
-        @media (max-width: 1000px) {
-            .contrib-grid { grid-template-columns: repeat(2, 1fr); }
-        }
-        
-        @media (max-width: 600px) {
-            .contrib-grid { grid-template-columns: 1fr; }
-        }
-        
-        .contrib-card {
             background: var(--glass-bg);
             backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 40px;
+        }
+        
+        .chart-title { font-size: 1rem; font-weight: 600; margin-bottom: 16px; }
+        
+        /* Contributors */
+        .contributors-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 12px;
+        }
+        
+        .contributor-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
             border-radius: 14px;
             padding: 20px;
-            border: 1px solid var(--glass-border);
             transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
         }
         
-        .contrib-card:hover {
+        .contributor-card:hover {
             background: var(--glass-hover);
             border-color: rgba(212, 175, 55, 0.2);
             transform: translateY(-2px);
         }
         
-        .contrib-card.highlight {
-            border-color: rgba(168, 85, 247, 0.4);
+        .contributor-name { font-weight: 600; margin-bottom: 4px; display: flex; align-items: center; gap: 8px; }
+        .contributor-type { font-size: 0.75rem; color: var(--text-tertiary); margin-bottom: 8px; }
+        .contributor-stats { font-size: 0.875rem; color: var(--text-secondary); }
+        .contributor-work { font-size: 0.8rem; color: var(--text-tertiary); margin-top: 8px; }
+        
+        /* Recommendations */
+        .rec-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 16px;
         }
         
-        .contrib-header {
+        .rec-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 14px;
+            padding: 20px;
+        }
+        
+        .rec-card.recs {
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.08) 0%, var(--glass-bg) 100%);
+            border-color: rgba(212, 175, 55, 0.3);
+        }
+        
+        .rec-card.gaps { 
+            border-color: rgba(255, 159, 10, 0.4); 
+            background: rgba(255, 159, 10, 0.05); 
+        }
+        
+        .rec-title { font-weight: 600; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+        
+        .rec-list { list-style: none; }
+        .rec-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid var(--glass-border);
+            font-size: 0.8rem;
+            color: var(--text-secondary);
             display: flex;
-            align-items: center;
+            align-items: flex-start;
+            gap: 8px;
+        }
+        .rec-list li:last-child { border-bottom: none; }
+        .rec-list li::before { content: "→"; color: var(--gold); }
+        .rec-card.gaps .rec-list li::before { content: "⚠"; color: var(--warning); }
+        
+        /* Days Live Badge */
+        .days-live {
+            font-size: 0.75rem;
+            color: var(--gold);
+            font-weight: 600;
+            background: rgba(212, 175, 55, 0.1);
+            padding: 4px 10px;
+            border-radius: 6px;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+        }
+        
+        .days-live.veteran {
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.15) 0%, rgba(168, 168, 168, 0.1) 100%);
+            border-color: rgba(212, 175, 55, 0.3);
+        }
+        
+        /* App Cards */
+        .app-tile {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 12px;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .app-tile:hover {
+            background: var(--glass-hover);
+            border-color: rgba(212, 175, 55, 0.2);
+        }
+        
+        .app-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
             gap: 12px;
             margin-bottom: 12px;
         }
         
-        .contrib-avatar {
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: 1rem;
-        }
-        
-        .contrib-name { font-weight: 600; }
-        .contrib-role { font-size: 0.75rem; color: var(--text-tertiary); }
-        
-        .contrib-stats {
-            margin: 12px 0;
-            padding: 8px 0;
-            border-top: 1px solid var(--glass-border);
-            border-bottom: 1px solid var(--glass-border);
-        }
-        
-        .contrib-stat-row {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.8rem;
-            padding: 4px 0;
-        }
-        
-        .contrib-stat-row span { color: var(--text-tertiary); }
-        .contrib-stat-row strong { color: var(--text-primary); }
-        
-        .contrib-desc {
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-            line-height: 1.5;
-        }
-        
-        /* Work Distribution */
-        .work-dist {
-            margin-bottom: 20px;
-            padding: 16px;
-            background: rgba(255, 255, 255, 0.02);
-            border-radius: 12px;
-            border: 1px solid var(--glass-border);
-        }
-        
-        .work-dist-title {
-            font-size: 0.9375rem;
+        .app-name {
+            font-size: 1.125rem;
             font-weight: 600;
-            margin-bottom: 12px;
+            letter-spacing: -0.01em;
         }
         
-        .work-bar {
+        .app-meta {
             display: flex;
-            height: 24px;
-            border-radius: 8px;
-            overflow: hidden;
-            margin-bottom: 10px;
-        }
-        
-        .work-legend {
-            display: flex;
-            flex-wrap: wrap;
             gap: 16px;
+            align-items: center;
+        }
+        
+        .app-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 10px;
             font-size: 0.8rem;
             color: var(--text-secondary);
         }
         
-        .work-legend-dot {
-            display: inline-block;
-            width: 12px;
-            height: 12px;
-            border-radius: 4px;
-            margin-right: 8px;
-        }
-        
-        .work-legend-note {
-            font-size: 0.75rem;
-            color: var(--text-tertiary);
-            margin-top: 8px;
-        }
-        
-        /* Recommendations & Gaps */
-        .rec-list, .gap-list {
-            list-style: none;
-        }
-        
-        .rec-list li, .gap-list li {
-            padding: 16px;
-            margin-bottom: 10px;
-            border-radius: 12px;
-            display: flex;
-            align-items: flex-start;
-            gap: 14px;
-        }
-        
-        .rec-list li {
-            background: linear-gradient(135deg, rgba(212, 175, 55, 0.08) 0%, var(--glass-bg) 100%);
-            border-left: 3px solid var(--gold);
-        }
-        
-        .gap-list li {
-            background: rgba(255, 159, 10, 0.08);
-            border-left: 3px solid var(--warning);
-        }
-        
-        .rec-icon, .gap-icon {
-            font-size: 1.25rem;
-            flex-shrink: 0;
-        }
-        
-        .rec-content strong, .gap-content strong {
-            display: block;
-            margin-bottom: 4px;
-        }
-        
-        .rec-content p, .gap-content p {
-            color: var(--text-secondary);
-            font-size: 0.875rem;
-            line-height: 1.5;
-        }
-        
-        /* Footer */
-        footer {
-            margin-top: 48px;
-            padding-top: 24px;
-            border-top: 1px solid var(--glass-border);
-            text-align: center;
-            color: var(--text-tertiary);
-            font-size: 0.8125rem;
-        }
-        
-        footer a {
+        .app-info a {
             color: var(--gold);
             text-decoration: none;
         }
         
+        .app-info a:hover { text-decoration: underline; }
+        
+        footer {
+            text-align: center;
+            padding: 32px;
+            color: var(--text-tertiary);
+            font-size: 0.8125rem;
+            border-top: 1px solid var(--glass-border);
+            margin-top: 40px;
+        }
+        
+        footer a { color: var(--gold); text-decoration: none; }
         footer a:hover { text-decoration: underline; }
     </style>
 </head>
 <body>
     <div class="bg-gradient"></div>
+    
     <div class="container">
         <header>
-            <img src="https://corboo.github.io/ipai-media-kit/images/ipai-logo.png" alt="IPAI" class="logo">
-            <h1>🚀 Engineering Dashboard</h1>
-            <p class="subtitle">Tech Leadership Overview • GitHub Systems</p>
-            <div class="header-status">
-                <span class="status-badge status-healthy">
-                    <span class="status-dot"></span>
-                    All Systems Operational
-                </span>
-            </div>
-            <p class="updated">Last updated: <span id="timestamp"></span></p>
+            <img src="ipai-logo.jpg" alt="IPAI" class="logo">
+            <h1>🛠️ Tech Leadership Dashboard</h1>
+            <p class="subtitle">Engineering Infrastructure & System Status — CEO & VP Engineering View</p>
+            <p class="updated">Last updated: <span id="update-time"></span></p>
         </header>
-
+        
         <!-- Quick Stats -->
-        <section class="section">
-            <div class="stats-bar">
-                <div class="stat-box">
-                    <div class="stat-value">6</div>
-                    <div class="stat-label">Total Repos</div>
-                    <div class="stat-subtitle">Tracked repositories</div>
-                </div>
-                <div class="stat-box">
-                    <div class="stat-value">2,087+</div>
-                    <div class="stat-label">Total Commits</div>
-                    <div class="stat-subtitle">Since Aug 2025</div>
-                </div>
-                <div class="stat-box highlight">
-                    <div class="stat-value trend-up">348</div>
-                    <div class="stat-label">Recent Activity (7d)</div>
-                    <div class="stat-subtitle">Commits this week (arc)</div>
-                </div>
-                <div class="stat-box">
-                    <div class="stat-value success">100%</div>
-                    <div class="stat-label">CI Health</div>
-                    <div class="stat-subtitle">Last 10 builds passing</div>
-                </div>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-label">Repositories</div>
+                <div class="stat-value">7</div>
+                <div class="stat-sub">inceptionpointai</div>
             </div>
-        </section>
-
-        <!-- Main Systems -->
-        <section class="section">
-            <h2 class="section-title">📦 Core Systems</h2>
+            <div class="stat-card">
+                <div class="stat-label">Total Commits</div>
+                <div class="stat-value">2,087</div>
+                <div class="stat-sub">arc + content-app</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Active System</div>
+                <div class="stat-value" style="background: var(--go-color); -webkit-background-clip: text;">Go</div>
+                <div class="stat-sub">arc v2</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Make.com</div>
+                <div class="stat-value">150+</div>
+                <div class="stat-sub">scenarios</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Integrations</div>
+                <div class="stat-value">35</div>
+                <div class="stat-sub">APIs connected</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">CB Apps</div>
+                <div class="stat-value">6</div>
+                <div class="stat-sub">Streamlit/React</div>
+            </div>
+        </div>
+        
+        <!-- Systems - Stacked Tiles -->
+        <div class="section">
+            <h2 class="section-title">💻 Core Systems</h2>
             
-            <!-- Arc (Go) -->
-            <div class="card system-tile go">
-                <div class="repo-header">
-                    <div class="repo-name">arc</div>
-                    <span class="status-badge status-healthy">
-                        <span class="status-dot"></span>
-                        Active Development
-                    </span>
-                </div>
-                <div class="primary-lang">
-                    <span class="primary-lang-icon" style="background: var(--go-color);">Go</span>
-                    <span class="primary-lang-label">Primary Language: <strong>Go</strong></span>
-                </div>
-                <div class="timeline-info">
-                    <div class="timeline-item">
-                        <span class="timeline-label">Development Started</span>
-                        <span class="timeline-value">January 9, 2026</span>
+            <!-- 1. ARC (Go) -->
+            <div class="system-tile go">
+                <div class="tile-header">
+                    <div class="tile-title-area">
+                        <div class="tile-name">arc</div>
+                        <div class="tile-badges">
+                            <span class="badge badge-go">Go</span>
+                            <span class="badge badge-active">Active Development</span>
+                        </div>
                     </div>
-                    <div class="timeline-item">
-                        <span class="timeline-label">System Live</span>
-                        <span class="timeline-value highlight-green" id="arc-days">29 days</span>
-                    </div>
-                    <div class="timeline-item">
-                        <span class="timeline-label">Commits</span>
-                        <span class="timeline-value">1,443</span>
-                    </div>
-                    <div class="timeline-item">
-                        <span class="timeline-label">Codebase Size</span>
-                        <span class="timeline-value">~90K lines</span>
+                    <div class="tile-stats">
+                        <div>
+                            <div class="tile-stat-value">1,443</div>
+                            <div class="tile-stat-label">Commits</div>
+                        </div>
+                        <div>
+                            <div class="tile-stat-value" id="go-days">—</div>
+                            <div class="tile-stat-label">Days Live</div>
+                        </div>
+                        <div>
+                            <div class="tile-stat-value">~3.7 MB</div>
+                            <div class="tile-stat-label">Codebase</div>
+                        </div>
                     </div>
                 </div>
-                <p style="color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 16px;">
-                    v2 of the Arc execution engine — Temporal workflows, LLM orchestration
-                </p>
-                <div class="tech-section">
-                    <div class="tech-section-title">Full Tech Stack</div>
-                    <div class="tech-stack-box">
-                        <span class="stack-tag" style="background: rgba(0, 173, 216, 0.2); color: #00ADD8;">Go</span>
-                        <span class="stack-tag" style="background: rgba(241, 224, 90, 0.2); color: #f1e05a;">JavaScript</span>
-                        <span class="stack-tag" style="background: rgba(49, 120, 198, 0.2); color: #3178c6;">TypeScript</span>
-                        <span class="stack-tag" style="background: rgba(126, 178, 224, 0.2); color: #7eb3e0;">Nix</span>
-                        <span class="stack-tag" style="background: rgba(137, 224, 81, 0.2); color: #89e051;">Shell</span>
-                        <span class="stack-tag" style="background: rgba(86, 61, 124, 0.2); color: #b794f6;">CSS</span>
-                        <span class="stack-tag" style="background: rgba(56, 77, 84, 0.2); color: #7eb3e0;">Dockerfile</span>
-                        <span class="stack-tag" style="background: rgba(227, 76, 38, 0.2); color: #e34c26;">HTML</span>
+                
+                <div class="tile-info">
+                    <div><strong>Development Started:</strong> January 9, 2026</div>
+                    <div><strong>Last Push:</strong> February 6, 2026</div>
+                    <div><strong>Lead Developer:</strong> David McHealy (mindreader)</div>
+                    <div><strong>Status:</strong> Primary platform, rapid development</div>
+                </div>
+                
+                <div class="tile-section">
+                    <div class="tile-section-title">Full Tech Stack</div>
+                    <div class="tech-tags">
+                        <span class="tag primary go">Go 76%</span>
+                        <span class="tag">JavaScript 23%</span>
+                        <span class="tag">TypeScript 1%</span>
+                        <span class="tag">Nix</span>
+                        <span class="tag">Shell</span>
+                        <span class="tag">CSS</span>
+                        <span class="tag">Dockerfile</span>
+                        <span class="tag">HTML</span>
+                    </div>
+                    <div class="lang-bar">
+                        <div class="lang-segment" style="width: 76%; background: var(--go-color);"></div>
+                        <div class="lang-segment" style="width: 23%; background: #f7df1e;"></div>
+                        <div class="lang-segment" style="width: 1%; background: #3178c6;"></div>
                     </div>
                 </div>
-                <div class="tech-section">
-                    <div class="tech-section-title">Integrated Services</div>
-                    <div class="tech-stack-box">
-                        <span class="stack-tag" style="background: rgba(204, 120, 50, 0.2); color: #cc7832;">Anthropic Claude</span>
-                        <span class="stack-tag" style="background: rgba(16, 163, 127, 0.2); color: #10a37f;">OpenAI GPT</span>
-                        <span class="stack-tag" style="background: rgba(0, 166, 147, 0.2); color: #00a693;">Perplexity AI</span>
-                        <span class="stack-tag" style="background: rgba(66, 133, 244, 0.2); color: #4285f4;">Google Gemini</span>
-                        <span class="stack-tag" style="background: rgba(252, 196, 25, 0.2); color: #fcc419;">Hume AI</span>
-                        <span class="stack-tag" style="background: rgba(29, 185, 84, 0.2); color: #1db954;">Spreaker</span>
-                        <span class="stack-tag" style="background: rgba(255, 153, 0, 0.2); color: #ff9900;">AWS S3</span>
-                        <span class="stack-tag" style="background: rgba(255, 153, 0, 0.2); color: #ff9900;">AWS Lambda</span>
-                        <span class="stack-tag" style="background: rgba(139, 92, 246, 0.2); color: #8b5cf6;">Fal.ai</span>
-                        <span class="stack-tag" style="background: rgba(52, 211, 153, 0.2); color: #34d399;">Temporal</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Content-App (Elixir) -->
-            <div class="card system-tile elixir">
-                <div class="repo-header">
-                    <div class="repo-name">content-app</div>
-                    <span class="status-badge status-critical">
-                        <span class="status-dot" style="animation: none; opacity: 0.5;"></span>
-                        Deprecated
-                    </span>
-                </div>
-                <div class="primary-lang">
-                    <span class="primary-lang-icon" style="background: var(--elixir-color);">Ex</span>
-                    <span class="primary-lang-label">Primary Language: <strong>Elixir</strong> <span style="color: var(--error); font-size: 0.75rem;">— NO LONGER IN ACTIVE DEVELOPMENT</span></span>
-                </div>
-                <div class="timeline-info">
-                    <div class="timeline-item">
-                        <span class="timeline-label">Development Started</span>
-                        <span class="timeline-value">August 15, 2025</span>
-                    </div>
-                    <div class="timeline-item">
-                        <span class="timeline-label">System Ran For</span>
-                        <span class="timeline-value" style="color: var(--text-tertiary);" id="elixir-days">150 days</span>
-                    </div>
-                    <div class="timeline-item">
-                        <span class="timeline-label">Development Ended</span>
-                        <span class="timeline-value" style="color: var(--error);">January 12, 2026</span>
-                    </div>
-                    <div class="timeline-item">
-                        <span class="timeline-label">Commits</span>
-                        <span class="timeline-value">644</span>
-                    </div>
-                </div>
-                <p style="color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 16px;">
-                    v1 Arc (Elixir) — Phoenix LiveView, podcast pipelines. <strong style="color: var(--warning);">Superseded by arc (Go).</strong>
-                </p>
-                <div class="tech-section">
-                    <div class="tech-section-title">Full Tech Stack</div>
-                    <div class="tech-stack-box">
-                        <span class="stack-tag" style="background: rgba(110, 74, 126, 0.2); color: #9B72AA;">Elixir</span>
-                        <span class="stack-tag" style="background: rgba(227, 76, 38, 0.2); color: #e34c26;">HTML</span>
-                        <span class="stack-tag" style="background: rgba(241, 224, 90, 0.2); color: #f1e05a;">JavaScript</span>
-                        <span class="stack-tag" style="background: rgba(137, 224, 81, 0.2); color: #89e051;">Shell</span>
-                        <span class="stack-tag" style="background: rgba(86, 61, 124, 0.2); color: #b794f6;">CSS</span>
-                        <span class="stack-tag" style="background: rgba(126, 178, 224, 0.2); color: #7eb3e0;">Nix</span>
-                        <span class="stack-tag" style="background: rgba(56, 77, 84, 0.2); color: #7eb3e0;">Dockerfile</span>
-                    </div>
-                </div>
-                <div class="tech-section">
-                    <div class="tech-section-title">Integrated Services</div>
-                    <div class="tech-stack-box">
-                        <span class="stack-tag" style="background: rgba(204, 120, 50, 0.2); color: #cc7832;">Anthropic Claude</span>
-                        <span class="stack-tag" style="background: rgba(16, 163, 127, 0.2); color: #10a37f;">OpenAI GPT</span>
-                        <span class="stack-tag" style="background: rgba(0, 166, 147, 0.2); color: #00a693;">Perplexity AI</span>
-                        <span class="stack-tag" style="background: rgba(66, 133, 244, 0.2); color: #4285f4;">Google Gemini</span>
-                        <span class="stack-tag" style="background: rgba(252, 196, 25, 0.2); color: #fcc419;">Hume AI</span>
-                        <span class="stack-tag" style="background: rgba(45, 212, 191, 0.2); color: #2dd4bf;">ElevenLabs</span>
-                        <span class="stack-tag" style="background: rgba(29, 185, 84, 0.2); color: #1db954;">Spreaker</span>
-                        <span class="stack-tag" style="background: rgba(255, 153, 0, 0.2); color: #ff9900;">AWS S3</span>
-                        <span class="stack-tag" style="background: rgba(139, 92, 246, 0.2); color: #8b5cf6;">Fal.ai</span>
+                
+                <div class="tile-section">
+                    <div class="tile-section-title">Integrated Services</div>
+                    <div class="int-tags">
+                        <span class="tag int">Anthropic Claude</span>
+                        <span class="tag int">OpenAI GPT</span>
+                        <span class="tag int">Perplexity AI</span>
+                        <span class="tag int">Hume AI</span>
+                        <span class="tag int">Spreaker</span>
+                        <span class="tag int">Temporal</span>
+                        <span class="tag int">AWS</span>
                     </div>
                 </div>
             </div>
-
-            <!-- Make.com -->
-            <div class="card system-tile make">
-                <div class="repo-header">
-                    <div class="repo-name">Make.com</div>
-                    <span class="status-badge status-healthy">
-                        <span class="status-dot"></span>
-                        Operational
-                    </span>
-                </div>
-                <div class="primary-lang">
-                    <span class="primary-lang-icon" style="background: var(--make-color);">⚙️</span>
-                    <span class="primary-lang-label">Platform: <strong>No-Code Automation</strong></span>
-                </div>
-                <div class="timeline-info">
-                    <div class="timeline-item">
-                        <span class="timeline-label">Platform Started</span>
-                        <span class="timeline-value">March 14, 2024</span>
+            
+            <!-- 2. CONTENT-APP (Elixir) -->
+            <div class="system-tile elixir">
+                <div class="tile-header">
+                    <div class="tile-title-area">
+                        <div class="tile-name">content-app</div>
+                        <div class="tile-badges">
+                            <span class="badge badge-elixir">Elixir</span>
+                            <span class="badge badge-deprecated">Deprecated</span>
+                        </div>
                     </div>
-                    <div class="timeline-item">
-                        <span class="timeline-label">System Live</span>
-                        <span class="timeline-value highlight-green" id="make-days">330+ days</span>
-                    </div>
-                    <div class="timeline-item">
-                        <span class="timeline-label">Total Scenarios</span>
-                        <span class="timeline-value">305</span>
-                    </div>
-                    <div class="timeline-item">
-                        <span class="timeline-label">Active</span>
-                        <span class="timeline-value" style="color: var(--success);">~200</span>
+                    <div class="tile-stats">
+                        <div>
+                            <div class="tile-stat-value">644</div>
+                            <div class="tile-stat-label">Commits</div>
+                        </div>
+                        <div>
+                            <div class="tile-stat-value">150</div>
+                            <div class="tile-stat-label">Days Ran</div>
+                        </div>
+                        <div>
+                            <div class="tile-stat-value">~3.0 MB</div>
+                            <div class="tile-stat-label">Codebase</div>
+                        </div>
                     </div>
                 </div>
-                <p style="color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 16px;">
-                    No-code automation layer — podcast generation, content pipelines, API orchestration
-                </p>
-                <div class="tech-section">
-                    <div class="tech-section-title">Integrated Services</div>
-                    <div class="tech-stack-box">
-                        <span class="stack-tag" style="background: rgba(204, 120, 50, 0.2); color: #cc7832;">Anthropic Claude</span>
-                        <span class="stack-tag" style="background: rgba(0, 166, 147, 0.2); color: #00a693;">Perplexity AI</span>
-                        <span class="stack-tag" style="background: rgba(52, 168, 83, 0.2); color: #34a853;">Google Sheets</span>
-                        <span class="stack-tag" style="background: rgba(16, 163, 127, 0.2); color: #10a37f;">OpenAI GPT</span>
-                        <span class="stack-tag" style="background: rgba(255, 153, 0, 0.2); color: #ff9900;">AWS S3</span>
-                        <span class="stack-tag" style="background: rgba(255, 153, 0, 0.2); color: #ff9900;">AWS Lambda</span>
-                        <span class="stack-tag" style="background: rgba(100, 100, 100, 0.2); color: #aaa;">HTTP/Webhooks</span>
-                        <span class="stack-tag" style="background: rgba(252, 196, 25, 0.2); color: #fcc419;">Hume AI</span>
-                        <span class="stack-tag" style="background: rgba(45, 212, 191, 0.2); color: #2dd4bf;">ElevenLabs</span>
-                        <span class="stack-tag" style="background: rgba(219, 68, 55, 0.2); color: #db4437;">Google Drive</span>
+                
+                <div class="deprecation-notice">
+                    ⚠️ NO LONGER IN ACTIVE DEVELOPMENT — All work moved to arc (Go) on January 12, 2026
+                </div>
+                
+                <div class="tile-info">
+                    <div><strong>Development Started:</strong> August 15, 2025</div>
+                    <div><strong>Development Ended:</strong> January 12, 2026</div>
+                    <div><strong>Developer:</strong> David McHealy (mindreader)</div>
+                    <div><strong>Status:</strong> Archived / Legacy</div>
+                </div>
+                
+                <div class="tile-section">
+                    <div class="tile-section-title">Full Tech Stack</div>
+                    <div class="tech-tags">
+                        <span class="tag primary elixir">Elixir 97%</span>
+                        <span class="tag">HTML 1%</span>
+                        <span class="tag">JavaScript 1%</span>
+                        <span class="tag">Shell</span>
+                        <span class="tag">CSS</span>
+                        <span class="tag">Nix</span>
+                        <span class="tag">Dockerfile</span>
+                    </div>
+                    <div class="lang-bar">
+                        <div class="lang-segment" style="width: 97%; background: var(--elixir-color);"></div>
+                        <div class="lang-segment" style="width: 2%; background: #e34c26;"></div>
+                        <div class="lang-segment" style="width: 1%; background: #f7df1e;"></div>
                     </div>
                 </div>
-            </div>
-        </section>
-
-        <!-- Development Trend Chart -->
-        <section class="section">
-            <h2 class="section-title">📈 Development Velocity <span class="tag">— Language Transition Timeline</span></h2>
-            <div class="card">
-                <div class="chart-container">
-                    <canvas id="activityChart"></canvas>
-                </div>
-            </div>
-        </section>
-
-        <!-- Supporting Repos -->
-        <section class="section">
-            <h2 class="section-title">🔧 Supporting Systems</h2>
-            <div class="card">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Repository</th>
-                            <th>Languages</th>
-                            <th>Purpose</th>
-                            <th>Last Activity</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><strong>infrastructure</strong></td>
-                            <td>
-                                <span class="lang-tag" style="background: rgba(130, 80, 170, 0.2); color: #cba6f7;">HCL 98%</span>
-                                <span class="lang-tag" style="background: rgba(124, 178, 232, 0.2); color: #7eb3e0;">Nix 2%</span>
-                            </td>
-                            <td>AWS infrastructure as code (Terraform)</td>
-                            <td>Feb 5, 2026</td>
-                            <td><span class="status-badge status-healthy">Active</span></td>
-                        </tr>
-                        <tr>
-                            <td><strong>postgres-ami</strong></td>
-                            <td>
-                                <span class="lang-tag" style="background: rgba(130, 80, 170, 0.2); color: #cba6f7;">HCL 100%</span>
-                            </td>
-                            <td>Database AMI builds</td>
-                            <td>Oct 1, 2025</td>
-                            <td><span class="status-badge status-warning">Dormant</span></td>
-                        </tr>
-                        <tr>
-                            <td><strong>website-ami</strong></td>
-                            <td>
-                                <span class="lang-tag" style="background: rgba(130, 80, 170, 0.2); color: #cba6f7;">HCL 100%</span>
-                            </td>
-                            <td>Web server AMI builds</td>
-                            <td>Sep 17, 2025</td>
-                            <td><span class="status-badge status-warning">Dormant</span></td>
-                        </tr>
-                        <tr>
-                            <td><strong>docker-ami</strong></td>
-                            <td>
-                                <span class="lang-tag" style="background: rgba(130, 80, 170, 0.2); color: #cba6f7;">HCL 100%</span>
-                            </td>
-                            <td>Docker AMI builds</td>
-                            <td>Aug 18, 2025</td>
-                            <td><span class="status-badge status-warning">Dormant</span></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </section>
-
-        <!-- Recent Activity -->
-        <section class="section">
-            <h2 class="section-title">⚡ Recent Commits <span class="tag">(arc)</span></h2>
-            <div class="card">
-                <div class="recent-commits">
-                    <div class="commit">
-                        <div class="commit-message">fix(web): render media Refs with storage_uri as widgets not JSON</div>
-                        <div class="commit-meta">David McHealy • Feb 6, 2026 @ 11:48 AM</div>
-                    </div>
-                    <div class="commit">
-                        <div class="commit-message">fix(workflow): infer type from embedded assets for polymorphic inputs</div>
-                        <div class="commit-meta">David McHealy • Feb 6, 2026 @ 11:25 AM</div>
-                    </div>
-                    <div class="commit">
-                        <div class="commit-message">feat(tts): add utterance-level chunking for Hume TTS</div>
-                        <div class="commit-meta">David McHealy • Feb 6, 2026 @ 7:57 AM</div>
-                    </div>
-                    <div class="commit">
-                        <div class="commit-message">refactor(workflow): remove legacy ref types (TypedOutput, ArtifactRef, ResourceRef)</div>
-                        <div class="commit-meta">David McHealy • Feb 6, 2026 @ 8:38 AM</div>
-                    </div>
-                    <div class="commit">
-                        <div class="commit-message">feat(workflow): complete unified Ref system bug fixes and V1 cleanup</div>
-                        <div class="commit-meta">David McHealy • Feb 6, 2026 @ 3:57 AM</div>
+                
+                <div class="tile-section">
+                    <div class="tile-section-title">Integrated Services (Legacy)</div>
+                    <div class="int-tags">
+                        <span class="tag int">Anthropic Claude</span>
+                        <span class="tag int">OpenAI GPT</span>
+                        <span class="tag int">Perplexity AI</span>
+                        <span class="tag int">Hume AI</span>
+                        <span class="tag int">Spreaker</span>
+                        <span class="tag int">AWS Lambda</span>
                     </div>
                 </div>
             </div>
-        </section>
-
-        <!-- Key Contributors -->
-        <section class="section">
+            
+            <!-- 3. MAKE.COM -->
+            <div class="system-tile make">
+                <div class="tile-header">
+                    <div class="tile-title-area">
+                        <div class="tile-name">Make.com</div>
+                        <div class="tile-badges">
+                            <span class="badge badge-make">Automation</span>
+                            <span class="badge badge-operational">Operational</span>
+                        </div>
+                    </div>
+                    <div class="tile-stats">
+                        <div>
+                            <div class="tile-stat-value">150+</div>
+                            <div class="tile-stat-label">Scenarios</div>
+                        </div>
+                        <div>
+                            <div class="tile-stat-value" id="make-days">—</div>
+                            <div class="tile-stat-label">Days Live</div>
+                        </div>
+                        <div>
+                            <div class="tile-stat-value">35</div>
+                            <div class="tile-stat-label">Integrations</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tile-info">
+                    <div><strong>Platform Started:</strong> ~August 2024</div>
+                    <div><strong>Status:</strong> Production — Content Pipeline</div>
+                    <div><strong>Org:</strong> 1324921 / Team: 528784</div>
+                    <div><strong>Primary Use:</strong> Content generation & publishing</div>
+                </div>
+                
+                <div class="tile-section">
+                    <div class="tile-section-title">All Integrations</div>
+                    <div class="int-tags">
+                        <span class="tag int">Anthropic Claude</span>
+                        <span class="tag int">OpenAI GPT</span>
+                        <span class="tag int">Perplexity AI</span>
+                        <span class="tag int">Google Vertex AI</span>
+                        <span class="tag int">xAI (Grok)</span>
+                        <span class="tag int">Hume AI</span>
+                        <span class="tag int">ElevenLabs TTS</span>
+                        <span class="tag int">HeyGen</span>
+                        <span class="tag int">Runway ML</span>
+                        <span class="tag int">YouTube</span>
+                        <span class="tag int">Instagram</span>
+                        <span class="tag int">LinkedIn</span>
+                        <span class="tag int">AWS S3</span>
+                        <span class="tag int">Google Drive</span>
+                        <span class="tag int">Google Sheets</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Development Velocity Chart -->
+        <div class="chart-container">
+            <div class="chart-title">📈 Development Velocity — Go (Active) vs Elixir (Deprecated)</div>
+            <canvas id="velocityChart" height="80"></canvas>
+        </div>
+        
+        <!-- Contributors -->
+        <div class="section">
             <h2 class="section-title">👥 Contributors & Work Distribution</h2>
-            
-            <!-- Work Distribution Chart -->
-            <div class="work-dist">
-                <div class="work-dist-title">arc (Go) — Commit Distribution</div>
-                <div class="work-bar">
-                    <div style="width: 99%; background: var(--accent-blue);" title="David McHealy: 99%"></div>
-                    <div style="width: 1%; background: var(--accent-purple);" title="Claude Code: <1%"></div>
+            <div class="contributors-grid">
+                <div class="contributor-card">
+                    <div class="contributor-name">David McHealy <span style="font-size: 0.7rem; color: var(--text-tertiary);">(mindreader)</span></div>
+                    <div class="contributor-type">Lead Engineer</div>
+                    <div class="contributor-stats">
+                        <strong>1,187</strong> commits (Go) + <strong>640</strong> commits (Elixir)
+                    </div>
+                    <div class="contributor-work">Core architecture, Temporal, LLMs, all major features</div>
                 </div>
-                <div class="work-legend">
-                    <span><span class="work-legend-dot" style="background: var(--accent-blue);"></span>David McHealy: 1,182 commits (99%)</span>
-                    <span><span class="work-legend-dot" style="background: var(--accent-purple);"></span>Claude Code: 5 commits (<1%)</span>
+                
+                <div class="contributor-card" style="border-color: rgba(168, 85, 247, 0.4);">
+                    <div class="contributor-name">Claude Code 🤖 <span style="font-size: 0.7rem; color: var(--text-tertiary);">(AI Agent)</span></div>
+                    <div class="contributor-type">AI Assistant</div>
+                    <div class="contributor-stats">
+                        <strong>~5</strong> commits (Go) — obsidian, quartz, onyx, jasper
+                    </div>
+                    <div class="contributor-work">Content dedup, memory fixes, file record creation</div>
                 </div>
-                <div class="work-legend-note">+ 256 automated deploy commits (github-actions)</div>
-            </div>
-
-            <div class="contrib-grid">
-                <!-- David McHealy -->
-                <div class="contrib-card">
-                    <div class="contrib-header">
-                        <div class="contrib-avatar" style="background: var(--accent-blue);">DM</div>
-                        <div>
-                            <div class="contrib-name">David McHealy</div>
-                            <div class="contrib-role">Lead Engineer</div>
-                        </div>
-                    </div>
-                    <div class="contrib-stats">
-                        <div class="contrib-stat-row"><span>arc (Go)</span><strong>1,182</strong></div>
-                        <div class="contrib-stat-row"><span>Elixir</span><strong>95</strong></div>
-                    </div>
-                    <div class="contrib-desc">
-                        Core architecture, Temporal workflows, LLM integrations, refactoring. Drives 99% of development.
-                    </div>
+                
+                <div class="contributor-card">
+                    <div class="contributor-name">mayor</div>
+                    <div class="contributor-type">Developer</div>
+                    <div class="contributor-stats"><strong>2</strong> commits (Elixir)</div>
+                    <div class="contributor-work">Pipeline execution, soft/hard delete</div>
                 </div>
-
-                <!-- Claude Code -->
-                <div class="contrib-card highlight">
-                    <div class="contrib-header">
-                        <div class="contrib-avatar" style="background: var(--accent-purple);">🤖</div>
-                        <div>
-                            <div class="contrib-name">Claude Code</div>
-                            <div class="contrib-role" style="color: var(--accent-purple);">AI Coding Agent</div>
-                        </div>
-                    </div>
-                    <div class="contrib-stats">
-                        <div class="contrib-stat-row"><span>arc (Go)</span><strong>5</strong></div>
-                        <div class="contrib-stat-row"><span>Agents</span><strong style="font-size: 0.7rem;">obsidian, quartz, onyx, jasper</strong></div>
-                    </div>
-                    <div class="contrib-desc">
-                        Content deduplication, memory optimization, audio/image file records. Uses gemstone-named agents.
-                    </div>
-                </div>
-
-                <!-- Mayor -->
-                <div class="contrib-card">
-                    <div class="contrib-header">
-                        <div class="contrib-avatar" style="background: var(--warning);">M</div>
-                        <div>
-                            <div class="contrib-name">mayor</div>
-                            <div class="contrib-role">Developer</div>
-                        </div>
-                    </div>
-                    <div class="contrib-stats">
-                        <div class="contrib-stat-row"><span>Elixir</span><strong>2</strong></div>
-                    </div>
-                    <div class="contrib-desc">
-                        Pipeline execution fixes, soft/hard delete for pipeline executions, dynamic query conditions.
-                    </div>
-                </div>
-
-                <!-- williamipai -->
-                <div class="contrib-card">
-                    <div class="contrib-header">
-                        <div class="contrib-avatar" style="background: var(--success);">W</div>
-                        <div>
-                            <div class="contrib-name">williamipai</div>
-                            <div class="contrib-role">Contributor</div>
-                        </div>
-                    </div>
-                    <div class="contrib-stats">
-                        <div class="contrib-stat-row"><span>Elixir</span><strong>3</strong></div>
-                    </div>
-                    <div class="contrib-desc">
-                        Personality conversation UI updates, spelling corrections.
-                    </div>
+                
+                <div class="contributor-card">
+                    <div class="contributor-name">williamipai</div>
+                    <div class="contributor-type">Contributor</div>
+                    <div class="contributor-stats"><strong>4</strong> commits (Elixir)</div>
+                    <div class="contributor-work">Conversation UI updates</div>
                 </div>
             </div>
-        </section>
-
-        <!-- Recommendations -->
-        <section class="section">
-            <h2 class="section-title">💡 Recommendations <span class="tag" style="color: var(--gold);">— arc (Go)</span></h2>
-            <div class="card">
-                <ul class="rec-list">
-                    <li>
-                        <span class="rec-icon">🧪</span>
-                        <div class="rec-content">
-                            <strong>Add test coverage metrics & CI badges</strong>
-                            <p>arc is shipping 50+ commits/day — add coverage tracking to ensure quality keeps pace with velocity.</p>
-                        </div>
-                    </li>
-                    <li>
-                        <span class="rec-icon">🔀</span>
-                        <div class="rec-content">
-                            <strong>Implement PR workflow with code review</strong>
-                            <p>Enable branch protection on main. Require at least one approval before merge for critical changes.</p>
-                        </div>
-                    </li>
-                    <li>
-                        <span class="rec-icon">📚</span>
-                        <div class="rec-content">
-                            <strong>Document architecture & onboarding guide</strong>
-                            <p>Create README with system overview, local dev setup, and key architectural decisions for new team members.</p>
-                        </div>
-                    </li>
-                    <li>
-                        <span class="rec-icon">📋</span>
-                        <div class="rec-content">
-                            <strong>Use GitHub Issues for tracking work</strong>
-                            <p>0 open issues currently — consider using Issues or Projects for roadmap visibility and sprint planning.</p>
-                        </div>
-                    </li>
-                    <li>
-                        <span class="rec-icon">🏷️</span>
-                        <div class="rec-content">
-                            <strong>Tag releases with semantic versioning</strong>
-                            <p>Add git tags (v1.0.0, etc.) to mark stable releases and enable rollback points.</p>
-                        </div>
-                    </li>
-                </ul>
+        </div>
+        
+        <!-- Recommendations & Gaps -->
+        <div class="section">
+            <h2 class="section-title">📋 Recommendations & Gaps</h2>
+            <div class="rec-grid">
+                <div class="rec-card recs">
+                    <div class="rec-title">✅ Recommendations</div>
+                    <ul class="rec-list">
+                        <li>Add test coverage metrics & CI badges</li>
+                        <li>Implement PR workflow with code review</li>
+                        <li>Create architecture docs & onboarding guide</li>
+                        <li>Enable GitHub Issues for tracking</li>
+                        <li>Add semantic versioning (v2.0.0)</li>
+                        <li>Set up branch protection on main</li>
+                    </ul>
+                </div>
+                
+                <div class="rec-card gaps">
+                    <div class="rec-title">⚠️ Gaps & Risks — arc (Go)</div>
+                    <ul class="rec-list">
+                        <li><strong>Single contributor</strong> — bus factor = 1</li>
+                        <li><strong>No branch protection</strong> on main</li>
+                        <li><strong>No issue tracking</strong> visible</li>
+                        <li><strong>High velocity no guardrails</strong> ~50 commits/day</li>
+                        <li><strong>No rollback strategy</strong> documented</li>
+                    </ul>
+                </div>
+                
+                <div class="rec-card gaps">
+                    <div class="rec-title">⚠️ Enterprise Infrastructure Gaps</div>
+                    <ul class="rec-list">
+                        <li><strong>Content Syndication</strong> — No license tracking</li>
+                        <li><strong>Attribution Tracking</strong> — Can't trace partner revenue</li>
+                        <li><strong>Rights Management</strong> — No metadata pipeline</li>
+                        <li><strong>White-Label</strong> — No partner delivery system</li>
+                        <li><strong>Revenue Share</strong> — No royalty automation</li>
+                    </ul>
+                </div>
             </div>
-        </section>
-
-        <!-- Gaps -->
-        <section class="section">
-            <h2 class="section-title">⚠️ Gaps & Risks <span class="tag" style="color: var(--warning);">— arc (Go)</span></h2>
-            <div class="card">
-                <ul class="gap-list">
-                    <li>
-                        <span class="gap-icon">👤</span>
-                        <div class="gap-content">
-                            <strong>Single contributor risk — bus factor = 1</strong>
-                            <p>David McHealy authored 99%+ of commits. Knowledge transfer and pair programming recommended.</p>
-                        </div>
-                    </li>
-                    <li>
-                        <span class="gap-icon">🔓</span>
-                        <div class="gap-content">
-                            <strong>No branch protection on main</strong>
-                            <p>Direct commits to main with no PR review. Risk of accidental breaking changes in production.</p>
-                        </div>
-                    </li>
-                    <li>
-                        <span class="gap-icon">📝</span>
-                        <div class="gap-content">
-                            <strong>No issue tracking visible</strong>
-                            <p>0 open issues — work may be tracked elsewhere (Linear, Notion?) but not visible in GitHub.</p>
-                        </div>
-                    </li>
-                    <li>
-                        <span class="gap-icon">⚡</span>
-                        <div class="gap-content">
-                            <strong>High velocity without guardrails</strong>
-                            <p>1,443 commits in 29 days (~50/day). Fast shipping is great, but ensure CI tests catch regressions.</p>
-                        </div>
-                    </li>
-                    <li>
-                        <span class="gap-icon">🔄</span>
-                        <div class="gap-content">
-                            <strong>No visible rollback strategy</strong>
-                            <p>Auto-deploys to staging on every commit. Consider tagged releases for production with rollback plan.</p>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-        </section>
-
+        </div>
+        
+        <!-- CB-Built Apps & Tools (sorted by days live) -->
+        <div class="section">
+            <h2 class="section-title">🚀 CB-Built Apps & Tools <span class="note">↓ sorted by days live</span></h2>
+            <div id="apps-container"></div>
+        </div>
+        
         <footer>
-            <p>IPAI Engineering Dashboard • Data from GitHub API • Auto-generated by CB ⚡</p>
-            <p style="margin-top: 6px;">Organization: <a href="https://github.com/inceptionpointai">inceptionpointai</a></p>
+            Built by CB for <a href="https://inceptionpoint.ai">Inception Point AI</a> • Data from GitHub API & Make.com
         </footer>
     </div>
-
+    
     <script>
         // Update timestamp
-        document.getElementById('timestamp').textContent = new Date().toLocaleString();
+        document.getElementById('update-time').textContent = new Date().toLocaleString('en-US', {
+            month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit'
+        });
         
-        // Calculate live days counters
-        const arcStart = new Date('2026-01-09');
-        const elixirStart = new Date('2025-08-15');
-        const elixirEnd = new Date('2026-01-12');
-        const now = new Date();
+        // Calculate days
+        const today = new Date();
+        const calcDays = (start) => Math.floor((today - new Date(start)) / (1000 * 60 * 60 * 24));
         
-        const arcDays = Math.floor((now - arcStart) / (1000 * 60 * 60 * 24));
-        const elixirDays = Math.floor((elixirEnd - elixirStart) / (1000 * 60 * 60 * 24));
+        document.getElementById('go-days').textContent = calcDays('2026-01-09');
+        document.getElementById('make-days').textContent = calcDays('2024-08-01');
         
-        document.getElementById('arc-days').textContent = arcDays + ' days';
-        document.getElementById('elixir-days').textContent = elixirDays + ' days';
+        // CB Apps data - sorted by launch date (oldest first = most days on top)
+        const cbApps = [
+            {
+                name: "FORGE — Audio to Video",
+                badges: ["Python 38%", "HTML"],
+                badgeColors: ["#3776ab", "#e34c26"],
+                live: true,
+                launched: "2026-02-02",
+                repo: "corboo/qp1-tools",
+                url: "https://qp1-tools-cxjt6gffvwuump8fsczqu8.streamlit.app/",
+                purpose: "Transform audio into AI video",
+                tech: ["Python 38%", "HTML 62%", "Streamlit"],
+                integrations: ["LTX Video", "OpenAI", "Hume TTS"]
+            },
+            {
+                name: "Claire Video Generator",
+                badges: ["Python 100%"],
+                badgeColors: ["#3776ab"],
+                live: true,
+                launched: "2026-02-03",
+                repo: "corboo/claire-video-generator",
+                url: "https://claire-video-generator-3eu5c3hvxozv6y45wdq2xd.streamlit.app/",
+                purpose: "Talking avatar video creation",
+                tech: ["Python 100%", "Streamlit"],
+                integrations: ["Hume TTS", "D-ID"]
+            },
+            {
+                name: "Claire Delish — Realtime Voice",
+                badges: ["HTML", "Python 4%"],
+                badgeColors: ["#e34c26", "#3776ab"],
+                live: true,
+                launched: "2026-02-03",
+                repo: "corboo/claire-delish",
+                url: "https://corboo.github.io/claire-delish",
+                purpose: "Real-time AI cooking companion",
+                tech: ["HTML 96%", "Python 4%", "LiveKit"],
+                integrations: ["Hume EVI", "LiveKit", "Simli", "D-ID"]
+            },
+            {
+                name: "Dashboards Hub",
+                badges: ["HTML", "JavaScript"],
+                badgeColors: ["#e34c26", "#f7df1e"],
+                live: true,
+                launched: "2026-02-03",
+                repo: "corboo/dashboards",
+                url: "https://corboo.github.io/dashboards/",
+                purpose: "Analytics & monitoring hub",
+                tech: ["HTML", "JavaScript", "Chart.js"],
+                integrations: ["GitHub API", "Spreaker", "YouTube Data"]
+            },
+            {
+                name: "YouTube Thumbnail Generator",
+                badges: ["JavaScript", "React"],
+                badgeColors: ["#f7df1e", "#61dafb"],
+                live: true,
+                launched: "2026-02-05",
+                repo: "corboo/youtube-thumbnail-generator",
+                url: "https://youtube-thumbnail-generator-iota.vercel.app/",
+                purpose: "AI-powered high-CTR thumbnails",
+                tech: ["JavaScript", "React", "Next.js", "Vercel"],
+                integrations: ["Claude AI", "Canvas API"]
+            },
+            {
+                name: "Character Bible Builder",
+                badges: ["Python 100%"],
+                badgeColors: ["#3776ab"],
+                live: true,
+                launched: "2026-02-06",
+                repo: "corboo/character-bible-builder",
+                url: "https://character-bible-builder-hlkmhjigwnchkx5zsypmeb.streamlit.app/",
+                purpose: "Create AI persona definitions",
+                tech: ["Python 100%", "Streamlit"],
+                integrations: []
+            }
+        ];
         
-        // Make.com days
-        const makeStart = new Date('2024-03-14');
-        const makeDays = Math.floor((now - makeStart) / (1000 * 60 * 60 * 24));
-        document.getElementById('make-days').textContent = makeDays + ' days';
-
-        // Activity Chart - IPAI branded colors
-        const ctx = document.getElementById('activityChart').getContext('2d');
+        // Sort by launch date (oldest first)
+        cbApps.sort((a, b) => new Date(a.launched) - new Date(b.launched));
+        
+        // Render apps
+        const appsContainer = document.getElementById('apps-container');
+        cbApps.forEach(app => {
+            const daysLive = calcDays(app.launched);
+            const isVeteran = daysLive >= 5;
+            
+            const badgesHtml = app.badges.map((badge, i) => 
+                `<span class="badge" style="background: ${app.badgeColors[i]}; color: ${app.badgeColors[i] === '#f7df1e' ? '#000' : '#fff'};">${badge}</span>`
+            ).join('');
+            
+            const techHtml = app.tech.map(t => `<span class="tag">${t}</span>`).join('');
+            const intHtml = app.integrations.length ? app.integrations.map(i => `<span class="tag int">${i}</span>`).join('') : '';
+            
+            appsContainer.innerHTML += `
+                <div class="app-tile">
+                    <div class="app-header">
+                        <div>
+                            <div class="app-name">${app.name}</div>
+                            <div class="tile-badges" style="margin-top: 8px;">
+                                ${badgesHtml}
+                                <span class="badge badge-active">Live</span>
+                            </div>
+                        </div>
+                        <div class="app-meta">
+                            <div class="days-live${isVeteran ? ' veteran' : ''}">${daysLive}d live</div>
+                        </div>
+                    </div>
+                    <div class="app-info">
+                        <div><strong>Created:</strong> ${new Date(app.launched).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</div>
+                        <div><strong>Repo:</strong> ${app.repo}</div>
+                        <div><strong>Live:</strong> <a href="${app.url}" target="_blank">View App →</a></div>
+                        <div><strong>Purpose:</strong> ${app.purpose}</div>
+                    </div>
+                    <div class="tile-section">
+                        <div class="tile-section-title">Tech Stack</div>
+                        <div class="tech-tags">${techHtml}</div>
+                    </div>
+                    ${intHtml ? `<div class="tile-section">
+                        <div class="tile-section-title">Integrations</div>
+                        <div class="int-tags">${intHtml}</div>
+                    </div>` : ''}
+                </div>
+            `;
+        });
+        
+        // Chart
+        const ctx = document.getElementById('velocityChart').getContext('2d');
         new Chart(ctx, {
             type: 'bar',
             data: {
-                labels: ['Aug 25', 'Sep 25', 'Oct 25', 'Nov 25', 'Dec 25', 'Jan 26', 'Feb 26*'],
-                datasets: [
-                    {
-                        label: 'ELIXIR — content-app (DEPRECATED)',
-                        data: [135, 252, 117, 62, 66, 12, 0],
-                        backgroundColor: 'rgba(155, 114, 170, 0.4)',
-                        borderColor: '#9B72AA',
-                        borderWidth: 1
-                    },
-                    {
-                        label: 'GO — arc (ACTIVE)',
-                        data: [0, 0, 0, 0, 0, 1095, 348],
-                        backgroundColor: 'rgba(0, 173, 216, 0.7)',
-                        borderColor: '#00ADD8',
-                        borderWidth: 1
-                    }
-                ]
+                labels: ['Aug 25', 'Sep 25', 'Oct 25', 'Nov 25', 'Dec 25', 'Jan 26', 'Feb 26'],
+                datasets: [{
+                    label: 'GO — arc (ACTIVE)',
+                    data: [0, 0, 0, 0, 0, 1095, 348],
+                    backgroundColor: '#00ADD8',
+                    borderRadius: 4
+                }, {
+                    label: 'ELIXIR — content-app (DEPRECATED)',
+                    data: [120, 180, 150, 100, 80, 14, 0],
+                    backgroundColor: 'rgba(155, 114, 170, 0.4)',
+                    borderRadius: 4
+                }]
             },
             options: {
                 responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        position: 'top',
-                        labels: { 
-                            color: 'rgba(255, 255, 255, 0.7)',
-                            font: { family: 'Inter' }
-                        }
-                    },
-                    title: {
-                        display: true,
-                        text: 'Development Activity: Go (Active) vs Elixir (Deprecated)',
-                        color: '#ffffff',
-                        font: { family: 'Inter', weight: '600' }
-                    }
+                plugins: { 
+                    legend: { 
+                        position: 'top', 
+                        labels: { color: 'rgba(255, 255, 255, 0.7)', font: { family: 'Inter' } } 
+                    } 
                 },
                 scales: {
-                    x: {
-                        stacked: true,
-                        ticks: { color: 'rgba(255, 255, 255, 0.5)' },
-                        grid: { color: 'rgba(255, 255, 255, 0.1)' }
-                    },
-                    y: {
-                        stacked: true,
-                        ticks: { color: 'rgba(255, 255, 255, 0.5)' },
-                        grid: { color: 'rgba(255, 255, 255, 0.1)' }
-                    }
+                    x: { ticks: { color: 'rgba(255, 255, 255, 0.5)' }, grid: { color: 'rgba(255, 255, 255, 0.1)' } },
+                    y: { ticks: { color: 'rgba(255, 255, 255, 0.5)' }, grid: { color: 'rgba(255, 255, 255, 0.1)' } }
                 }
             }
         });
