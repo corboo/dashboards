@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IPAI Tech Leadership Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-card: #1e293b;
+            --border: #334155;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --go-color: #00ADD8;
+            --elixir-color: #6e4a7e;
+            --success: #22c55e;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --info: #3b82f6;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.5;
+        }
+        
+        .container { max-width: 1400px; margin: 0 auto; padding: 32px 24px; }
+        
+        header { margin-bottom: 32px; }
+        
+        h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+        
+        .subtitle { color: var(--text-secondary); font-size: 1rem; }
+        
+        .updated { color: var(--text-muted); font-size: 0.75rem; margin-top: 8px; }
+        
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+        
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+        }
+        
+        .stat-label { color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; }
+        .stat-value { font-size: 2rem; font-weight: 700; margin-top: 4px; }
+        .stat-sub { color: var(--text-secondary); font-size: 0.875rem; margin-top: 4px; }
+        
+        /* Section */
+        .section { margin-bottom: 40px; }
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        /* System Cards */
+        .systems-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 20px;
+        }
+        
+        .system-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 24px;
+            position: relative;
+        }
+        
+        .system-card.deprecated {
+            opacity: 0.7;
+            border-color: var(--elixir-color);
+        }
+        
+        .system-card.active {
+            border-color: var(--go-color);
+        }
+        
+        .system-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+        
+        .system-name { font-size: 1.5rem; font-weight: 700; }
+        
+        .system-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .badge-go { background: var(--go-color); color: #000; }
+        .badge-elixir { background: var(--elixir-color); color: #fff; }
+        .badge-active { background: var(--success); color: #000; }
+        .badge-deprecated { background: var(--danger); color: #fff; }
+        
+        .primary-lang {
+            font-size: 1rem;
+            margin: 8px 0 16px;
+            color: var(--text-secondary);
+        }
+        
+        .primary-lang strong { color: var(--text-primary); }
+        
+        .deprecation-notice {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 16px;
+            font-size: 0.875rem;
+            color: #fca5a5;
+        }
+        
+        .system-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        
+        .mini-stat { text-align: center; }
+        .mini-stat-value { font-size: 1.25rem; font-weight: 700; }
+        .mini-stat-label { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; }
+        
+        .tech-stack {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border);
+        }
+        
+        .tech-stack-title { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 8px; text-transform: uppercase; }
+        
+        .tech-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        
+        .tech-tag {
+            font-size: 0.7rem;
+            padding: 4px 8px;
+            border-radius: 4px;
+            background: rgba(255,255,255,0.1);
+            color: var(--text-secondary);
+        }
+        
+        .tech-tag.primary { background: var(--go-color); color: #000; font-weight: 600; }
+        .tech-tag.primary-elixir { background: var(--elixir-color); color: #fff; font-weight: 600; }
+        
+        /* Language Bar */
+        .lang-bar {
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+            display: flex;
+            margin-top: 12px;
+        }
+        
+        .lang-segment { height: 100%; }
+        
+        /* Chart */
+        .chart-container {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 24px;
+        }
+        
+        .chart-title { font-size: 1rem; font-weight: 600; margin-bottom: 16px; }
+        
+        /* Make.com Section */
+        .integration-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 16px;
+        }
+        
+        .integration-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px;
+        }
+        
+        .integration-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+        
+        .integration-icon { font-size: 1.5rem; }
+        .integration-title { font-weight: 600; }
+        .integration-count { color: var(--text-muted); font-size: 0.75rem; }
+        
+        .integration-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+        
+        .int-tag {
+            font-size: 0.65rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            background: rgba(59, 130, 246, 0.15);
+            color: #93c5fd;
+        }
+        
+        /* Recommendations */
+        .rec-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .rec-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+        }
+        
+        .rec-card.gaps {
+            border-color: var(--danger);
+            background: rgba(239, 68, 68, 0.05);
+        }
+        
+        .rec-title {
+            font-weight: 600;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .rec-list {
+            list-style: none;
+        }
+        
+        .rec-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+        }
+        
+        .rec-list li:last-child { border-bottom: none; }
+        .rec-list li::before { content: "→"; color: var(--info); }
+        .rec-card.gaps .rec-list li::before { content: "⚠"; color: var(--danger); }
+        
+        footer {
+            text-align: center;
+            padding: 32px;
+            color: var(--text-muted);
+            font-size: 0.875rem;
+            border-top: 1px solid var(--border);
+            margin-top: 40px;
+        }
+        
+        @media (max-width: 768px) {
+            .systems-grid { grid-template-columns: 1fr; }
+            .system-stats { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🛠️ IPAI Tech Leadership Dashboard</h1>
+            <p class="subtitle">Engineering Infrastructure & System Status — For CEO & VP Engineering</p>
+            <p class="updated">Last updated: <span id="update-time"></span></p>
+        </header>
+        
+        <!-- Quick Stats -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-label">Total Repositories</div>
+                <div class="stat-value">7</div>
+                <div class="stat-sub">inceptionpointai org</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Total Commits</div>
+                <div class="stat-value">2,087</div>
+                <div class="stat-sub">arc: 1,443 | content-app: 644</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Active System</div>
+                <div class="stat-value" style="color: var(--go-color);">Go</div>
+                <div class="stat-sub">arc v2 — primary development</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Make.com Scenarios</div>
+                <div class="stat-value">150+</div>
+                <div class="stat-sub">35 integrations active</div>
+            </div>
+        </div>
+        
+        <!-- Core Systems -->
+        <div class="section">
+            <h2 class="section-title">💻 Core Systems — Go (Active) vs Elixir (Deprecated)</h2>
+            <div class="systems-grid">
+                <!-- Arc (Go) -->
+                <div class="system-card active">
+                    <div class="system-header">
+                        <div>
+                            <div class="system-name">arc</div>
+                            <span class="system-badge badge-go">Go</span>
+                            <span class="system-badge badge-active">Active Development</span>
+                        </div>
+                    </div>
+                    <p class="primary-lang">Primary Language: <strong>Go</strong></p>
+                    
+                    <div class="system-stats">
+                        <div class="mini-stat">
+                            <div class="mini-stat-value">1,443</div>
+                            <div class="mini-stat-label">Commits</div>
+                        </div>
+                        <div class="mini-stat">
+                            <div class="mini-stat-value" id="go-days">—</div>
+                            <div class="mini-stat-label">Days Live</div>
+                        </div>
+                        <div class="mini-stat">
+                            <div class="mini-stat-value">1</div>
+                            <div class="mini-stat-label">Contributors</div>
+                        </div>
+                    </div>
+                    
+                    <div style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 8px;">
+                        <strong>Development Started:</strong> January 9, 2026<br>
+                        <strong>Last Push:</strong> February 6, 2026<br>
+                        <strong>Main Contributor:</strong> mindreader (1,187 commits)
+                    </div>
+                    
+                    <div class="tech-stack">
+                        <div class="tech-stack-title">Full Tech Stack</div>
+                        <div class="tech-tags">
+                            <span class="tech-tag primary">Go 76%</span>
+                            <span class="tech-tag">JavaScript 23%</span>
+                            <span class="tech-tag">TypeScript 1%</span>
+                            <span class="tech-tag">Nix</span>
+                            <span class="tech-tag">Shell</span>
+                            <span class="tech-tag">CSS</span>
+                            <span class="tech-tag">Dockerfile</span>
+                            <span class="tech-tag">HTML</span>
+                        </div>
+                        <div class="lang-bar">
+                            <div class="lang-segment" style="width: 76%; background: var(--go-color);"></div>
+                            <div class="lang-segment" style="width: 23%; background: #f7df1e;"></div>
+                            <div class="lang-segment" style="width: 1%; background: #3178c6;"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Content-App (Elixir) -->
+                <div class="system-card deprecated">
+                    <div class="system-header">
+                        <div>
+                            <div class="system-name">content-app</div>
+                            <span class="system-badge badge-elixir">Elixir</span>
+                            <span class="system-badge badge-deprecated">Deprecated</span>
+                        </div>
+                    </div>
+                    <p class="primary-lang">Primary Language: <strong>Elixir</strong> — NO LONGER IN ACTIVE DEVELOPMENT</p>
+                    
+                    <div class="deprecation-notice">
+                        ⚠️ Development ceased January 12, 2026 — all work moved to arc (Go)
+                    </div>
+                    
+                    <div class="system-stats">
+                        <div class="mini-stat">
+                            <div class="mini-stat-value">644</div>
+                            <div class="mini-stat-label">Commits</div>
+                        </div>
+                        <div class="mini-stat">
+                            <div class="mini-stat-value">150</div>
+                            <div class="mini-stat-label">Days Ran</div>
+                        </div>
+                        <div class="mini-stat">
+                            <div class="mini-stat-value">—</div>
+                            <div class="mini-stat-label">Inactive</div>
+                        </div>
+                    </div>
+                    
+                    <div style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 8px;">
+                        <strong>Development Started:</strong> August 15, 2025<br>
+                        <strong>Development Ended:</strong> January 12, 2026<br>
+                        <strong>Status:</strong> Archived / Legacy
+                    </div>
+                    
+                    <div class="tech-stack">
+                        <div class="tech-stack-title">Full Tech Stack</div>
+                        <div class="tech-tags">
+                            <span class="tech-tag primary-elixir">Elixir 97%</span>
+                            <span class="tech-tag">HTML 1%</span>
+                            <span class="tech-tag">JavaScript 1%</span>
+                            <span class="tech-tag">Shell</span>
+                            <span class="tech-tag">CSS</span>
+                            <span class="tech-tag">Nix</span>
+                            <span class="tech-tag">Dockerfile</span>
+                        </div>
+                        <div class="lang-bar">
+                            <div class="lang-segment" style="width: 97%; background: var(--elixir-color);"></div>
+                            <div class="lang-segment" style="width: 2%; background: #e34c26;"></div>
+                            <div class="lang-segment" style="width: 1%; background: #f7df1e;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Development Velocity Chart -->
+        <div class="section">
+            <h2 class="section-title">📈 Development Velocity — Language Transition Timeline</h2>
+            <div class="chart-container">
+                <div class="chart-title">Monthly Commits: Go (Active) vs Elixir (Deprecated) — Since Aug 2025</div>
+                <canvas id="velocityChart" height="100"></canvas>
+            </div>
+        </div>
+        
+        <!-- Make.com Integrations -->
+        <div class="section">
+            <h2 class="section-title">⚡ Make.com Automation Platform — 35 Active Integrations</h2>
+            <div class="stats-grid" style="margin-bottom: 20px;">
+                <div class="stat-card">
+                    <div class="stat-label">Platform Live Since</div>
+                    <div class="stat-value" style="font-size: 1.5rem;">Aug 2024</div>
+                    <div class="stat-sub" id="make-days">— days</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Active Scenarios</div>
+                    <div class="stat-value">150+</div>
+                    <div class="stat-sub">Content automation</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Integrations</div>
+                    <div class="stat-value">35</div>
+                    <div class="stat-sub">APIs connected</div>
+                </div>
+            </div>
+            
+            <div class="integration-grid">
+                <div class="integration-card">
+                    <div class="integration-header">
+                        <span class="integration-icon">🤖</span>
+                        <span class="integration-title">AI & LLM</span>
+                        <span class="integration-count">(6)</span>
+                    </div>
+                    <div class="integration-items">
+                        <span class="int-tag">Claude</span>
+                        <span class="int-tag">OpenAI/GPT</span>
+                        <span class="int-tag">Perplexity</span>
+                        <span class="int-tag">Vertex AI</span>
+                        <span class="int-tag">xAI/Grok</span>
+                        <span class="int-tag">Cloud Vision</span>
+                    </div>
+                </div>
+                
+                <div class="integration-card">
+                    <div class="integration-header">
+                        <span class="integration-icon">📱</span>
+                        <span class="integration-title">Social & Video</span>
+                        <span class="integration-count">(5)</span>
+                    </div>
+                    <div class="integration-items">
+                        <span class="int-tag">YouTube</span>
+                        <span class="int-tag">Instagram</span>
+                        <span class="int-tag">LinkedIn</span>
+                        <span class="int-tag">Twitter</span>
+                        <span class="int-tag">Facebook</span>
+                    </div>
+                </div>
+                
+                <div class="integration-card">
+                    <div class="integration-header">
+                        <span class="integration-icon">🎬</span>
+                        <span class="integration-title">Media Production</span>
+                        <span class="integration-count">(6)</span>
+                    </div>
+                    <div class="integration-items">
+                        <span class="int-tag">ElevenLabs</span>
+                        <span class="int-tag">Google TTS</span>
+                        <span class="int-tag">HeyGen</span>
+                        <span class="int-tag">Runway ML</span>
+                        <span class="int-tag">CloudConvert</span>
+                        <span class="int-tag">Transloadit</span>
+                    </div>
+                </div>
+                
+                <div class="integration-card">
+                    <div class="integration-header">
+                        <span class="integration-icon">☁️</span>
+                        <span class="integration-title">Cloud & Storage</span>
+                        <span class="integration-count">(7)</span>
+                    </div>
+                    <div class="integration-items">
+                        <span class="int-tag">AWS S3</span>
+                        <span class="int-tag">Lambda</span>
+                        <span class="int-tag">Google Drive</span>
+                        <span class="int-tag">Sheets</span>
+                        <span class="int-tag">Docs</span>
+                        <span class="int-tag">Forms</span>
+                        <span class="int-tag">Dropbox</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Recommendations & Gaps -->
+        <div class="section">
+            <h2 class="section-title">📋 Recommendations & Gaps — Focused on arc (Go)</h2>
+            <div class="rec-grid">
+                <div class="rec-card">
+                    <div class="rec-title">✅ Recommendations for arc (Go)</div>
+                    <ul class="rec-list">
+                        <li>Add test coverage metrics & CI badges to README</li>
+                        <li>Implement PR workflow with required code review</li>
+                        <li>Create architecture docs & onboarding guide</li>
+                        <li>Enable GitHub Issues for feature/bug tracking</li>
+                        <li>Add semantic versioning tags (v2.0.0, etc.)</li>
+                        <li>Set up branch protection rules on main</li>
+                        <li>Document API endpoints and data models</li>
+                    </ul>
+                </div>
+                
+                <div class="rec-card gaps">
+                    <div class="rec-title">⚠️ Gaps & Risks — arc (Go)</div>
+                    <ul class="rec-list">
+                        <li><strong>Single contributor</strong> — bus factor = 1 (mindreader)</li>
+                        <li><strong>No branch protection</strong> on main branch</li>
+                        <li><strong>No issue tracking</strong> visible in repo</li>
+                        <li><strong>High velocity without guardrails</strong> — ~50 commits/day</li>
+                        <li><strong>No visible rollback strategy</strong> documented</li>
+                        <li><strong>No PR review process</strong> — direct pushes to main</li>
+                    </ul>
+                </div>
+                
+                <div class="rec-card gaps">
+                    <div class="rec-title">⚠️ Enterprise Infrastructure Gaps</div>
+                    <ul class="rec-list">
+                        <li><strong>Content Syndication</strong> — No tracking for licensed content</li>
+                        <li><strong>Attribution Tracking</strong> — Can't trace revenue to partners</li>
+                        <li><strong>Rights Management</strong> — No metadata pipeline for licensing</li>
+                        <li><strong>White-Label</strong> — No partner-branded delivery system</li>
+                        <li><strong>Revenue Share</strong> — No automated royalty calculations</li>
+                        <li><strong>B2B APIs</strong> — No self-service partner onboarding</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            Built by CB for Inception Point AI<br>
+            <span style="font-size: 0.75rem;">Data sourced from GitHub API & Make.com</span>
+        </footer>
+    </div>
+    
+    <script>
+        // Update timestamp
+        document.getElementById('update-time').textContent = new Date().toLocaleString('en-US', {
+            month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit'
+        });
+        
+        // Calculate days live for Go
+        const goStart = new Date('2026-01-09');
+        const today = new Date();
+        const goDays = Math.floor((today - goStart) / (1000 * 60 * 60 * 24));
+        document.getElementById('go-days').textContent = goDays;
+        
+        // Calculate Make.com days
+        const makeStart = new Date('2024-08-01');
+        const makeDays = Math.floor((today - makeStart) / (1000 * 60 * 60 * 24));
+        document.getElementById('make-days').textContent = makeDays + ' days';
+        
+        // Velocity Chart
+        const ctx = document.getElementById('velocityChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Aug 25', 'Sep 25', 'Oct 25', 'Nov 25', 'Dec 25', 'Jan 26', 'Feb 26'],
+                datasets: [{
+                    label: 'GO — arc (ACTIVE)',
+                    data: [0, 0, 0, 0, 0, 1095, 348],
+                    backgroundColor: '#00ADD8',
+                    borderRadius: 4
+                }, {
+                    label: 'ELIXIR — content-app (DEPRECATED)',
+                    data: [120, 180, 150, 100, 80, 14, 0],
+                    backgroundColor: 'rgba(110, 74, 126, 0.4)',
+                    borderRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: { color: '#94a3b8' }
+                    }
+                },
+                scales: {
+                    x: {
+                        ticks: { color: '#64748b' },
+                        grid: { color: '#334155' }
+                    },
+                    y: {
+                        ticks: { color: '#64748b' },
+                        grid: { color: '#334155' }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
