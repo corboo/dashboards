@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IPAI Tech Stack</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #1a1a2e;
+            --bg-secondary: #16213e;
+            --bg-tertiary: #0f3460;
+            --accent: #e94560;
+            --accent-light: #ff6b6b;
+            --cyan: #4ecdc4;
+            --gold: #f39c12;
+            --purple: #9b59b6;
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.7);
+            --text-tertiary: rgba(255, 255, 255, 0.5);
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--bg-primary);
+            min-height: 100vh;
+            color: var(--text-primary);
+        }
+        
+        .bg-gradient {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: 
+                radial-gradient(ellipse at 20% 20%, rgba(233, 69, 96, 0.1) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(78, 205, 196, 0.08) 0%, transparent 50%),
+                var(--bg-primary);
+            z-index: -1;
+        }
+        
+        .container { max-width: 1400px; margin: 0 auto; padding: 40px 24px; }
+        
+        header { text-align: center; margin-bottom: 48px; }
+        
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--cyan) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .subtitle { font-size: 1.1rem; color: var(--text-secondary); }
+        
+        .section {
+            margin-bottom: 48px;
+        }
+        
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--glass-border);
+        }
+        
+        .section-icon { font-size: 1.5rem; }
+        .section-title { font-size: 1.25rem; font-weight: 600; }
+        .section-count {
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--cyan);
+            background: rgba(78, 205, 196, 0.15);
+            padding: 4px 10px;
+            border-radius: 100px;
+            margin-left: auto;
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px;
+        }
+        
+        .card {
+            background: var(--glass-bg);
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid var(--glass-border);
+            transition: all 0.3s ease;
+        }
+        
+        .card:hover {
+            border-color: rgba(78, 205, 196, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+        
+        .card-icon {
+            font-size: 2rem;
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--glass-bg);
+            border-radius: 12px;
+        }
+        
+        .card-title { font-size: 1.1rem; font-weight: 600; }
+        .card-desc { font-size: 0.875rem; color: var(--text-secondary); line-height: 1.5; }
+        
+        .tech-list {
+            margin-top: 12px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        
+        .tech-tag {
+            font-size: 0.7rem;
+            font-weight: 500;
+            padding: 4px 8px;
+            border-radius: 6px;
+            background: var(--glass-bg);
+            color: var(--text-secondary);
+            border: 1px solid var(--glass-border);
+        }
+        
+        .tech-tag.active { background: rgba(78, 205, 196, 0.15); color: var(--cyan); border-color: rgba(78, 205, 196, 0.3); }
+        .tech-tag.exploring { background: rgba(243, 156, 18, 0.15); color: var(--gold); border-color: rgba(243, 156, 18, 0.3); }
+        .tech-tag.legacy { background: rgba(155, 89, 182, 0.15); color: var(--purple); border-color: rgba(155, 89, 182, 0.3); }
+        
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.75rem;
+            margin-top: 12px;
+        }
+        
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+        
+        .status-active { background: #34c759; box-shadow: 0 0 8px rgba(52, 199, 89, 0.5); }
+        .status-exploring { background: var(--gold); }
+        .status-legacy { background: var(--purple); }
+        
+        .warning-box {
+            margin-top: 24px;
+            padding: 20px;
+            background: rgba(233, 69, 96, 0.1);
+            border-radius: 12px;
+            border: 1px solid rgba(233, 69, 96, 0.3);
+        }
+        
+        .warning-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            color: var(--accent-light);
+            margin-bottom: 12px;
+        }
+        
+        .gap-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 8px;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+        
+        .gap-item { display: flex; align-items: center; gap: 6px; }
+        .gap-item::before { content: "•"; color: var(--accent); }
+        
+        footer {
+            text-align: center;
+            margin-top: 60px;
+            padding-top: 24px;
+            border-top: 1px solid var(--glass-border);
+            font-size: 0.875rem;
+            color: var(--text-tertiary);
+        }
+        
+        footer a { color: var(--cyan); text-decoration: none; }
+    </style>
+</head>
+<body>
+    <div class="bg-gradient"></div>
+    
+    <div class="container">
+        <header>
+            <h1>🛠️ IPAI Tech Stack</h1>
+            <p class="subtitle">Development Infrastructure & Integration Landscape</p>
+        </header>
+        
+        <!-- LANGUAGES & FRAMEWORKS -->
+        <div class="section">
+            <div class="section-header">
+                <span class="section-icon">💻</span>
+                <h2 class="section-title">Languages & Frameworks</h2>
+            </div>
+            <div class="grid">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon">🐹</div>
+                        <div class="card-title">Go</div>
+                    </div>
+                    <div class="card-desc">Current focus for backend services. David building core infrastructure.</div>
+                    <div class="tech-list">
+                        <span class="tech-tag active">In Development</span>
+                        <span class="tech-tag">Backend</span>
+                    </div>
+                    <div class="status-badge">
+                        <span class="status-dot status-active"></span>
+                        Active Development
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon">💧</div>
+                        <div class="card-title">Elixir</div>
+                    </div>
+                    <div class="card-desc">Previous backend exploration. Phoenix framework evaluated.</div>
+                    <div class="tech-list">
+                        <span class="tech-tag legacy">Previous</span>
+                        <span class="tech-tag">Phoenix</span>
+                        <span class="tech-tag">OTP</span>
+                    </div>
+                    <div class="status-badge">
+                        <span class="status-dot status-legacy"></span>
+                        Pivoted From
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon">🐍</div>
+                        <div class="card-title">Python</div>
+                    </div>
+                    <div class="card-desc">AI/ML, automation, Streamlit apps. Primary for rapid prototyping.</div>
+                    <div class="tech-list">
+                        <span class="tech-tag active">Production</span>
+                        <span class="tech-tag">Streamlit</span>
+                        <span class="tech-tag">FastAPI</span>
+                        <span class="tech-tag">Make.com</span>
+                    </div>
+                    <div class="status-badge">
+                        <span class="status-dot status-active"></span>
+                        In Production
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon">⚛️</div>
+                        <div class="card-title">JavaScript / React</div>
+                    </div>
+                    <div class="card-desc">Frontend apps, dashboards, interactive tools.</div>
+                    <div class="tech-list">
+                        <span class="tech-tag active">Production</span>
+                        <span class="tech-tag">React</span>
+                        <span class="tech-tag">Next.js</span>
+                        <span class="tech-tag">Vercel</span>
+                    </div>
+                    <div class="status-badge">
+                        <span class="status-dot status-active"></span>
+                        In Production
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- AUTOMATION PLATFORM -->
+        <div class="section">
+            <div class="section-header">
+                <span class="section-icon">⚡</span>
+                <h2 class="section-title">Make.com Automation Platform</h2>
+                <span class="section-count">35 integrations</span>
+            </div>
+            <div class="grid">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon">📱</div>
+                        <div class="card-title">Social & Video</div>
+                    </div>
+                    <div class="card-desc">Content distribution across platforms</div>
+                    <div class="tech-list">
+                        <span class="tech-tag active">YouTube</span>
+                        <span class="tech-tag active">Instagram</span>
+                        <span class="tech-tag active">LinkedIn</span>
+                        <span class="tech-tag active">Twitter</span>
+                        <span class="tech-tag active">Facebook</span>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon">🤖</div>
+                        <div class="card-title">AI & LLM</div>
+                    </div>
+                    <div class="card-desc">Intelligence layer for content generation</div>
+                    <div class="tech-list">
+                        <span class="tech-tag active">Claude</span>
+                        <span class="tech-tag active">OpenAI</span>
+                        <span class="tech-tag active">Perplexity</span>
+                        <span class="tech-tag active">Vertex AI</span>
+                        <span class="tech-tag active">xAI/Grok</span>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon">🎬</div>
+                        <div class="card-title">Media Production</div>
+                    </div>
+                    <div class="card-desc">Audio/video generation pipeline</div>
+                    <div class="tech-list">
+                        <span class="tech-tag active">ElevenLabs</span>
+                        <span class="tech-tag active">HeyGen</span>
+                        <span class="tech-tag active">Runway ML</span>
+                        <span class="tech-tag active">CloudConvert</span>
+                        <span class="tech-tag active">Transloadit</span>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon">☁️</div>
+                        <div class="card-title">Cloud & Storage</div>
+                    </div>
+                    <div class="card-desc">Infrastructure and data storage</div>
+                    <div class="tech-list">
+                        <span class="tech-tag active">AWS S3</span>
+                        <span class="tech-tag active">Lambda</span>
+                        <span class="tech-tag active">Google Drive</span>
+                        <span class="tech-tag active">Sheets</span>
+                        <span class="tech-tag active">Dropbox</span>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon">🔧</div>
+                        <div class="card-title">Utilities</div>
+                    </div>
+                    <div class="card-desc">API connections and data processing</div>
+                    <div class="tech-list">
+                        <span class="tech-tag active">HTTP/Webhooks</span>
+                        <span class="tech-tag active">JSON</span>
+                        <span class="tech-tag active">RSS</span>
+                        <span class="tech-tag active">PDF.co</span>
+                        <span class="tech-tag active">Browse AI</span>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon">🚫</div>
+                        <div class="card-title">Not Yet Integrated</div>
+                    </div>
+                    <div class="card-desc">Gaps in current automation</div>
+                    <div class="tech-list">
+                        <span class="tech-tag exploring">TikTok (native)</span>
+                        <span class="tech-tag exploring">Spreaker (native)</span>
+                        <span class="tech-tag exploring">Spotify</span>
+                        <span class="tech-tag exploring">Apple Podcasts</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Enterprise Gaps -->
+            <div class="warning-box">
+                <div class="warning-title">
+                    <span>⚠️</span>
+                    Infrastructure Gaps — Enterprise/Partnership Readiness
+                </div>
+                <div class="gap-grid">
+                    <div class="gap-item">Content Syndication</div>
+                    <div class="gap-item">Attribution Tracking</div>
+                    <div class="gap-item">Rights Management</div>
+                    <div class="gap-item">White-Label Infrastructure</div>
+                    <div class="gap-item">Revenue Share Tracking</div>
+                    <div class="gap-item">B2B / Enterprise APIs</div>
+                </div>
+                <p style="margin-top: 12px; font-size: 0.8rem; color: var(--text-tertiary);">
+                    Start building now — retrofitting later is exponentially harder.
+                </p>
+            </div>
+        </div>
+        
+        <!-- EXTERNAL SERVICES -->
+        <div class="section">
+            <div class="section-header">
+                <span class="section-icon">🔌</span>
+                <h2 class="section-title">External Services & APIs</h2>
+            </div>
+            <div class="grid">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon">🎙️</div>
+                        <div class="card-title">Spreaker</div>
+                    </div>
+                    <div class="card-desc">Podcast hosting. 5,265+ shows, 278K+ episodes.</div>
+                    <div class="tech-list">
+                        <span class="tech-tag active">Production</span>
+                        <span class="tech-tag">REST API</span>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon">🗣️</div>
+                        <div class="card-title">Hume AI</div>
+                    </div>
+                    <div class="card-desc">Expressive TTS with custom voices.</div>
+                    <div class="tech-list">
+                        <span class="tech-tag active">Production</span>
+                        <span class="tech-tag">EVI</span>
+                        <span class="tech-tag">Custom Voices</span>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon">🎥</div>
+                        <div class="card-title">D-ID</div>
+                    </div>
+                    <div class="card-desc">Avatar video generation. 800 credits/month.</div>
+                    <div class="tech-list">
+                        <span class="tech-tag active">Production</span>
+                        <span class="tech-tag">Talks API</span>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon">📹</div>
+                        <div class="card-title">LTX Video</div>
+                    </div>
+                    <div class="card-desc">AI video generation from text/image.</div>
+                    <div class="tech-list">
+                        <span class="tech-tag active">Production</span>
+                        <span class="tech-tag">ltx-2-fast</span>
+                        <span class="tech-tag">ltx-2-pro</span>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon">📺</div>
+                        <div class="card-title">YouTube Data API</div>
+                    </div>
+                    <div class="card-desc">Channel analytics. 5 channels tracked.</div>
+                    <div class="tech-list">
+                        <span class="tech-tag active">Production</span>
+                        <span class="tech-tag">10K quota/day</span>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon">📞</div>
+                        <div class="card-title">Telnyx</div>
+                    </div>
+                    <div class="card-desc">Cloud communications. Voice AI agents.</div>
+                    <div class="tech-list">
+                        <span class="tech-tag exploring">Exploring</span>
+                        <span class="tech-tag">Voice API</span>
+                        <span class="tech-tag">SMS</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>Built by CB for <a href="https://inceptionpoint.ai">Inception Point AI</a></p>
+            <p style="margin-top: 8px; font-size: 0.75rem;">Last updated: February 7, 2026</p>
+        </footer>
+    </div>
+</body>
+</html>
