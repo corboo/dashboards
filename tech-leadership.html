@@ -3,78 +3,171 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IPAI Tech Leadership Dashboard</title>
+    <title>Tech Leadership — IPAI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
-            --bg-primary: #0f172a;
-            --bg-secondary: #1e293b;
-            --bg-card: #1e293b;
-            --border: #334155;
-            --text-primary: #f8fafc;
-            --text-secondary: #94a3b8;
-            --text-muted: #64748b;
-            --go-color: #00ADD8;
-            --elixir-color: #6e4a7e;
-            --make-color: #6366f1;
-            --success: #22c55e;
-            --warning: #f59e0b;
-            --danger: #ef4444;
+            /* IPAI Brand Colors */
+            --bg-primary: #2d2d2d;
+            --bg-secondary: #3a3a3a;
+            --bg-tertiary: #454545;
+            --silver: #a8a8a8;
+            --silver-light: #c5c5c5;
+            --gold: #d4af37;
+            --gold-light: #e8c547;
+            --gold-bright: #f5d742;
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.7);
+            --text-tertiary: rgba(255, 255, 255, 0.5);
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --glass-hover: rgba(255, 255, 255, 0.08);
+            --success: #34c759;
+            --warning: #ff9f0a;
+            --danger: #ff453a;
             --info: #3b82f6;
+            --go-color: #00ADD8;
+            --elixir-color: #9B72AA;
+            --make-color: #6366f1;
+            --python-color: #3776ab;
         }
         
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
         body {
-            font-family: 'Inter', -apple-system, sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             background: var(--bg-primary);
+            min-height: 100vh;
             color: var(--text-primary);
-            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
         }
         
-        .container { max-width: 1200px; margin: 0 auto; padding: 32px 24px; }
+        .bg-gradient {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: 
+                radial-gradient(ellipse at 20% 20%, rgba(168, 168, 168, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(212, 175, 55, 0.06) 0%, transparent 50%),
+                var(--bg-primary);
+            z-index: -1;
+        }
         
-        header { margin-bottom: 32px; }
-        h1 { font-size: 2rem; font-weight: 700; margin-bottom: 4px; }
-        .subtitle { color: var(--text-secondary); font-size: 1rem; }
-        .updated { color: var(--text-muted); font-size: 0.75rem; margin-top: 8px; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 48px 24px; }
+        
+        /* Header */
+        header { text-align: center; margin-bottom: 48px; }
+        
+        .logo {
+            width: 72px;
+            height: 72px;
+            margin-bottom: 16px;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        
+        h1 {
+            font-size: 2.25rem;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            margin-bottom: 8px;
+            background: linear-gradient(180deg, var(--silver-light) 0%, var(--gold) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .subtitle { font-size: 1rem; color: var(--text-secondary); margin-bottom: 8px; }
+        .updated { font-size: 0.8125rem; color: var(--gold); }
         
         /* Stats Grid */
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 16px;
-            margin-bottom: 32px;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
+            margin-bottom: 40px;
         }
         
         .stat-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 12px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 14px;
             padding: 16px;
+            text-align: center;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
         }
         
-        .stat-label { color: var(--text-muted); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; }
-        .stat-value { font-size: 1.75rem; font-weight: 700; margin-top: 4px; }
-        .stat-sub { color: var(--text-secondary); font-size: 0.8rem; margin-top: 4px; }
+        .stat-card:hover {
+            background: var(--glass-hover);
+            border-color: rgba(212, 175, 55, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        .stat-label { 
+            color: var(--text-tertiary); 
+            font-size: 0.6875rem; 
+            text-transform: uppercase; 
+            letter-spacing: 0.05em; 
+        }
+        .stat-value { 
+            font-size: 1.5rem; 
+            font-weight: 700; 
+            margin-top: 4px;
+            background: linear-gradient(180deg, var(--silver) 0%, var(--gold-light) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .stat-sub { color: var(--text-secondary); font-size: 0.75rem; margin-top: 4px; }
         
         /* Section */
-        .section { margin-bottom: 32px; }
-        .section-title { font-size: 1.1rem; font-weight: 600; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
-        
-        /* System Tiles - Stacked */
-        .system-tile {
-            background: var(--bg-card);
-            border: 2px solid var(--border);
-            border-radius: 16px;
-            padding: 24px;
-            margin-bottom: 20px;
+        .section { margin-bottom: 40px; }
+        .section-title { 
+            font-size: 1.125rem; 
+            font-weight: 600; 
+            margin-bottom: 20px; 
+            display: flex; 
+            align-items: center; 
+            gap: 8px;
+            letter-spacing: -0.01em;
+        }
+        .section-title .note {
+            font-size: 0.8rem;
+            font-weight: 400;
+            color: var(--text-tertiary);
         }
         
-        .system-tile.go { border-color: var(--go-color); }
-        .system-tile.elixir { border-color: var(--elixir-color); opacity: 0.8; }
-        .system-tile.make { border-color: var(--make-color); }
+        /* System Tiles */
+        .system-tile {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 16px;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .system-tile:hover {
+            background: var(--glass-hover);
+            border-color: rgba(212, 175, 55, 0.2);
+        }
+        
+        .system-tile.go { 
+            border-color: rgba(0, 173, 216, 0.4);
+            background: linear-gradient(135deg, rgba(0, 173, 216, 0.08) 0%, var(--glass-bg) 100%);
+        }
+        .system-tile.elixir { 
+            opacity: 0.85; 
+            border-color: rgba(155, 114, 170, 0.4);
+        }
+        .system-tile.make { 
+            border-color: rgba(99, 102, 241, 0.4);
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.08) 0%, var(--glass-bg) 100%);
+        }
         
         .tile-header {
             display: flex;
@@ -85,14 +178,20 @@
             gap: 12px;
         }
         
-        .tile-title-area { }
-        .tile-name { font-size: 1.5rem; font-weight: 700; }
+        .tile-name { 
+            font-size: 1.375rem; 
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            background: linear-gradient(180deg, var(--silver-light) 0%, var(--gold) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
         .tile-badges { display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
         
         .badge {
             padding: 4px 12px;
             border-radius: 20px;
-            font-size: 0.7rem;
+            font-size: 0.6875rem;
             font-weight: 600;
             text-transform: uppercase;
         }
@@ -110,13 +209,19 @@
             text-align: center;
         }
         
-        .tile-stat-value { font-size: 1.5rem; font-weight: 700; }
-        .tile-stat-label { font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; }
+        .tile-stat-value { 
+            font-size: 1.375rem; 
+            font-weight: 700;
+            background: linear-gradient(180deg, var(--silver) 0%, var(--gold-light) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .tile-stat-label { font-size: 0.625rem; color: var(--text-tertiary); text-transform: uppercase; }
         
         .tile-info {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 16px;
+            gap: 12px;
             margin: 16px 0;
             font-size: 0.875rem;
             color: var(--text-secondary);
@@ -125,27 +230,27 @@
         .tile-info strong { color: var(--text-primary); }
         
         .deprecation-notice {
-            background: rgba(239, 68, 68, 0.1);
-            border: 1px solid rgba(239, 68, 68, 0.3);
-            border-radius: 8px;
-            padding: 10px 14px;
+            background: rgba(255, 69, 58, 0.1);
+            border: 1px solid rgba(255, 69, 58, 0.3);
+            border-radius: 10px;
+            padding: 12px 16px;
             margin-bottom: 16px;
             font-size: 0.8rem;
             color: #fca5a5;
         }
         
-        /* Tech Stack & Integrations */
+        /* Tech Stack */
         .tile-section {
             padding-top: 16px;
-            border-top: 1px solid var(--border);
+            border-top: 1px solid var(--glass-border);
             margin-top: 16px;
         }
         
         .tile-section-title {
-            font-size: 0.7rem;
-            color: var(--text-muted);
+            font-size: 0.6875rem;
+            color: var(--text-tertiary);
             text-transform: uppercase;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             letter-spacing: 0.05em;
         }
         
@@ -156,17 +261,18 @@
         }
         
         .tag {
-            font-size: 0.65rem;
-            padding: 4px 8px;
-            border-radius: 4px;
-            background: rgba(255,255,255,0.08);
+            font-size: 0.6875rem;
+            padding: 5px 10px;
+            border-radius: 6px;
+            background: rgba(255,255,255,0.06);
             color: var(--text-secondary);
+            border: 1px solid var(--glass-border);
         }
         
         .tag.primary { font-weight: 600; }
-        .tag.go { background: var(--go-color); color: #000; }
-        .tag.elixir { background: var(--elixir-color); color: #fff; }
-        .tag.int { background: rgba(99, 102, 241, 0.2); color: #a5b4fc; }
+        .tag.go { background: var(--go-color); color: #000; border: none; }
+        .tag.elixir { background: var(--elixir-color); color: #fff; border: none; }
+        .tag.int { background: rgba(212, 175, 55, 0.15); color: var(--gold-light); border-color: rgba(212, 175, 55, 0.3); }
         
         /* Language Bar */
         .lang-bar {
@@ -181,11 +287,13 @@
         
         /* Chart */
         .chart-container {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
             border-radius: 16px;
             padding: 24px;
-            margin-bottom: 32px;
+            margin-bottom: 40px;
         }
         
         .chart-title { font-size: 1rem; font-weight: 600; margin-bottom: 16px; }
@@ -193,44 +301,63 @@
         /* Contributors */
         .contributors-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 16px;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 12px;
         }
         
         .contributor-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 16px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 14px;
+            padding: 20px;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .contributor-card:hover {
+            background: var(--glass-hover);
+            border-color: rgba(212, 175, 55, 0.2);
+            transform: translateY(-2px);
         }
         
         .contributor-name { font-weight: 600; margin-bottom: 4px; display: flex; align-items: center; gap: 8px; }
-        .contributor-type { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 8px; }
+        .contributor-type { font-size: 0.75rem; color: var(--text-tertiary); margin-bottom: 8px; }
         .contributor-stats { font-size: 0.875rem; color: var(--text-secondary); }
-        .contributor-work { font-size: 0.8rem; color: var(--text-muted); margin-top: 8px; }
+        .contributor-work { font-size: 0.8rem; color: var(--text-tertiary); margin-top: 8px; }
         
         /* Recommendations */
         .rec-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
+            gap: 16px;
         }
         
         .rec-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 12px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 14px;
             padding: 20px;
         }
         
-        .rec-card.gaps { border-color: var(--danger); background: rgba(239, 68, 68, 0.05); }
+        .rec-card.recs {
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.08) 0%, var(--glass-bg) 100%);
+            border-color: rgba(212, 175, 55, 0.3);
+        }
+        
+        .rec-card.gaps { 
+            border-color: rgba(255, 159, 10, 0.4); 
+            background: rgba(255, 159, 10, 0.05); 
+        }
         
         .rec-title { font-weight: 600; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
         
         .rec-list { list-style: none; }
         .rec-list li {
-            padding: 6px 0;
-            border-bottom: 1px solid var(--border);
+            padding: 8px 0;
+            border-bottom: 1px solid var(--glass-border);
             font-size: 0.8rem;
             color: var(--text-secondary);
             display: flex;
@@ -238,23 +365,98 @@
             gap: 8px;
         }
         .rec-list li:last-child { border-bottom: none; }
-        .rec-list li::before { content: "→"; color: var(--info); }
-        .rec-card.gaps .rec-list li::before { content: "⚠"; color: var(--danger); }
+        .rec-list li::before { content: "→"; color: var(--gold); }
+        .rec-card.gaps .rec-list li::before { content: "⚠"; color: var(--warning); }
+        
+        /* Days Live Badge */
+        .days-live {
+            font-size: 0.75rem;
+            color: var(--gold);
+            font-weight: 600;
+            background: rgba(212, 175, 55, 0.1);
+            padding: 4px 10px;
+            border-radius: 6px;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+        }
+        
+        .days-live.veteran {
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.15) 0%, rgba(168, 168, 168, 0.1) 100%);
+            border-color: rgba(212, 175, 55, 0.3);
+        }
+        
+        /* App Cards */
+        .app-tile {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 12px;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .app-tile:hover {
+            background: var(--glass-hover);
+            border-color: rgba(212, 175, 55, 0.2);
+        }
+        
+        .app-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+        
+        .app-name {
+            font-size: 1.125rem;
+            font-weight: 600;
+            letter-spacing: -0.01em;
+        }
+        
+        .app-meta {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+        
+        .app-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 10px;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+        
+        .app-info a {
+            color: var(--gold);
+            text-decoration: none;
+        }
+        
+        .app-info a:hover { text-decoration: underline; }
         
         footer {
             text-align: center;
-            padding: 24px;
-            color: var(--text-muted);
-            font-size: 0.8rem;
-            border-top: 1px solid var(--border);
-            margin-top: 32px;
+            padding: 32px;
+            color: var(--text-tertiary);
+            font-size: 0.8125rem;
+            border-top: 1px solid var(--glass-border);
+            margin-top: 40px;
         }
+        
+        footer a { color: var(--gold); text-decoration: none; }
+        footer a:hover { text-decoration: underline; }
     </style>
 </head>
 <body>
+    <div class="bg-gradient"></div>
+    
     <div class="container">
         <header>
-            <h1>🛠️ IPAI Tech Leadership Dashboard</h1>
+            <img src="ipai-logo.jpg" alt="IPAI" class="logo">
+            <h1>🛠️ Tech Leadership Dashboard</h1>
             <p class="subtitle">Engineering Infrastructure & System Status — CEO & VP Engineering View</p>
             <p class="updated">Last updated: <span id="update-time"></span></p>
         </header>
@@ -273,7 +475,7 @@
             </div>
             <div class="stat-card">
                 <div class="stat-label">Active System</div>
-                <div class="stat-value" style="color: var(--go-color);">Go</div>
+                <div class="stat-value" style="background: var(--go-color); -webkit-background-clip: text;">Go</div>
                 <div class="stat-sub">arc v2</div>
             </div>
             <div class="stat-card">
@@ -465,62 +667,23 @@
                 </div>
                 
                 <div class="tile-section">
-                    <div class="tile-section-title">AI & LLM Services</div>
+                    <div class="tile-section-title">All Integrations</div>
                     <div class="int-tags">
                         <span class="tag int">Anthropic Claude</span>
                         <span class="tag int">OpenAI GPT</span>
                         <span class="tag int">Perplexity AI</span>
                         <span class="tag int">Google Vertex AI</span>
                         <span class="tag int">xAI (Grok)</span>
-                        <span class="tag int">Google Cloud Vision</span>
-                    </div>
-                </div>
-                
-                <div class="tile-section">
-                    <div class="tile-section-title">Social & Video</div>
-                    <div class="int-tags">
-                        <span class="tag int">YouTube</span>
-                        <span class="tag int">Instagram Business</span>
-                        <span class="tag int">LinkedIn</span>
-                        <span class="tag int">Twitter</span>
-                        <span class="tag int">Facebook Pages</span>
-                    </div>
-                </div>
-                
-                <div class="tile-section">
-                    <div class="tile-section-title">Media Production</div>
-                    <div class="int-tags">
+                        <span class="tag int">Hume AI</span>
                         <span class="tag int">ElevenLabs TTS</span>
-                        <span class="tag int">Google Cloud TTS</span>
                         <span class="tag int">HeyGen</span>
                         <span class="tag int">Runway ML</span>
-                        <span class="tag int">CloudConvert</span>
-                        <span class="tag int">Transloadit</span>
-                    </div>
-                </div>
-                
-                <div class="tile-section">
-                    <div class="tile-section-title">Cloud & Storage</div>
-                    <div class="int-tags">
+                        <span class="tag int">YouTube</span>
+                        <span class="tag int">Instagram</span>
+                        <span class="tag int">LinkedIn</span>
                         <span class="tag int">AWS S3</span>
-                        <span class="tag int">AWS Lambda</span>
                         <span class="tag int">Google Drive</span>
                         <span class="tag int">Google Sheets</span>
-                        <span class="tag int">Google Docs</span>
-                        <span class="tag int">Google Forms</span>
-                        <span class="tag int">Dropbox</span>
-                    </div>
-                </div>
-                
-                <div class="tile-section">
-                    <div class="tile-section-title">Utilities</div>
-                    <div class="int-tags">
-                        <span class="tag int">HTTP/Webhooks</span>
-                        <span class="tag int">JSON</span>
-                        <span class="tag int">RSS</span>
-                        <span class="tag int">PDF.co</span>
-                        <span class="tag int">Browse AI</span>
-                        <span class="tag int">Gmail</span>
                     </div>
                 </div>
             </div>
@@ -537,7 +700,7 @@
             <h2 class="section-title">👥 Contributors & Work Distribution</h2>
             <div class="contributors-grid">
                 <div class="contributor-card">
-                    <div class="contributor-name">David McHealy <span style="font-size: 0.7rem; color: var(--text-muted);">(mindreader)</span></div>
+                    <div class="contributor-name">David McHealy <span style="font-size: 0.7rem; color: var(--text-tertiary);">(mindreader)</span></div>
                     <div class="contributor-type">Lead Engineer</div>
                     <div class="contributor-stats">
                         <strong>1,187</strong> commits (Go) + <strong>640</strong> commits (Elixir)
@@ -545,8 +708,8 @@
                     <div class="contributor-work">Core architecture, Temporal, LLMs, all major features</div>
                 </div>
                 
-                <div class="contributor-card">
-                    <div class="contributor-name">Claude Code 🤖 <span style="font-size: 0.7rem; color: var(--text-muted);">(AI Agent)</span></div>
+                <div class="contributor-card" style="border-color: rgba(168, 85, 247, 0.4);">
+                    <div class="contributor-name">Claude Code 🤖 <span style="font-size: 0.7rem; color: var(--text-tertiary);">(AI Agent)</span></div>
                     <div class="contributor-type">AI Assistant</div>
                     <div class="contributor-stats">
                         <strong>~5</strong> commits (Go) — obsidian, quartz, onyx, jasper
@@ -557,18 +720,14 @@
                 <div class="contributor-card">
                     <div class="contributor-name">mayor</div>
                     <div class="contributor-type">Developer</div>
-                    <div class="contributor-stats">
-                        <strong>2</strong> commits (Elixir)
-                    </div>
+                    <div class="contributor-stats"><strong>2</strong> commits (Elixir)</div>
                     <div class="contributor-work">Pipeline execution, soft/hard delete</div>
                 </div>
                 
                 <div class="contributor-card">
                     <div class="contributor-name">williamipai</div>
                     <div class="contributor-type">Contributor</div>
-                    <div class="contributor-stats">
-                        <strong>4</strong> commits (Elixir)
-                    </div>
+                    <div class="contributor-stats"><strong>4</strong> commits (Elixir)</div>
                     <div class="contributor-work">Conversation UI updates</div>
                 </div>
             </div>
@@ -576,9 +735,9 @@
         
         <!-- Recommendations & Gaps -->
         <div class="section">
-            <h2 class="section-title">📋 Recommendations & Gaps — arc (Go)</h2>
+            <h2 class="section-title">📋 Recommendations & Gaps</h2>
             <div class="rec-grid">
-                <div class="rec-card">
+                <div class="rec-card recs">
                     <div class="rec-title">✅ Recommendations</div>
                     <ul class="rec-list">
                         <li>Add test coverage metrics & CI badges</li>
@@ -587,7 +746,6 @@
                         <li>Enable GitHub Issues for tracking</li>
                         <li>Add semantic versioning (v2.0.0)</li>
                         <li>Set up branch protection on main</li>
-                        <li>Document API endpoints & data models</li>
                     </ul>
                 </div>
                 
@@ -599,7 +757,6 @@
                         <li><strong>No issue tracking</strong> visible</li>
                         <li><strong>High velocity no guardrails</strong> ~50 commits/day</li>
                         <li><strong>No rollback strategy</strong> documented</li>
-                        <li><strong>Direct pushes</strong> — no PR review</li>
                     </ul>
                 </div>
                 
@@ -611,203 +768,19 @@
                         <li><strong>Rights Management</strong> — No metadata pipeline</li>
                         <li><strong>White-Label</strong> — No partner delivery system</li>
                         <li><strong>Revenue Share</strong> — No royalty automation</li>
-                        <li><strong>B2B APIs</strong> — No self-service onboarding</li>
                     </ul>
                 </div>
             </div>
-            <p style="margin-top: 16px; font-size: 0.8rem; color: var(--warning); text-align: center;">
-                ⚠️ Start building enterprise infrastructure now — retrofitting later is exponentially harder.
-            </p>
         </div>
         
-        <!-- CB-Built Apps & Tools (ranked by Python usage) -->
+        <!-- CB-Built Apps & Tools (sorted by days live) -->
         <div class="section">
-            <h2 class="section-title">🚀 CB-Built Apps & Tools <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: normal;">(ranked by Python %)</span></h2>
-            
-            <!-- 1. Character Bible Builder - 100% Python -->
-            <div class="system-tile" style="border-color: #3776ab;">
-                <div class="tile-header">
-                    <div class="tile-title-area">
-                        <div class="tile-name">Character Bible Builder</div>
-                        <div class="tile-badges">
-                            <span class="badge" style="background: #3776ab; color: #fff;">Python 100%</span>
-                            <span class="badge badge-active">Live</span>
-                        </div>
-                    </div>
-                    <div class="tile-stats">
-                        <div><div class="tile-stat-value" id="bible-days">—</div><div class="tile-stat-label">Days Live</div></div>
-                        <div><div class="tile-stat-value">~22 KB</div><div class="tile-stat-label">Codebase</div></div>
-                    </div>
-                </div>
-                <div class="tile-info">
-                    <div><strong>Created:</strong> February 6, 2026</div>
-                    <div><strong>Repo:</strong> corboo/character-bible-builder</div>
-                    <div><strong>Live:</strong> <a href="https://character-bible-builder-hlkmhjigwnchkx5zsypmeb.streamlit.app/" style="color: var(--info);">Streamlit Cloud</a></div>
-                    <div><strong>Purpose:</strong> Create AI persona definitions</div>
-                </div>
-                <div class="tile-section">
-                    <div class="tile-section-title">Tech Stack</div>
-                    <div class="tech-tags"><span class="tag" style="background: #3776ab; color: #fff;">Python 100%</span><span class="tag">Streamlit</span></div>
-                </div>
-            </div>
-            
-            <!-- 2. Claire Video Generator - 100% Python -->
-            <div class="system-tile" style="border-color: #3776ab;">
-                <div class="tile-header">
-                    <div class="tile-title-area">
-                        <div class="tile-name">Claire Video Generator</div>
-                        <div class="tile-badges">
-                            <span class="badge" style="background: #3776ab; color: #fff;">Python 100%</span>
-                            <span class="badge badge-active">Live</span>
-                        </div>
-                    </div>
-                    <div class="tile-stats">
-                        <div><div class="tile-stat-value" id="claire-vid-days">—</div><div class="tile-stat-label">Days Live</div></div>
-                        <div><div class="tile-stat-value">~8 KB</div><div class="tile-stat-label">Codebase</div></div>
-                    </div>
-                </div>
-                <div class="tile-info">
-                    <div><strong>Created:</strong> February 3, 2026</div>
-                    <div><strong>Repo:</strong> corboo/claire-video-generator</div>
-                    <div><strong>Live:</strong> <a href="https://claire-video-generator-3eu5c3hvxozv6y45wdq2xd.streamlit.app/" style="color: var(--info);">Streamlit Cloud</a></div>
-                    <div><strong>Purpose:</strong> Talking avatar video creation</div>
-                </div>
-                <div class="tile-section">
-                    <div class="tile-section-title">Tech Stack</div>
-                    <div class="tech-tags"><span class="tag" style="background: #3776ab; color: #fff;">Python 100%</span><span class="tag">Streamlit</span></div>
-                </div>
-                <div class="tile-section">
-                    <div class="tile-section-title">Integrations</div>
-                    <div class="int-tags"><span class="tag int">Hume TTS</span><span class="tag int">D-ID</span></div>
-                </div>
-            </div>
-            
-            <!-- 3. FORGE - 38% Python -->
-            <div class="system-tile" style="border-color: #ff6b6b;">
-                <div class="tile-header">
-                    <div class="tile-title-area">
-                        <div class="tile-name">FORGE — Audio to Video</div>
-                        <div class="tile-badges">
-                            <span class="badge" style="background: #3776ab; color: #fff;">Python 38%</span>
-                            <span class="badge" style="background: #e34c26; color: #fff;">HTML</span>
-                            <span class="badge badge-active">Live</span>
-                        </div>
-                    </div>
-                    <div class="tile-stats">
-                        <div><div class="tile-stat-value" id="forge-days">—</div><div class="tile-stat-label">Days Live</div></div>
-                        <div><div class="tile-stat-value">~124 KB</div><div class="tile-stat-label">Codebase</div></div>
-                    </div>
-                </div>
-                <div class="tile-info">
-                    <div><strong>Created:</strong> February 2, 2026</div>
-                    <div><strong>Repo:</strong> corboo/qp1-tools</div>
-                    <div><strong>Live:</strong> <a href="https://qp1-tools-cxjt6gffvwuump8fsczqu8.streamlit.app/" style="color: var(--info);">Streamlit Cloud</a></div>
-                    <div><strong>Purpose:</strong> Transform audio into AI video</div>
-                </div>
-                <div class="tile-section">
-                    <div class="tile-section-title">Tech Stack</div>
-                    <div class="tech-tags"><span class="tag" style="background: #3776ab; color: #fff;">Python 38%</span><span class="tag" style="background: #e34c26; color: #fff;">HTML 62%</span><span class="tag">Streamlit</span></div>
-                </div>
-                <div class="tile-section">
-                    <div class="tile-section-title">Integrations</div>
-                    <div class="int-tags"><span class="tag int">LTX Video</span><span class="tag int">OpenAI</span><span class="tag int">Hume TTS</span></div>
-                </div>
-            </div>
-            
-            <!-- 4. Claire Delish - 4% Python -->
-            <div class="system-tile" style="border-color: #10b981;">
-                <div class="tile-header">
-                    <div class="tile-title-area">
-                        <div class="tile-name">Claire Delish — Realtime Voice</div>
-                        <div class="tile-badges">
-                            <span class="badge" style="background: #3776ab; color: #fff;">Python 4%</span>
-                            <span class="badge" style="background: #e34c26; color: #fff;">HTML</span>
-                            <span class="badge badge-active">Live</span>
-                        </div>
-                    </div>
-                    <div class="tile-stats">
-                        <div><div class="tile-stat-value" id="claire-rt-days">—</div><div class="tile-stat-label">Days Live</div></div>
-                        <div><div class="tile-stat-value">~28 KB</div><div class="tile-stat-label">Codebase</div></div>
-                    </div>
-                </div>
-                <div class="tile-info">
-                    <div><strong>Created:</strong> February 3, 2026</div>
-                    <div><strong>Repo:</strong> corboo/claire-delish</div>
-                    <div><strong>Live:</strong> <a href="https://corboo.github.io/claire-delish" style="color: var(--info);">GitHub Pages</a></div>
-                    <div><strong>Purpose:</strong> Real-time AI cooking companion</div>
-                </div>
-                <div class="tile-section">
-                    <div class="tile-section-title">Tech Stack</div>
-                    <div class="tech-tags"><span class="tag" style="background: #e34c26; color: #fff;">HTML 96%</span><span class="tag" style="background: #3776ab; color: #fff;">Python 4%</span><span class="tag">LiveKit</span></div>
-                </div>
-                <div class="tile-section">
-                    <div class="tile-section-title">Integrations</div>
-                    <div class="int-tags"><span class="tag int">Hume EVI</span><span class="tag int">LiveKit</span><span class="tag int">Simli</span><span class="tag int">D-ID</span></div>
-                </div>
-            </div>
-            
-            <!-- 5. YouTube Thumbnail Generator - 0% Python -->
-            <div class="system-tile" style="border-color: #f7df1e;">
-                <div class="tile-header">
-                    <div class="tile-title-area">
-                        <div class="tile-name">YouTube Thumbnail Generator</div>
-                        <div class="tile-badges">
-                            <span class="badge" style="background: #f7df1e; color: #000;">JavaScript</span>
-                            <span class="badge" style="background: #61dafb; color: #000;">React</span>
-                            <span class="badge badge-active">Live</span>
-                        </div>
-                    </div>
-                    <div class="tile-stats">
-                        <div><div class="tile-stat-value" id="thumb-days">—</div><div class="tile-stat-label">Days Live</div></div>
-                    </div>
-                </div>
-                <div class="tile-info">
-                    <div><strong>Created:</strong> February 5, 2026</div>
-                    <div><strong>Repo:</strong> corboo/youtube-thumbnail-generator</div>
-                    <div><strong>Live:</strong> <a href="https://youtube-thumbnail-generator-iota.vercel.app/" style="color: var(--info);">Vercel</a></div>
-                    <div><strong>Purpose:</strong> AI-powered high-CTR thumbnails</div>
-                </div>
-                <div class="tile-section">
-                    <div class="tile-section-title">Tech Stack</div>
-                    <div class="tech-tags"><span class="tag" style="background: #f7df1e; color: #000;">JavaScript</span><span class="tag" style="background: #61dafb; color: #000;">React</span><span class="tag">Next.js</span><span class="tag">Vercel</span></div>
-                </div>
-                <div class="tile-section">
-                    <div class="tile-section-title">Integrations</div>
-                    <div class="int-tags"><span class="tag int">Claude AI</span><span class="tag int">Canvas API</span></div>
-                </div>
-            </div>
-            
-            <!-- 6. Dashboards Hub - 0% Python -->
-            <div class="system-tile" style="border-color: #06b6d4;">
-                <div class="tile-header">
-                    <div class="tile-title-area">
-                        <div class="tile-name">Dashboards Hub</div>
-                        <div class="tile-badges">
-                            <span class="badge" style="background: #e34c26; color: #fff;">HTML</span>
-                            <span class="badge" style="background: #f7df1e; color: #000;">JS</span>
-                            <span class="badge badge-active">Live</span>
-                        </div>
-                    </div>
-                    <div class="tile-stats">
-                        <div><div class="tile-stat-value" id="dash-days">—</div><div class="tile-stat-label">Days Live</div></div>
-                        <div><div class="tile-stat-value">8+</div><div class="tile-stat-label">Dashboards</div></div>
-                    </div>
-                </div>
-                <div class="tile-info">
-                    <div><strong>Created:</strong> February 3, 2026</div>
-                    <div><strong>Repo:</strong> corboo/dashboards</div>
-                    <div><strong>Live:</strong> <a href="https://corboo.github.io/dashboards/" style="color: var(--info);">GitHub Pages</a></div>
-                    <div><strong>Purpose:</strong> Analytics & monitoring hub</div>
-                </div>
-                <div class="tile-section">
-                    <div class="tile-section-title">Dashboards Included</div>
-                    <div class="int-tags"><span class="tag int">Spreaker Analytics</span><span class="tag int">YouTube Analytics</span><span class="tag int">Make.com Ops</span><span class="tag int">Apps & Tools</span><span class="tag int">Tech Leadership</span><span class="tag int">Board View</span></div>
-                </div>
-            </div>
+            <h2 class="section-title">🚀 CB-Built Apps & Tools <span class="note">↓ sorted by days live</span></h2>
+            <div id="apps-container"></div>
         </div>
         
         <footer>
-            Built by CB for Inception Point AI • Data from GitHub API & Make.com
+            Built by CB for <a href="https://inceptionpoint.ai">Inception Point AI</a> • Data from GitHub API & Make.com
         </footer>
     </div>
     
@@ -823,12 +796,130 @@
         
         document.getElementById('go-days').textContent = calcDays('2026-01-09');
         document.getElementById('make-days').textContent = calcDays('2024-08-01');
-        document.getElementById('forge-days').textContent = calcDays('2026-02-02');
-        document.getElementById('thumb-days').textContent = calcDays('2026-02-05');
-        document.getElementById('bible-days').textContent = calcDays('2026-02-06');
-        document.getElementById('claire-vid-days').textContent = calcDays('2026-02-03');
-        document.getElementById('claire-rt-days').textContent = calcDays('2026-02-03');
-        document.getElementById('dash-days').textContent = calcDays('2026-02-03');
+        
+        // CB Apps data - sorted by launch date (oldest first = most days on top)
+        const cbApps = [
+            {
+                name: "FORGE — Audio to Video",
+                badges: ["Python 38%", "HTML"],
+                badgeColors: ["#3776ab", "#e34c26"],
+                live: true,
+                launched: "2026-02-02",
+                repo: "corboo/qp1-tools",
+                url: "https://qp1-tools-cxjt6gffvwuump8fsczqu8.streamlit.app/",
+                purpose: "Transform audio into AI video",
+                tech: ["Python 38%", "HTML 62%", "Streamlit"],
+                integrations: ["LTX Video", "OpenAI", "Hume TTS"]
+            },
+            {
+                name: "Claire Video Generator",
+                badges: ["Python 100%"],
+                badgeColors: ["#3776ab"],
+                live: true,
+                launched: "2026-02-03",
+                repo: "corboo/claire-video-generator",
+                url: "https://claire-video-generator-3eu5c3hvxozv6y45wdq2xd.streamlit.app/",
+                purpose: "Talking avatar video creation",
+                tech: ["Python 100%", "Streamlit"],
+                integrations: ["Hume TTS", "D-ID"]
+            },
+            {
+                name: "Claire Delish — Realtime Voice",
+                badges: ["HTML", "Python 4%"],
+                badgeColors: ["#e34c26", "#3776ab"],
+                live: true,
+                launched: "2026-02-03",
+                repo: "corboo/claire-delish",
+                url: "https://corboo.github.io/claire-delish",
+                purpose: "Real-time AI cooking companion",
+                tech: ["HTML 96%", "Python 4%", "LiveKit"],
+                integrations: ["Hume EVI", "LiveKit", "Simli", "D-ID"]
+            },
+            {
+                name: "Dashboards Hub",
+                badges: ["HTML", "JavaScript"],
+                badgeColors: ["#e34c26", "#f7df1e"],
+                live: true,
+                launched: "2026-02-03",
+                repo: "corboo/dashboards",
+                url: "https://corboo.github.io/dashboards/",
+                purpose: "Analytics & monitoring hub",
+                tech: ["HTML", "JavaScript", "Chart.js"],
+                integrations: ["GitHub API", "Spreaker", "YouTube Data"]
+            },
+            {
+                name: "YouTube Thumbnail Generator",
+                badges: ["JavaScript", "React"],
+                badgeColors: ["#f7df1e", "#61dafb"],
+                live: true,
+                launched: "2026-02-05",
+                repo: "corboo/youtube-thumbnail-generator",
+                url: "https://youtube-thumbnail-generator-iota.vercel.app/",
+                purpose: "AI-powered high-CTR thumbnails",
+                tech: ["JavaScript", "React", "Next.js", "Vercel"],
+                integrations: ["Claude AI", "Canvas API"]
+            },
+            {
+                name: "Character Bible Builder",
+                badges: ["Python 100%"],
+                badgeColors: ["#3776ab"],
+                live: true,
+                launched: "2026-02-06",
+                repo: "corboo/character-bible-builder",
+                url: "https://character-bible-builder-hlkmhjigwnchkx5zsypmeb.streamlit.app/",
+                purpose: "Create AI persona definitions",
+                tech: ["Python 100%", "Streamlit"],
+                integrations: []
+            }
+        ];
+        
+        // Sort by launch date (oldest first)
+        cbApps.sort((a, b) => new Date(a.launched) - new Date(b.launched));
+        
+        // Render apps
+        const appsContainer = document.getElementById('apps-container');
+        cbApps.forEach(app => {
+            const daysLive = calcDays(app.launched);
+            const isVeteran = daysLive >= 5;
+            
+            const badgesHtml = app.badges.map((badge, i) => 
+                `<span class="badge" style="background: ${app.badgeColors[i]}; color: ${app.badgeColors[i] === '#f7df1e' ? '#000' : '#fff'};">${badge}</span>`
+            ).join('');
+            
+            const techHtml = app.tech.map(t => `<span class="tag">${t}</span>`).join('');
+            const intHtml = app.integrations.length ? app.integrations.map(i => `<span class="tag int">${i}</span>`).join('') : '';
+            
+            appsContainer.innerHTML += `
+                <div class="app-tile">
+                    <div class="app-header">
+                        <div>
+                            <div class="app-name">${app.name}</div>
+                            <div class="tile-badges" style="margin-top: 8px;">
+                                ${badgesHtml}
+                                <span class="badge badge-active">Live</span>
+                            </div>
+                        </div>
+                        <div class="app-meta">
+                            <div class="days-live${isVeteran ? ' veteran' : ''}">${daysLive}d live</div>
+                        </div>
+                    </div>
+                    <div class="app-info">
+                        <div><strong>Created:</strong> ${new Date(app.launched).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</div>
+                        <div><strong>Repo:</strong> ${app.repo}</div>
+                        <div><strong>Live:</strong> <a href="${app.url}" target="_blank">View App →</a></div>
+                        <div><strong>Purpose:</strong> ${app.purpose}</div>
+                    </div>
+                    <div class="tile-section">
+                        <div class="tile-section-title">Tech Stack</div>
+                        <div class="tech-tags">${techHtml}</div>
+                    </div>
+                    ${intHtml ? `<div class="tile-section">
+                        <div class="tile-section-title">Integrations</div>
+                        <div class="int-tags">${intHtml}</div>
+                    </div>` : ''}
+                </div>
+            `;
+        });
         
         // Chart
         const ctx = document.getElementById('velocityChart').getContext('2d');
@@ -844,16 +935,21 @@
                 }, {
                     label: 'ELIXIR — content-app (DEPRECATED)',
                     data: [120, 180, 150, 100, 80, 14, 0],
-                    backgroundColor: 'rgba(110, 74, 126, 0.4)',
+                    backgroundColor: 'rgba(155, 114, 170, 0.4)',
                     borderRadius: 4
                 }]
             },
             options: {
                 responsive: true,
-                plugins: { legend: { position: 'top', labels: { color: '#94a3b8' } } },
+                plugins: { 
+                    legend: { 
+                        position: 'top', 
+                        labels: { color: 'rgba(255, 255, 255, 0.7)', font: { family: 'Inter' } } 
+                    } 
+                },
                 scales: {
-                    x: { ticks: { color: '#64748b' }, grid: { color: '#334155' } },
-                    y: { ticks: { color: '#64748b' }, grid: { color: '#334155' } }
+                    x: { ticks: { color: 'rgba(255, 255, 255, 0.5)' }, grid: { color: 'rgba(255, 255, 255, 0.1)' } },
+                    y: { ticks: { color: 'rgba(255, 255, 255, 0.5)' }, grid: { color: 'rgba(255, 255, 255, 0.1)' } }
                 }
             }
         });
