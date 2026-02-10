@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="ipai-app" content="dashboards">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Make.com Migration Tracker — IPAI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #2d2d2d;
+            --bg-secondary: #3a3a3a;
+            --bg-tertiary: #454545;
+            --silver: #a8a8a8;
+            --silver-light: #c5c5c5;
+            --gold: #d4af37;
+            --gold-light: #e8c547;
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.7);
+            --text-tertiary: rgba(255, 255, 255, 0.5);
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --glass-hover: rgba(255, 255, 255, 0.08);
+            --success: #34c759;
+            --warning: #ff9f0a;
+            --error: #ff453a;
+            --accent-purple: #a855f7;
+            --accent-blue: #3b82f6;
+            --accent-cyan: #06b6d4;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            min-height: 100vh;
+            color: var(--text-primary);
+            -webkit-font-smoothing: antialiased;
+        }
+        
+        .bg-gradient {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: 
+                radial-gradient(ellipse at 20% 20%, rgba(52, 199, 89, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(212, 175, 55, 0.06) 0%, transparent 50%),
+                var(--bg-primary);
+            z-index: -1;
+        }
+        
+        .container { max-width: 1400px; margin: 0 auto; padding: 48px 24px; }
+        
+        .back-link {
+            position: fixed;
+            top: 24px;
+            left: 24px;
+            font-size: 0.8125rem;
+            color: var(--text-tertiary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: color 0.2s;
+            z-index: 100;
+        }
+        
+        .back-link:hover { color: var(--gold); }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(180deg, var(--silver-light) 0%, var(--gold) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+        }
+        
+        .header p { color: var(--text-tertiary); font-size: 1rem; }
+        
+        /* Big Progress Section */
+        .progress-hero {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 48px;
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        
+        .progress-number {
+            font-size: 6rem;
+            font-weight: 700;
+            line-height: 1;
+            margin-bottom: 8px;
+        }
+        
+        .progress-number .done { color: var(--success); }
+        .progress-number .slash { color: var(--text-tertiary); font-weight: 300; }
+        .progress-number .total { color: var(--text-tertiary); }
+        
+        .progress-label {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            margin-bottom: 32px;
+        }
+        
+        .progress-bar-container {
+            background: var(--bg-tertiary);
+            border-radius: 12px;
+            height: 24px;
+            overflow: hidden;
+            margin-bottom: 16px;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--success), var(--gold));
+            border-radius: 12px;
+            transition: width 0.5s ease;
+            position: relative;
+        }
+        
+        .progress-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            animation: shimmer 2s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        .progress-percent {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--success);
+        }
+        
+        /* Motivational Stats */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+        
+        .stat-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 24px;
+            text-align: center;
+        }
+        
+        .stat-icon { font-size: 2rem; margin-bottom: 12px; }
+        .stat-value { font-size: 2rem; font-weight: 700; margin-bottom: 4px; }
+        .stat-label { font-size: 0.75rem; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.05em; }
+        
+        .stat-value.green { color: var(--success); }
+        .stat-value.blue { color: var(--accent-blue); }
+        .stat-value.purple { color: var(--accent-purple); }
+        .stat-value.gold { color: var(--gold); }
+        
+        /* Status Breakdown */
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+        
+        .status-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .status-card:hover {
+            transform: translateY(-2px);
+            border-color: var(--gold);
+        }
+        
+        .status-card.active { border-color: var(--gold); background: var(--glass-hover); }
+        
+        .status-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+        
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        
+        .status-dot.not-started { background: var(--text-tertiary); }
+        .status-dot.replicated { background: var(--accent-blue); }
+        .status-dot.topics-copied { background: var(--accent-purple); }
+        .status-dot.complete { background: var(--success); }
+        
+        .status-name { font-weight: 500; }
+        .status-count { font-size: 2rem; font-weight: 700; }
+        
+        /* Scenario Table */
+        .table-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            overflow: hidden;
+        }
+        
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--glass-border);
+        }
+        
+        .table-title { font-weight: 600; }
+        
+        .search-input {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            padding: 8px 16px;
+            color: var(--text-primary);
+            font-size: 0.875rem;
+            width: 250px;
+        }
+        
+        .search-input::placeholder { color: var(--text-tertiary); }
+        
+        .table-container { max-height: 500px; overflow-y: auto; }
+        
+        table { width: 100%; border-collapse: collapse; }
+        
+        th {
+            text-align: left;
+            font-size: 0.6875rem;
+            font-weight: 600;
+            color: var(--text-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 12px 24px;
+            border-bottom: 1px solid var(--glass-border);
+            position: sticky;
+            top: 0;
+            background: var(--bg-secondary);
+        }
+        
+        td {
+            padding: 16px 24px;
+            font-size: 0.875rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+        }
+        
+        tr:hover { background: rgba(255, 255, 255, 0.02); }
+        
+        .scenario-name { font-weight: 500; }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        
+        .status-badge.not-started { background: rgba(255,255,255,0.1); color: var(--text-tertiary); }
+        .status-badge.replicated { background: rgba(59, 130, 246, 0.2); color: var(--accent-blue); }
+        .status-badge.topics-copied { background: rgba(168, 85, 247, 0.2); color: var(--accent-purple); }
+        .status-badge.complete { background: rgba(52, 199, 89, 0.2); color: var(--success); }
+        
+        .action-btn {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 6px;
+            padding: 6px 12px;
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .action-btn:hover {
+            background: var(--gold);
+            color: var(--bg-primary);
+            border-color: var(--gold);
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 48px;
+            padding-top: 24px;
+            border-top: 1px solid var(--glass-border);
+            font-size: 0.8125rem;
+            color: var(--text-tertiary);
+        }
+        
+        footer a { color: var(--gold); text-decoration: none; }
+        
+        @media (max-width: 900px) {
+            .back-link { position: static; margin-bottom: 24px; }
+            .stats-grid, .status-grid { grid-template-columns: repeat(2, 1fr); }
+            .progress-number { font-size: 4rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-gradient"></div>
+    
+    <a href="index.html" class="back-link">← Dashboard Hub</a>
+    
+    <div class="container">
+        <div class="header">
+            <h1>🚀 Make.com Migration Tracker</h1>
+            <p>Migrating 177 active scenarios to our in-house tool</p>
+        </div>
+        
+        <div class="progress-hero">
+            <div class="progress-number">
+                <span class="done" id="doneCount">0</span>
+                <span class="slash">/</span>
+                <span class="total">177</span>
+            </div>
+            <div class="progress-label">Scenarios Migrated</div>
+            <div class="progress-bar-container">
+                <div class="progress-bar" id="progressBar" style="width: 0%"></div>
+            </div>
+            <div class="progress-percent" id="progressPercent">0% Complete</div>
+        </div>
+        
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">🎯</div>
+                <div class="stat-value green" id="remainingCount">177</div>
+                <div class="stat-label">Remaining</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">📅</div>
+                <div class="stat-value blue" id="estDays">--</div>
+                <div class="stat-label">Est. Days Left</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">⚡</div>
+                <div class="stat-value purple" id="avgPerDay">0</div>
+                <div class="stat-label">Avg / Day</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">🏆</div>
+                <div class="stat-value gold" id="streak">0</div>
+                <div class="stat-label">Day Streak</div>
+            </div>
+        </div>
+        
+        <div class="section-title">📊 Status Breakdown</div>
+        <div class="status-grid">
+            <div class="status-card active" data-filter="all">
+                <div class="status-header">
+                    <div class="status-dot not-started"></div>
+                    <span class="status-name">Not Started</span>
+                </div>
+                <div class="status-count" id="notStartedCount">177</div>
+            </div>
+            <div class="status-card" data-filter="replicated">
+                <div class="status-header">
+                    <div class="status-dot replicated"></div>
+                    <span class="status-name">Workflow Replicated</span>
+                </div>
+                <div class="status-count" id="replicatedCount">0</div>
+            </div>
+            <div class="status-card" data-filter="topics-copied">
+                <div class="status-header">
+                    <div class="status-dot topics-copied"></div>
+                    <span class="status-name">Topics Copied</span>
+                </div>
+                <div class="status-count" id="topicsCopiedCount">0</div>
+            </div>
+            <div class="status-card" data-filter="complete">
+                <div class="status-header">
+                    <div class="status-dot complete"></div>
+                    <span class="status-name">Complete</span>
+                </div>
+                <div class="status-count" id="completeCount">0</div>
+            </div>
+        </div>
+        
+        <div class="section-title">📋 All Active Scenarios</div>
+        <div class="table-card">
+            <div class="table-header">
+                <span class="table-title">177 scenarios to migrate</span>
+                <input type="text" class="search-input" placeholder="Search scenarios..." id="searchInput">
+            </div>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Scenario Name</th>
+                            <th>Category</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="scenariosTable"></tbody>
+                </table>
+            </div>
+        </div>
+        
+        <footer>
+            <a href="index.html">Inception Point AI</a> • Migration Tracker
+        </footer>
+    </div>
+    
+    <script>
+        // Active scenarios from Make.com (177 total)
+        const scenarios = [
+            { name: "50k plus Pop city news tracker", category: "News" },
+            { name: "5 minute mystery", category: "Entertainment" },
+            { name: "Air Quality Report", category: "Weather" },
+            { name: "Astronomy Tonight", category: "Science" },
+            { name: "bad bunny tracker", category: "Music" },
+            { name: "Baseball News Tracker", category: "Sports" },
+            { name: "Bass Fishing Daily", category: "Lifestyle" },
+            { name: "Biography Flash Fictional 1-15", category: "Biography" },
+            { name: "Biography Flash leaders 1-15", category: "Biography" },
+            { name: "Bio Snap 220-240", category: "Biography" },
+            { name: "Bio Snap 250-270", category: "Biography" },
+            { name: "Bio Snap 270-290", category: "Biography" },
+            { name: "Bio Snap 290-310", category: "Biography" },
+            { name: "Bio Snap 310-330", category: "Biography" },
+            { name: "Bio Snap 330-345", category: "Biography" },
+            { name: "Bio Snap brands 10-20", category: "Biography" },
+            { name: "Bio Snap brands 1-10", category: "Biography" },
+            { name: "Bio Snap outliers", category: "Biography" },
+            { name: "Bio Snap outliers part 2", category: "Biography" },
+            { name: "Bird Flu 10", category: "Health" },
+            { name: "Bird Flu tracker", category: "Health" },
+            { name: "Birthday", category: "Entertainment" },
+            { name: "Blake and Justin", category: "Entertainment" },
+            { name: "Boeing Starliner Tracker", category: "Science" },
+            { name: "Boos Trump on Trial", category: "News" },
+            { name: "Boost Your Mood: Daily Inspiration", category: "Lifestyle" },
+            { name: "brain hacks", category: "Lifestyle" },
+            { name: "Brawl Stars", category: "Gaming" },
+            { name: "Cabinet 101s", category: "News" },
+            { name: "Cabinet 101s part 2", category: "News" },
+            { name: "Champions League Daily soccer", category: "Sports" },
+            { name: "China 10", category: "News" },
+            { name: "City Events Guide", category: "Local" },
+            { name: "City Job Tracker", category: "Local" },
+            { name: "City news and info tracker", category: "Local" },
+            { name: "Coastal Marine Report", category: "Weather" },
+            { name: "College Basketball Tracker", category: "Sports" },
+            { name: "Comic Book Daily", category: "Entertainment" },
+            { name: "commodity tracker 15 daily", category: "Finance" },
+            { name: "common phrase 10", category: "Education" },
+            { name: "Credit Card 101", category: "Finance" },
+            { name: "Crime Report", category: "News" },
+            { name: "Crypto 10", category: "Finance" },
+            { name: "Culinary Cities Food Scene", category: "Lifestyle" },
+            { name: "daily deals penny powers", category: "Lifestyle" },
+            { name: "Daily Tech Misc", category: "Tech" },
+            { name: "Daily Unusual Holiday", category: "Entertainment" },
+            { name: "Data for RTP and Dashboard Tests", category: "Internal" },
+            { name: "Deep Seek", category: "Tech" },
+            { name: "Departments US", category: "News" },
+            { name: "Derecho Tracker", category: "Weather" },
+            { name: "Diddy on the run", category: "Entertainment" },
+            { name: "doge 10", category: "Finance" },
+            { name: "DOJ v Apple", category: "Tech" },
+            { name: "Donald Trump Trials", category: "News" },
+            { name: "Earth Event News Tracker USGS", category: "Science" },
+            { name: "EU AI Act", category: "Tech" },
+            { name: "everything roblox", category: "Gaming" },
+            { name: "Fantasy Football News Tracker", category: "Sports" },
+            { name: "Fantasy Football Rankings Tracker", category: "Sports" },
+            { name: "Find Your Joy", category: "Lifestyle" },
+            { name: "Finn Hack tech", category: "Tech" },
+            { name: "Fishing Report 2", category: "Lifestyle" },
+            { name: "Fishing Report 3", category: "Lifestyle" },
+            { name: "Fly Fishing Daily", category: "Lifestyle" },
+            { name: "Football Brothers Travis and Jason Kelce", category: "Sports" },
+            { name: "Football News Tracker", category: "Sports" },
+            { name: "gardening", category: "Lifestyle" },
+            { name: "Golf News Tracker", category: "Sports" },
+            { name: "Google Trends Tracker", category: "Tech" },
+            { name: "Gut Health Daily", category: "Health" },
+            { name: "Harris 2024 Tracker", category: "News" },
+            { name: "Harry Styles Tracker", category: "Music" },
+            { name: "Health Alerts", category: "Health" },
+            { name: "Hockey News Tracker", category: "Sports" },
+            { name: "Horoscope", category: "Entertainment" },
+            { name: "Horse Racing News", category: "Sports" },
+            { name: "Horse Racing Odds", category: "Sports" },
+            { name: "How to make a podcast", category: "Education" },
+            { name: "how to make money", category: "Finance" },
+            { name: "How to watch Monday night football", category: "Sports" },
+            { name: "How to watch Thursday night football", category: "Sports" },
+            { name: "i am gpted", category: "Tech" },
+            { name: "Industry News", category: "Business" },
+            { name: "Inflation Tracker", category: "Finance" },
+            { name: "Jack Smith v Trump", category: "News" },
+            { name: "James Webb", category: "Science" },
+            { name: "Job Market Report", category: "Finance" },
+            { name: "Job Market Report 2", category: "Finance" },
+            { name: "Justin Bieber Tracker", category: "Music" },
+            { name: "Kamala Harris Tracker", category: "News" },
+            { name: "KateGate", category: "Entertainment" },
+            { name: "Lamar vs drake", category: "Music" },
+            { name: "Law of Attraction", category: "Lifestyle" },
+            { name: "LeBron James Tracker", category: "Sports" },
+            { name: "Live Music", category: "Music" },
+            { name: "Local Frequency", category: "Local" },
+            { name: "local pulse", category: "Local" },
+            { name: "Luna Vega - horoscope", category: "Entertainment" },
+            { name: "Malaria Vaccine Tracker", category: "Health" },
+            { name: "Margin Call", category: "Finance" },
+            { name: "MEME Stocks News Tracker", category: "Finance" },
+            { name: "mindfulness", category: "Lifestyle" },
+            { name: "Mission to Mars", category: "Science" },
+            { name: "Morning Person Daily", category: "Lifestyle" },
+            { name: "Motivation Daily", category: "Lifestyle" },
+            { name: "Music News Tracker", category: "Music" },
+            { name: "Nashville Real Estate Market", category: "Finance" },
+            { name: "News you do not need", category: "Entertainment" },
+            { name: "NFL recap", category: "Sports" },
+            { name: "Opioid Epidemic Tracker", category: "Health" },
+            { name: "Optimism Daily", category: "Lifestyle" },
+            { name: "Ozempic", category: "Health" },
+            { name: "Ozempic Loss Dilemna", category: "Health" },
+            { name: "Ozempic navigating", category: "Health" },
+            { name: "Personal Growth", category: "Lifestyle" },
+            { name: "Pet Department", category: "Lifestyle" },
+            { name: "Pollen Tracker", category: "Weather" },
+            { name: "project 2025 tracker", category: "News" },
+            { name: "Quantum 10", category: "Science" },
+            { name: "Relationship and Dating Advice Daily", category: "Lifestyle" },
+            { name: "RNC 2024 Tracker", category: "News" },
+            { name: "RNC primary", category: "News" },
+            { name: "roblox nation", category: "Gaming" },
+            { name: "Scam News Tracker", category: "News" },
+            { name: "Seed vault Tracker", category: "Science" },
+            { name: "Shark Attack Track", category: "News" },
+            { name: "Silicon Valley VC Tracker", category: "Finance" },
+            { name: "Soap opera daily", category: "Entertainment" },
+            { name: "Soccer News Tracker", category: "Sports" },
+            { name: "SpaceX Tracker", category: "Science" },
+            { name: "Sports Gossip", category: "Sports" },
+            { name: "Sports Marketing News Daily", category: "Sports" },
+            { name: "State News and Info", category: "Local" },
+            { name: "State News and Info 15-30", category: "Local" },
+            { name: "Stock Market Tracker", category: "Finance" },
+            { name: "Stock News Daily", category: "Finance" },
+            { name: "Stock News Daily 20-", category: "Finance" },
+            { name: "Summer Travel Plans", category: "Lifestyle" },
+            { name: "Supreme Court Decision Tracker SCOTUS", category: "News" },
+            { name: "Surf Report", category: "Weather" },
+            { name: "Surf Report El Porto", category: "Weather" },
+            { name: "Tariff Trackers", category: "Finance" },
+            { name: "Taylor Swift Tracker", category: "Music" },
+            { name: "TD Celebrity History", category: "Entertainment" },
+            { name: "TD Film History", category: "Entertainment" },
+            { name: "TD in Insane History", category: "Entertainment" },
+            { name: "TD in Sports History", category: "Sports" },
+            { name: "TD Music History", category: "Music" },
+            { name: "TD Pickle Ball History", category: "Sports" },
+            { name: "TD Science History", category: "Science" },
+            { name: "tech 15", category: "Tech" },
+            { name: "terrorist threat tracker", category: "News" },
+            { name: "Things to do in with Oly", category: "Local" },
+            { name: "This Week in History", category: "Entertainment" },
+            { name: "tik tok trend", category: "Entertainment" },
+            { name: "TIME IN City", category: "Local" },
+            { name: "Tornado News and Info", category: "Weather" },
+            { name: "travel advisory", category: "Lifestyle" },
+            { name: "Tropical Storm Tracker", category: "Weather" },
+            { name: "Trump Cabinet tracker", category: "News" },
+            { name: "Trump Cabinet tracker part 2", category: "News" },
+            { name: "Tucker Carlson Tracker", category: "News" },
+            { name: "Unexplained Phenomena Daily", category: "Entertainment" },
+            { name: "US and China Tracker", category: "News" },
+            { name: "US Immigration", category: "News" },
+            { name: "US Open", category: "Sports" },
+            { name: "VIX report", category: "Finance" },
+            { name: "Water News Cities", category: "Local" },
+            { name: "Weather In", category: "Weather" },
+            { name: "Weather In 30-60", category: "Weather" },
+            { name: "wegovy", category: "Health" },
+            { name: "What is Trending Today", category: "Entertainment" },
+            { name: "What to Watch on Streaming", category: "Entertainment" },
+            { name: "where is Melania", category: "Entertainment" },
+            { name: "White House Daily Briefing", category: "News" },
+            { name: "Women 10", category: "Lifestyle" }
+        ];
+        
+        // Initialize with status (load from localStorage if available)
+        let scenarioData = JSON.parse(localStorage.getItem('migrationData')) || 
+            scenarios.map(s => ({ ...s, status: 'not-started' }));
+        
+        function saveData() {
+            localStorage.setItem('migrationData', JSON.stringify(scenarioData));
+        }
+        
+        function updateStats() {
+            const complete = scenarioData.filter(s => s.status === 'complete').length;
+            const replicated = scenarioData.filter(s => s.status === 'replicated').length;
+            const topicsCopied = scenarioData.filter(s => s.status === 'topics-copied').length;
+            const notStarted = scenarioData.filter(s => s.status === 'not-started').length;
+            
+            const total = 177;
+            const percent = Math.round((complete / total) * 100);
+            
+            document.getElementById('doneCount').textContent = complete;
+            document.getElementById('remainingCount').textContent = total - complete;
+            document.getElementById('progressBar').style.width = percent + '%';
+            document.getElementById('progressPercent').textContent = percent + '% Complete';
+            
+            document.getElementById('notStartedCount').textContent = notStarted;
+            document.getElementById('replicatedCount').textContent = replicated;
+            document.getElementById('topicsCopiedCount').textContent = topicsCopied;
+            document.getElementById('completeCount').textContent = complete;
+            
+            // Estimate days (assuming 5 per day)
+            const remaining = total - complete;
+            const estDays = remaining > 0 ? Math.ceil(remaining / 5) : 0;
+            document.getElementById('estDays').textContent = estDays > 0 ? estDays : '🎉';
+        }
+        
+        function renderTable(filter = '') {
+            const tbody = document.getElementById('scenariosTable');
+            const search = filter.toLowerCase();
+            
+            tbody.innerHTML = scenarioData
+                .filter(s => s.name.toLowerCase().includes(search) || s.category.toLowerCase().includes(search))
+                .map((s, i) => `
+                    <tr>
+                        <td class="scenario-name">${s.name}</td>
+                        <td>${s.category}</td>
+                        <td><span class="status-badge ${s.status}">${formatStatus(s.status)}</span></td>
+                        <td><button class="action-btn" onclick="cycleStatus(${i})">Update →</button></td>
+                    </tr>
+                `).join('');
+        }
+        
+        function formatStatus(status) {
+            const map = {
+                'not-started': 'Not Started',
+                'replicated': 'Replicated',
+                'topics-copied': 'Topics Copied',
+                'complete': 'Complete ✓'
+            };
+            return map[status] || status;
+        }
+        
+        function cycleStatus(index) {
+            const statuses = ['not-started', 'replicated', 'topics-copied', 'complete'];
+            const current = statuses.indexOf(scenarioData[index].status);
+            scenarioData[index].status = statuses[(current + 1) % statuses.length];
+            saveData();
+            updateStats();
+            renderTable(document.getElementById('searchInput').value);
+        }
+        
+        // Search
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            renderTable(e.target.value);
+        });
+        
+        // Init
+        updateStats();
+        renderTable();
+    </script>
+</body>
+</html>
