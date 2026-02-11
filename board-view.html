@@ -361,7 +361,7 @@
             </div>
             <div class="header-meta">
                 <div class="updated" id="lastUpdated">Loading...</div>
-                <div class="period">Reporting Period: January 2026</div>
+                <div class="period">Month ending January 31, 2026</div>
             </div>
         </header>
         
@@ -422,7 +422,7 @@
             
             <div class="metric-card unavailable">
                 <div class="metric-header">
-                    <div class="metric-name">Blended CPM (or RPM)</div>
+                    <div class="metric-name">Blended CPM (podcasts)</div>
                     <div class="metric-icon">📊</div>
                 </div>
                 <div class="metric-values">
@@ -560,7 +560,7 @@
         <div class="metrics-grid">
             <div class="metric-card live">
                 <div class="metric-header">
-                    <div class="metric-name">Total Streams / Downloads</div>
+                    <div class="metric-name">Total Streams / Downloads (podcasts)</div>
                     <div class="metric-icon">📥</div>
                 </div>
                 <div class="metric-values">
@@ -574,35 +574,16 @@
                     </div>
                 </div>
                 <div class="metric-status success">
-                    ✅ Live from Spreaker API: /users/{id}/statistics
+                    ✅ Live from Spreaker API (downloads + plays combined)
                 </div>
                 <div class="metric-note" id="downloadsNote">Loading...</div>
             </div>
             
-            <div class="metric-card live">
-                <div class="metric-header">
-                    <div class="metric-name">Total Engagement / Reach</div>
-                    <div class="metric-icon">👥</div>
-                </div>
-                <div class="metric-values">
-                    <div class="value-group">
-                        <div class="value-label">Forecast</div>
-                        <div class="value-number forecast">—</div>
-                    </div>
-                    <div class="value-group">
-                        <div class="value-label">Actual (Plays)</div>
-                        <div class="value-number live" id="playsMetric">—</div>
-                    </div>
-                </div>
-                <div class="metric-status success">
-                    ✅ Live from Spreaker API. Plays = streaming listens (vs downloads = file downloads).
-                </div>
-                <div class="metric-note" id="playsNote">Loading...</div>
-            </div>
+<!-- Plays card removed per board request - rolled into downloads -->
             
-            <div class="metric-card live">
+            <div class="metric-card">
                 <div class="metric-header">
-                    <div class="metric-name"># Monetized AI Personalities</div>
+                    <div class="metric-name">Monetized AI Personalities (TBD)</div>
                     <div class="metric-icon">🎭</div>
                 </div>
                 <div class="metric-values">
@@ -611,14 +592,11 @@
                         <div class="value-number forecast">—</div>
                     </div>
                     <div class="value-group">
-                        <div class="value-label">Actual (Shows)</div>
-                        <div class="value-number live" id="showsMetric">—</div>
+                        <div class="value-label">Actual</div>
+                        <div class="value-number forecast">—</div>
                     </div>
                 </div>
-                <div class="metric-status success">
-                    ✅ Counting unique shows. For named personalities (Clare, Nigel), need separate mapping.
-                </div>
-                <div class="metric-note" id="showsNote">Loading...</div>
+                <div class="metric-note">Placeholder • Data not yet clean enough to track</div>
             </div>
         </div>
         
@@ -667,11 +645,8 @@
                 document.getElementById('downloadsMetric').textContent = formatNumber(totalEngagement);
                 document.getElementById('downloadsNote').textContent = `${totalEngagement.toLocaleString()} total (${orgStats.downloads_count.toLocaleString()} downloads + ${orgStats.plays_count.toLocaleString()} plays)`;
                 
-                document.getElementById('playsMetric').textContent = formatNumber(orgStats.plays_count);
-                document.getElementById('playsNote').textContent = `${orgStats.plays_ondemand_count.toLocaleString()} on-demand plays across all networks`;
-                
-                document.getElementById('showsMetric').textContent = formatNumber(userStats.shows_count);
-                document.getElementById('showsNote').textContent = `${userStats.episodes_count.toLocaleString()} total episodes • ${userStats.likes_count} likes`;
+                // Plays card removed - plays now rolled into downloads above
+                // AI Personalities card is now static TBD placeholder
                 
                 // Update timestamp
                 const now = new Date();
