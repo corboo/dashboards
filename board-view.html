@@ -643,9 +643,9 @@
                 const totalEngagement = orgStats.downloads_count + orgStats.plays_count;
                 document.getElementById('orgDownloads').textContent = totalEngagement.toLocaleString();
                 
-                // Update metric cards
-                document.getElementById('downloadsMetric').textContent = formatNumber(orgStats.downloads_count);
-                document.getElementById('downloadsNote').textContent = `${orgStats.downloads_count.toLocaleString()} total downloads across all networks`;
+                // Update metric cards (use combined downloads + plays to match top)
+                document.getElementById('downloadsMetric').textContent = formatNumber(totalEngagement);
+                document.getElementById('downloadsNote').textContent = `${totalEngagement.toLocaleString()} total (${orgStats.downloads_count.toLocaleString()} downloads + ${orgStats.plays_count.toLocaleString()} plays)`;
                 
                 document.getElementById('playsMetric').textContent = formatNumber(orgStats.plays_count);
                 document.getElementById('playsNote').textContent = `${orgStats.plays_ondemand_count.toLocaleString()} on-demand plays across all networks`;
