@@ -602,20 +602,13 @@
         const USER_ID = '17313059';
         const ORG_ID = '12296333';
         
-        // Google Sheet CSV URL - Replace with your published sheet URL
-        // To get this: Google Sheet → File → Share → Publish to web → CSV → Copy link
-        const FINANCE_SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSl1S2xPX6hSJvnVuG5rO1tFj8yHuBBLh-qGqV8f1E4K_Example/pub?output=csv';
+        // Google Sheet URL - IPAI Board Financials
+        const FINANCE_SHEET_URL = 'https://docs.google.com/spreadsheets/d/1J68Pv6vdkmuol8uStyso0MG5y7e0J-c8-6rY7N-ubvg/export?format=csv';
         
-        // Expected CSV columns (row 1 = headers, row 2 = values):
-        // metric, forecast, actual
-        // revenue, 50000, 48000
-        // cpm, 3.50, 3.20
-        // gross_margin_pct, 45, 42
-        // ai_cost_per_episode, 0.85, 0.92
-        // non_ad_revenue, 5000, 4500
-        // runway_months, 18, 16
-        // cash_on_hand, 500000, 480000
-        // gross_margin_ex_payroll_pct, 65, 62
+        // Sheet structure: 
+        // Column D (index 3) = Metric name
+        // Column E (index 4) = January 2026 Forecast
+        // Column R (index 17) = January 2026 Actual
         
         async function fetchFinanceData() {
             try {
@@ -624,75 +617,140 @@
                 
                 const csv = await res.text();
                 const lines = csv.trim().split('\n');
-                if (lines.length < 2) throw new Error('Sheet has no data');
+                if (lines.length < 5) throw new Error('Sheet has no data');
                 
-                // Parse CSV into object
+                // Parse CSV - handle quoted values with commas
+                function parseCSVLine(line) {
+                    const result = [];
+                    let current = '';
+                    let inQuotes = false;
+                    for (let i = 0; i < line.length; i++) {
+                        const char = line[i];
+                        if (char === '"') {
+                            inQuotes = !inQuotes;
+                        } else if (char === ',' && !inQuotes) {
+                            result.push(current.trim());
+                            current = '';
+                        } else {
+                            current += char;
+                        }
+                    }
+                    result.push(current.trim());
+                    return result;
+                }
+                
+                // Build lookup: metric name → { forecast, actual }
                 const data = {};
-                for (let i = 1; i < lines.length; i++) {
-                    const cols = lines[i].split(',').map(c => c.trim().replace(/^"|"$/g, ''));
-                    if (cols.length >= 3) {
-                        data[cols[0]] = { forecast: cols[1], actual: cols[2] };
+                for (let i = 0; i < lines.length; i++) {
+                    const cols = parseCSVLine(lines[i]);
+                    const metric = (cols[3] || '').toLowerCase().trim();
+                    if (metric && cols.length > 4) {
+                        data[metric] = {
+                            forecast: cols[4] || '',   // January forecast
+                            actual: cols[17] || ''     // January actual
+                        };
                     }
                 }
                 
+                // Clean currency/percent strings to numbers
+                const cleanNum = (v) => {
+                    if (!v) return NaN;
+                    return parseFloat(v.replace(/[$,%]/g, '').replace(/[()]/g, '-').replace(/,/g, ''));
+                };
+                
                 // Format helpers
                 const fmtDollar = (v) => {
-                    const num = parseFloat(v);
+                    const num = cleanNum(v);
                     if (isNaN(num)) return '$—';
-                    if (num >= 1000000) return '$' + (num / 1000000).toFixed(1) + 'M';
-                    if (num >= 1000) return '$' + (num / 1000).toFixed(0) + 'K';
-                    return '$' + num.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                    const abs = Math.abs(num);
+                    const sign = num < 0 ? '-' : '';
+                    if (abs >= 1000000) return sign + '$' + (abs / 1000000).toFixed(2) + 'M';
+                    if (abs >= 1000) return sign + '$' + (abs / 1000).toFixed(0) + 'K';
+                    return sign + '$' + abs.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
                 };
                 const fmtPct = (v) => {
-                    const num = parseFloat(v);
+                    const num = cleanNum(v);
                     return isNaN(num) ? '—%' : num.toFixed(1) + '%';
                 };
                 const fmtNum = (v) => {
-                    const num = parseFloat(v);
+                    const num = cleanNum(v);
                     return isNaN(num) ? '—' : num.toLocaleString();
                 };
                 
-                // Populate fields
-                if (data.revenue) {
-                    document.getElementById('revenueForecast').textContent = fmtDollar(data.revenue.forecast);
-                    document.getElementById('revenueActual').textContent = fmtDollar(data.revenue.actual);
+                // Map sheet metrics to dashboard fields
+                const setField = (id, value) => {
+                    const el = document.getElementById(id);
+                    if (el) el.textContent = value;
+                };
+                
+                // Revenue
+                if (data['revenue']) {
+                    setField('revenueForecast', fmtDollar(data['revenue'].forecast));
+                    setField('revenueActual', fmtDollar(data['revenue'].actual));
                 }
-                if (data.cpm) {
-                    document.getElementById('cpmForecast').textContent = fmtDollar(data.cpm.forecast);
-                    document.getElementById('cpmActual').textContent = fmtDollar(data.cpm.actual);
+                
+                // Blended CPM
+                if (data['blended cpm']) {
+                    setField('cpmForecast', fmtDollar(data['blended cpm'].forecast));
+                    setField('cpmActual', fmtDollar(data['blended cpm'].actual));
                 }
-                if (data.gross_margin_pct) {
-                    document.getElementById('grossMarginPctForecast').textContent = fmtPct(data.gross_margin_pct.forecast);
-                    document.getElementById('grossMarginPctActual').textContent = fmtPct(data.gross_margin_pct.actual);
+                
+                // Gross Margin % (the one at -262%)
+                if (data['gross margin']) {
+                    setField('grossMarginPctForecast', fmtPct(data['gross margin'].forecast));
+                    setField('grossMarginPctActual', fmtPct(data['gross margin'].actual));
                 }
-                if (data.ai_cost_per_episode) {
-                    document.getElementById('aiCostForecast').textContent = fmtDollar(data.ai_cost_per_episode.forecast);
-                    document.getElementById('aiCostActual').textContent = fmtDollar(data.ai_cost_per_episode.actual);
+                
+                // AI Cost per Episode
+                if (data['ai cost per podcast episode'] || data['ai cost / episode']) {
+                    const d = data['ai cost per podcast episode'] || data['ai cost / episode'];
+                    setField('aiCostForecast', fmtDollar(d.forecast));
+                    setField('aiCostActual', fmtDollar(d.actual));
                 }
-                if (data.non_ad_revenue) {
-                    document.getElementById('nonAdRevenueForecast').textContent = fmtDollar(data.non_ad_revenue.forecast);
-                    document.getElementById('nonAdRevenueActual').textContent = fmtDollar(data.non_ad_revenue.actual);
+                
+                // Non-ad revenue
+                if (data['total revenue from non-ad']) {
+                    setField('nonAdRevenueForecast', fmtDollar(data['total revenue from non-ad'].forecast));
+                    setField('nonAdRevenueActual', fmtDollar(data['total revenue from non-ad'].actual));
                 }
-                if (data.runway_months) {
-                    document.getElementById('runwayForecast').textContent = fmtNum(data.runway_months.forecast);
-                    document.getElementById('runwayActual').textContent = fmtNum(data.runway_months.actual);
+                
+                // Cash Runway
+                if (data['cash runway (months)']) {
+                    setField('runwayForecast', fmtNum(data['cash runway (months)'].forecast));
+                    setField('runwayActual', fmtNum(data['cash runway (months)'].actual));
                 }
-                if (data.cash_on_hand) {
-                    document.getElementById('cashOnHandForecast').textContent = fmtDollar(data.cash_on_hand.forecast);
-                    document.getElementById('cashOnHandActual').textContent = fmtDollar(data.cash_on_hand.actual);
+                
+                // Cash on Hand
+                if (data['cash']) {
+                    setField('cashOnHandForecast', fmtDollar(data['cash'].forecast));
+                    setField('cashOnHandActual', fmtDollar(data['cash'].actual));
                 }
-                if (data.gross_margin_ex_payroll_pct) {
-                    document.getElementById('grossMarginExPayrollForecast').textContent = fmtPct(data.gross_margin_ex_payroll_pct.forecast);
-                    document.getElementById('grossMarginExPayrollActual').textContent = fmtPct(data.gross_margin_ex_payroll_pct.actual);
+                
+                // Gross Margin excl payroll (the 44% one from "Gross Margin" at bottom or calculated)
+                // Look for the row that has the positive percentage
+                for (const key of Object.keys(data)) {
+                    if (key === 'gross margin' && data[key].forecast) {
+                        const val = cleanNum(data[key].forecast);
+                        if (val > 0 && val < 100) {
+                            // This is the positive gross margin %
+                            setField('grossMarginExPayrollForecast', fmtPct(data[key].forecast));
+                            setField('grossMarginExPayrollActual', fmtPct(data[key].actual));
+                            break;
+                        }
+                    }
                 }
+                // Actually use "gross profit excl. payroll" row if it exists - but that's a dollar amount
+                // The percentage at the very bottom is what we want
                 
                 document.getElementById('financeDataStatus').textContent = '• Sheet connected';
                 document.getElementById('financeDataStatus').style.color = 'var(--success)';
                 
+                console.log('Finance data loaded:', data);
+                
             } catch (error) {
-                console.log('Finance sheet not configured or inaccessible:', error.message);
-                document.getElementById('financeDataStatus').textContent = '• Sheet not connected';
-                document.getElementById('financeDataStatus').style.color = 'var(--text-tertiary)';
+                console.error('Finance sheet error:', error);
+                document.getElementById('financeDataStatus').textContent = '• Sheet error';
+                document.getElementById('financeDataStatus').style.color = 'var(--error)';
             }
         }
         
