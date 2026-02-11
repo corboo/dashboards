@@ -369,15 +369,15 @@
         <div class="summary-row" style="grid-template-columns: repeat(3, 1fr);">
             <div class="summary-card">
                 <div class="number" id="totalShows">—</div>
-                <div class="label">Total Shows</div>
+                <div class="label">Active Shows</div>
             </div>
             <div class="summary-card">
                 <div class="number" id="totalEpisodes">—</div>
-                <div class="label">Total Episodes</div>
+                <div class="label">Lifetime Episodes Made</div>
             </div>
             <div class="summary-card">
                 <div class="number" id="orgDownloads">—</div>
-                <div class="label">Total Downloads & Plays</div>
+                <div class="label">Lifetime Downloads</div>
             </div>
         </div>
         
@@ -636,12 +636,12 @@
                 const orgData = await orgRes.json();
                 const orgStats = orgData.response.statistics;
                 
-                // Update summary cards
-                document.getElementById('totalShows').textContent = formatNumber(userStats.shows_count);
-                document.getElementById('totalEpisodes').textContent = formatNumber(userStats.episodes_count);
+                // Update summary cards (full numbers, no abbreviation)
+                document.getElementById('totalShows').textContent = userStats.shows_count.toLocaleString();
+                document.getElementById('totalEpisodes').textContent = userStats.episodes_count.toLocaleString();
                 // Combine downloads + plays
                 const totalEngagement = orgStats.downloads_count + orgStats.plays_count;
-                document.getElementById('orgDownloads').textContent = formatNumber(totalEngagement);
+                document.getElementById('orgDownloads').textContent = totalEngagement.toLocaleString();
                 
                 // Update metric cards
                 document.getElementById('downloadsMetric').textContent = formatNumber(orgStats.downloads_count);
