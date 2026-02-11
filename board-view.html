@@ -398,9 +398,9 @@
         </div>
         
         <!-- Financial Metrics -->
-        <div class="section-title">Financial Metrics</div>
+        <div class="section-title">Financial Metrics <span id="financeDataStatus" style="font-size: 0.7rem; font-weight: 400; color: var(--text-tertiary); text-transform: none; letter-spacing: normal;"></span></div>
         <div class="metrics-grid">
-            <div class="metric-card unavailable">
+            <div class="metric-card" id="revenueCard">
                 <div class="metric-header">
                     <div class="metric-name">Revenue</div>
                     <div class="metric-icon">💰</div>
@@ -408,19 +408,17 @@
                 <div class="metric-values">
                     <div class="value-group">
                         <div class="value-label">Forecast</div>
-                        <div class="value-number unavailable">N/A</div>
+                        <div class="value-number forecast" id="revenueForecast">$—</div>
                     </div>
                     <div class="value-group">
                         <div class="value-label">Actual</div>
-                        <div class="value-number unavailable">N/A</div>
+                        <div class="value-number forecast" id="revenueActual">$—</div>
                     </div>
                 </div>
-                <div class="metric-status error">
-                    ❌ Spreaker API doesn't expose revenue. Need Spreaker Prime dashboard export or direct finance integration.
-                </div>
+                <div class="metric-note">From Google Sheet • Total revenue</div>
             </div>
             
-            <div class="metric-card unavailable">
+            <div class="metric-card" id="cpmCard">
                 <div class="metric-header">
                     <div class="metric-name">Blended CPM (podcasts)</div>
                     <div class="metric-icon">📊</div>
@@ -428,19 +426,17 @@
                 <div class="metric-values">
                     <div class="value-group">
                         <div class="value-label">Forecast</div>
-                        <div class="value-number unavailable">N/A</div>
+                        <div class="value-number forecast" id="cpmForecast">$—</div>
                     </div>
                     <div class="value-group">
                         <div class="value-label">Actual</div>
-                        <div class="value-number unavailable">N/A</div>
+                        <div class="value-number forecast" id="cpmActual">$—</div>
                     </div>
                 </div>
-                <div class="metric-status error">
-                    ❌ Requires Revenue ÷ Impressions. Need revenue data + ad impression counts.
-                </div>
+                <div class="metric-note">From Google Sheet • Revenue per 1K downloads</div>
             </div>
             
-            <div class="metric-card unavailable">
+            <div class="metric-card" id="grossMarginCard">
                 <div class="metric-header">
                     <div class="metric-name">Gross Margin %</div>
                     <div class="metric-icon">📈</div>
@@ -448,19 +444,17 @@
                 <div class="metric-values">
                     <div class="value-group">
                         <div class="value-label">Forecast</div>
-                        <div class="value-number unavailable">N/A</div>
+                        <div class="value-number forecast" id="grossMarginPctForecast">—%</div>
                     </div>
                     <div class="value-group">
                         <div class="value-label">Actual</div>
-                        <div class="value-number unavailable">N/A</div>
+                        <div class="value-number forecast" id="grossMarginPctActual">—%</div>
                     </div>
                 </div>
-                <div class="metric-status error">
-                    ❌ Finance data required. Need COGS breakdown (AI costs, hosting, distribution).
-                </div>
+                <div class="metric-note">From Google Sheet • (Revenue - COGS) / Revenue</div>
             </div>
             
-            <div class="metric-card unavailable">
+            <div class="metric-card" id="aiCostCard">
                 <div class="metric-header">
                     <div class="metric-name">AI Cost per Episode</div>
                     <div class="metric-icon">🤖</div>
@@ -468,21 +462,19 @@
                 <div class="metric-values">
                     <div class="value-group">
                         <div class="value-label">Forecast</div>
-                        <div class="value-number unavailable">N/A</div>
+                        <div class="value-number forecast" id="aiCostForecast">$—</div>
                     </div>
                     <div class="value-group">
                         <div class="value-label">Actual</div>
-                        <div class="value-number unavailable">N/A</div>
+                        <div class="value-number forecast" id="aiCostActual">$—</div>
                     </div>
                 </div>
-                <div class="metric-status error">
-                    ❌ Need production cost tracking: LLM API, TTS, storage per episode from Make.com or Arc.
-                </div>
+                <div class="metric-note">From Google Sheet • LLM + TTS + hosting per episode</div>
             </div>
             
-            <div class="metric-card">
+            <div class="metric-card" id="nonAdRevenueCard">
                 <div class="metric-header">
-                    <div class="metric-name">Non Advertising Revenue</div>
+                    <div class="metric-name">Non-Advertising Revenue</div>
                     <div class="metric-icon">📜</div>
                 </div>
                 <div class="metric-values">
@@ -495,10 +487,10 @@
                         <div class="value-number forecast" id="nonAdRevenueActual">$—</div>
                     </div>
                 </div>
-                <div class="metric-note">Manual entry • Licensing, syndication, other non-ad revenue</div>
+                <div class="metric-note">From Google Sheet • Licensing, syndication, other</div>
             </div>
             
-            <div class="metric-card unavailable">
+            <div class="metric-card" id="runwayCard">
                 <div class="metric-header">
                     <div class="metric-name">Cash Runway (months)</div>
                     <div class="metric-icon">🏦</div>
@@ -506,19 +498,17 @@
                 <div class="metric-values">
                     <div class="value-group">
                         <div class="value-label">Forecast</div>
-                        <div class="value-number unavailable">N/A</div>
+                        <div class="value-number forecast" id="runwayForecast">—</div>
                     </div>
                     <div class="value-group">
                         <div class="value-label">Actual</div>
-                        <div class="value-number unavailable">N/A</div>
+                        <div class="value-number forecast" id="runwayActual">—</div>
                     </div>
                 </div>
-                <div class="metric-status error">
-                    ❌ Finance data required. Need: cash balance ÷ monthly burn rate.
-                </div>
+                <div class="metric-note">From Google Sheet • Cash ÷ monthly burn</div>
             </div>
             
-            <div class="metric-card">
+            <div class="metric-card" id="cashCard">
                 <div class="metric-header">
                     <div class="metric-name">Cash on Hand</div>
                     <div class="metric-icon">💵</div>
@@ -533,10 +523,10 @@
                         <div class="value-number forecast" id="cashOnHandActual">$—</div>
                     </div>
                 </div>
-                <div class="metric-note">Manual entry • Updated as of reporting period</div>
+                <div class="metric-note">From Google Sheet • Month-end snapshot</div>
             </div>
             
-            <div class="metric-card">
+            <div class="metric-card" id="grossMarginExPayrollCard">
                 <div class="metric-header">
                     <div class="metric-name">Gross Margin (Excl. Payroll)</div>
                     <div class="metric-icon">📉</div>
@@ -544,14 +534,14 @@
                 <div class="metric-values">
                     <div class="value-group">
                         <div class="value-label">Forecast</div>
-                        <div class="value-number forecast" id="grossMarginForecast">—%</div>
+                        <div class="value-number forecast" id="grossMarginExPayrollForecast">—%</div>
                     </div>
                     <div class="value-group">
                         <div class="value-label">Actual</div>
-                        <div class="value-number forecast" id="grossMarginActual">—%</div>
+                        <div class="value-number forecast" id="grossMarginExPayrollActual">—%</div>
                     </div>
                 </div>
-                <div class="metric-note">Manual entry • Revenue minus non-payroll costs</div>
+                <div class="metric-note">From Google Sheet • Revenue minus non-payroll costs</div>
             </div>
         </div>
         
@@ -601,9 +591,9 @@
         </div>
         
         <footer>
-            <p><a href="index.html">Inception Point AI</a> • Board Dashboard v1.1</p>
+            <p><a href="index.html">Inception Point AI</a> • Board Dashboard v1.2</p>
             <p class="footer-highlight">Goal: Metrics tell us whether our AI content engine is scaling efficiently and monetizing effectively.</p>
-            <p class="footer-small">Data sources: Spreaker API (QP-1: user/17313059, Org: 12296333)</p>
+            <p class="footer-small">Data sources: Spreaker API (content metrics) + Google Sheet (financials)</p>
         </footer>
     </div>
     
@@ -611,6 +601,100 @@
         const API_KEY = 'c5e07e8373932ea7d0276c77f73837c768b83c98';
         const USER_ID = '17313059';
         const ORG_ID = '12296333';
+        
+        // Google Sheet CSV URL - Replace with your published sheet URL
+        // To get this: Google Sheet → File → Share → Publish to web → CSV → Copy link
+        const FINANCE_SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSl1S2xPX6hSJvnVuG5rO1tFj8yHuBBLh-qGqV8f1E4K_Example/pub?output=csv';
+        
+        // Expected CSV columns (row 1 = headers, row 2 = values):
+        // metric, forecast, actual
+        // revenue, 50000, 48000
+        // cpm, 3.50, 3.20
+        // gross_margin_pct, 45, 42
+        // ai_cost_per_episode, 0.85, 0.92
+        // non_ad_revenue, 5000, 4500
+        // runway_months, 18, 16
+        // cash_on_hand, 500000, 480000
+        // gross_margin_ex_payroll_pct, 65, 62
+        
+        async function fetchFinanceData() {
+            try {
+                const res = await fetch(FINANCE_SHEET_URL);
+                if (!res.ok) throw new Error('Sheet not accessible');
+                
+                const csv = await res.text();
+                const lines = csv.trim().split('\n');
+                if (lines.length < 2) throw new Error('Sheet has no data');
+                
+                // Parse CSV into object
+                const data = {};
+                for (let i = 1; i < lines.length; i++) {
+                    const cols = lines[i].split(',').map(c => c.trim().replace(/^"|"$/g, ''));
+                    if (cols.length >= 3) {
+                        data[cols[0]] = { forecast: cols[1], actual: cols[2] };
+                    }
+                }
+                
+                // Format helpers
+                const fmtDollar = (v) => {
+                    const num = parseFloat(v);
+                    if (isNaN(num)) return '$—';
+                    if (num >= 1000000) return '$' + (num / 1000000).toFixed(1) + 'M';
+                    if (num >= 1000) return '$' + (num / 1000).toFixed(0) + 'K';
+                    return '$' + num.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                };
+                const fmtPct = (v) => {
+                    const num = parseFloat(v);
+                    return isNaN(num) ? '—%' : num.toFixed(1) + '%';
+                };
+                const fmtNum = (v) => {
+                    const num = parseFloat(v);
+                    return isNaN(num) ? '—' : num.toLocaleString();
+                };
+                
+                // Populate fields
+                if (data.revenue) {
+                    document.getElementById('revenueForecast').textContent = fmtDollar(data.revenue.forecast);
+                    document.getElementById('revenueActual').textContent = fmtDollar(data.revenue.actual);
+                }
+                if (data.cpm) {
+                    document.getElementById('cpmForecast').textContent = fmtDollar(data.cpm.forecast);
+                    document.getElementById('cpmActual').textContent = fmtDollar(data.cpm.actual);
+                }
+                if (data.gross_margin_pct) {
+                    document.getElementById('grossMarginPctForecast').textContent = fmtPct(data.gross_margin_pct.forecast);
+                    document.getElementById('grossMarginPctActual').textContent = fmtPct(data.gross_margin_pct.actual);
+                }
+                if (data.ai_cost_per_episode) {
+                    document.getElementById('aiCostForecast').textContent = fmtDollar(data.ai_cost_per_episode.forecast);
+                    document.getElementById('aiCostActual').textContent = fmtDollar(data.ai_cost_per_episode.actual);
+                }
+                if (data.non_ad_revenue) {
+                    document.getElementById('nonAdRevenueForecast').textContent = fmtDollar(data.non_ad_revenue.forecast);
+                    document.getElementById('nonAdRevenueActual').textContent = fmtDollar(data.non_ad_revenue.actual);
+                }
+                if (data.runway_months) {
+                    document.getElementById('runwayForecast').textContent = fmtNum(data.runway_months.forecast);
+                    document.getElementById('runwayActual').textContent = fmtNum(data.runway_months.actual);
+                }
+                if (data.cash_on_hand) {
+                    document.getElementById('cashOnHandForecast').textContent = fmtDollar(data.cash_on_hand.forecast);
+                    document.getElementById('cashOnHandActual').textContent = fmtDollar(data.cash_on_hand.actual);
+                }
+                if (data.gross_margin_ex_payroll_pct) {
+                    document.getElementById('grossMarginExPayrollForecast').textContent = fmtPct(data.gross_margin_ex_payroll_pct.forecast);
+                    document.getElementById('grossMarginExPayrollActual').textContent = fmtPct(data.gross_margin_ex_payroll_pct.actual);
+                }
+                
+                document.getElementById('financeDataStatus').textContent = '• Sheet connected';
+                document.getElementById('financeDataStatus').style.color = 'var(--success)';
+                
+            } catch (error) {
+                console.log('Finance sheet not configured or inaccessible:', error.message);
+                document.getElementById('financeDataStatus').textContent = '• Sheet not connected';
+                document.getElementById('financeDataStatus').style.color = 'var(--text-tertiary)';
+            }
+        }
         
         function formatNumber(num) {
             if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
@@ -661,9 +745,11 @@
         
         // Load on page load
         fetchStats();
+        fetchFinanceData();
         
         // Refresh every 5 minutes
         setInterval(fetchStats, 300000);
+        setInterval(fetchFinanceData, 300000);
     </script>
 <script src="https://ipai-analytics.vercel.app/track.js" defer></script>
 </body>
