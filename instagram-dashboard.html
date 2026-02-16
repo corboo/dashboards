@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="ipai-app" content="dashboards">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instagram Analytics — IPAI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #2d2d2d;
+            --bg-secondary: #3a3a3a;
+            --silver: #a8a8a8;
+            --silver-light: #c5c5c5;
+            --gold: #d4af37;
+            --gold-light: #e8c547;
+            --gold-bright: #f5d742;
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.7);
+            --text-tertiary: rgba(255, 255, 255, 0.5);
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --glass-hover: rgba(255, 255, 255, 0.08);
+            --success: #34c759;
+            --instagram-gradient: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            min-height: 100vh;
+            color: var(--text-primary);
+            -webkit-font-smoothing: antialiased;
+        }
+        
+        .bg-gradient {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: 
+                radial-gradient(ellipse at 20% 0%, rgba(225, 48, 108, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 100%, rgba(212, 175, 55, 0.06) 0%, transparent 50%),
+                var(--bg-primary);
+            z-index: -1;
+        }
+        
+        .container { max-width: 1200px; margin: 0 auto; padding: 48px 24px; }
+        
+        /* Header */
+        header { text-align: center; margin-bottom: 48px; }
+        
+        .logo { width: 64px; height: 64px; margin-bottom: 16px; border-radius: 14px; box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
+        
+        h1 {
+            font-size: 2.25rem;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            background: linear-gradient(180deg, var(--silver-light) 0%, var(--gold) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+        }
+        
+        .subtitle { font-size: 1rem; color: var(--text-secondary); margin-bottom: 8px; }
+        .updated { font-size: 0.8125rem; color: var(--text-tertiary); }
+        
+        /* Stats Bar */
+        .stats-bar {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
+            margin-bottom: 40px;
+        }
+        
+        .stat-box {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border-radius: 14px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid var(--glass-border);
+            transition: all 0.25s ease;
+        }
+        
+        .stat-box:hover {
+            border-color: rgba(225, 48, 108, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        .stat-box.highlight { border-color: rgba(225, 48, 108, 0.25); }
+        
+        .stat-value {
+            font-size: 1.75rem;
+            font-weight: 700;
+            background: var(--instagram-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--text-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 4px;
+        }
+        
+        /* Account Cards */
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--text-primary);
+        }
+        
+        .accounts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px;
+            margin-bottom: 40px;
+        }
+        
+        .account-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 24px;
+            transition: all 0.25s ease;
+        }
+        
+        .account-card:hover {
+            border-color: rgba(225, 48, 108, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        .account-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+        
+        .account-avatar {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: var(--bg-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            border: 2px solid transparent;
+            background-clip: padding-box;
+            position: relative;
+        }
+        
+        .account-avatar::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            border-radius: 50%;
+            background: var(--instagram-gradient);
+            z-index: -1;
+        }
+        
+        .account-avatar img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        
+        .account-info h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+        
+        .account-info p {
+            font-size: 0.8125rem;
+            color: var(--text-tertiary);
+        }
+        
+        .account-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+        
+        .account-stat {
+            text-align: center;
+        }
+        
+        .account-stat-value {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        
+        .account-stat-label {
+            font-size: 0.6875rem;
+            color: var(--text-tertiary);
+            text-transform: uppercase;
+        }
+        
+        /* Performance Overview */
+        .perf-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 40px;
+        }
+        
+        .perf-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 14px;
+            padding: 20px;
+        }
+        
+        .perf-card h4 {
+            font-size: 0.8125rem;
+            color: var(--text-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+        
+        .perf-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        
+        .perf-change {
+            font-size: 0.875rem;
+            margin-top: 4px;
+        }
+        
+        .perf-change.up { color: #34c759; }
+        .perf-change.down { color: #ff6b6b; }
+        
+        /* Data Table */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        .data-table th,
+        .data-table td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--glass-border);
+        }
+        
+        .data-table th {
+            font-size: 0.75rem;
+            color: var(--text-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 500;
+        }
+        
+        .data-table td {
+            font-size: 0.9375rem;
+        }
+        
+        .data-table tr:hover {
+            background: var(--glass-hover);
+        }
+        
+        .channel-name {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .channel-icon-sm {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--bg-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+        
+        /* Footer */
+        footer {
+            text-align: center;
+            padding-top: 40px;
+            border-top: 1px solid var(--glass-border);
+            margin-top: 40px;
+        }
+        
+        .footer-text {
+            font-size: 0.8125rem;
+            color: var(--text-tertiary);
+        }
+        
+        @media (max-width: 768px) {
+            .accounts-grid { grid-template-columns: 1fr; }
+            .stats-bar { grid-template-columns: repeat(2, 1fr); }
+            h1 { font-size: 1.75rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-gradient"></div>
+    
+    <div class="container">
+        <header>
+            <img src="https://www.inceptionpoint.ai/wp-content/uploads/2025/08/cropped-Inception-Point-Logo-FINAL-RGB-250x83.png" alt="IPAI Logo" class="logo" style="width: auto; height: 48px; border-radius: 0;">
+            <h1>📸 Instagram Analytics</h1>
+            <p class="subtitle">IPAI AI Personality Accounts</p>
+            <p class="updated">Last updated: February 15, 2026 @ 7:45 PM PT</p>
+        </header>
+        
+        <!-- Summary Stats -->
+        <div class="stats-bar">
+            <div class="stat-box highlight">
+                <div class="stat-value">7</div>
+                <div class="stat-label">Accounts</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value">80+</div>
+                <div class="stat-label">Total Followers</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value">144</div>
+                <div class="stat-label">28d Views</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value">22</div>
+                <div class="stat-label">28d Reach</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value">10</div>
+                <div class="stat-label">Interactions</div>
+            </div>
+        </div>
+        
+        <!-- Main Account -->
+        <h2 class="section-title">🎯 Main Account</h2>
+        <div class="accounts-grid" style="margin-bottom: 24px;">
+            <div class="account-card" style="border-color: rgba(225, 48, 108, 0.3);">
+                <div class="account-header">
+                    <div class="account-avatar">
+                        <img src="https://www.inceptionpoint.ai/wp-content/uploads/2025/08/cropped-Inception-Point-Logo-FINAL-RGB-250x83.png" alt="IPAI" style="object-fit: contain; padding: 8px; background: #1a1a1a;">
+                    </div>
+                    <div class="account-info">
+                        <h3>@inceptionpointai</h3>
+                        <p>Main brand account</p>
+                    </div>
+                </div>
+                <div class="account-stats">
+                    <div class="account-stat">
+                        <div class="account-stat-value">80</div>
+                        <div class="account-stat-label">Followers</div>
+                    </div>
+                    <div class="account-stat">
+                        <div class="account-stat-value">144</div>
+                        <div class="account-stat-label">Views</div>
+                    </div>
+                    <div class="account-stat">
+                        <div class="account-stat-value">22</div>
+                        <div class="account-stat-label">Reach</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- AI Personality Accounts -->
+        <h2 class="section-title">🤖 AI Personality Accounts</h2>
+        <div class="accounts-grid">
+            <div class="account-card">
+                <div class="account-header">
+                    <div class="account-avatar">
+                        <img src="https://www.inceptionpoint.ai/wp-content/uploads/2025/08/Claire_Delish_-Home_Cook_1_250.png" alt="Claire">
+                    </div>
+                    <div class="account-info">
+                        <h3>@claredelish</h3>
+                        <p>Personal Chef 👩‍🍳</p>
+                    </div>
+                </div>
+                <div class="account-stats">
+                    <div class="account-stat">
+                        <div class="account-stat-value">—</div>
+                        <div class="account-stat-label">Followers</div>
+                    </div>
+                    <div class="account-stat">
+                        <div class="account-stat-value">—</div>
+                        <div class="account-stat-label">Views</div>
+                    </div>
+                    <div class="account-stat">
+                        <div class="account-stat-value">—</div>
+                        <div class="account-stat-label">Reach</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="account-card">
+                <div class="account-header">
+                    <div class="account-avatar">
+                        <img src="https://www.inceptionpoint.ai/wp-content/uploads/2025/08/Nigel_Thistledown_gardening_Blk_1_250.png" alt="Nigel">
+                    </div>
+                    <div class="account-info">
+                        <h3>@nigelthistledown</h3>
+                        <p>Garden Expert 🌱</p>
+                    </div>
+                </div>
+                <div class="account-stats">
+                    <div class="account-stat">
+                        <div class="account-stat-value">—</div>
+                        <div class="account-stat-label">Followers</div>
+                    </div>
+                    <div class="account-stat">
+                        <div class="account-stat-value">—</div>
+                        <div class="account-stat-label">Views</div>
+                    </div>
+                    <div class="account-stat">
+                        <div class="account-stat-value">—</div>
+                        <div class="account-stat-label">Reach</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="account-card">
+                <div class="account-header">
+                    <div class="account-avatar">
+                        <img src="https://www.inceptionpoint.ai/wp-content/uploads/2025/08/Oly_Bennet_-_Sports_-Blk_1_250.png" alt="Oly">
+                    </div>
+                    <div class="account-info">
+                        <h3>@olybennet</h3>
+                        <p>Fitness Coach 💪</p>
+                    </div>
+                </div>
+                <div class="account-stats">
+                    <div class="account-stat">
+                        <div class="account-stat-value">—</div>
+                        <div class="account-stat-label">Followers</div>
+                    </div>
+                    <div class="account-stat">
+                        <div class="account-stat-value">—</div>
+                        <div class="account-stat-label">Views</div>
+                    </div>
+                    <div class="account-stat">
+                        <div class="account-stat-value">—</div>
+                        <div class="account-stat-label">Reach</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="account-card">
+                <div class="account-header">
+                    <div class="account-avatar">
+                        <img src="https://www.inceptionpoint.ai/wp-content/uploads/2025/08/Vv-Steele-Gossip-blk-250.png" alt="VV">
+                    </div>
+                    <div class="account-info">
+                        <h3>@roxierushipai</h3>
+                        <p>Entertainment 🎬</p>
+                    </div>
+                </div>
+                <div class="account-stats">
+                    <div class="account-stat">
+                        <div class="account-stat-value">—</div>
+                        <div class="account-stat-label">Followers</div>
+                    </div>
+                    <div class="account-stat">
+                        <div class="account-stat-value">—</div>
+                        <div class="account-stat-label">Views</div>
+                    </div>
+                    <div class="account-stat">
+                        <div class="account-stat-value">—</div>
+                        <div class="account-stat-label">Reach</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="account-card">
+                <div class="account-header">
+                    <div class="account-avatar">👤</div>
+                    <div class="account-info">
+                        <h3>@marcuselleryipai</h3>
+                        <p>Personality</p>
+                    </div>
+                </div>
+                <div class="account-stats">
+                    <div class="account-stat">
+                        <div class="account-stat-value">—</div>
+                        <div class="account-stat-label">Followers</div>
+                    </div>
+                    <div class="account-stat">
+                        <div class="account-stat-value">—</div>
+                        <div class="account-stat-label">Views</div>
+                    </div>
+                    <div class="account-stat">
+                        <div class="account-stat-value">—</div>
+                        <div class="account-stat-label">Reach</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="account-card">
+                <div class="account-header">
+                    <div class="account-avatar">👤</div>
+                    <div class="account-info">
+                        <h3>@vanessaclarkipai</h3>
+                        <p>Personality</p>
+                    </div>
+                </div>
+                <div class="account-stats">
+                    <div class="account-stat">
+                        <div class="account-stat-value">—</div>
+                        <div class="account-stat-label">Followers</div>
+                    </div>
+                    <div class="account-stat">
+                        <div class="account-stat-value">—</div>
+                        <div class="account-stat-label">Views</div>
+                    </div>
+                    <div class="account-stat">
+                        <div class="account-stat-value">—</div>
+                        <div class="account-stat-label">Reach</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Performance for @inceptionpointai -->
+        <h2 class="section-title">📊 @inceptionpointai Performance (Jan 18 - Feb 14)</h2>
+        <div class="perf-grid">
+            <div class="perf-card">
+                <h4>Views</h4>
+                <div class="perf-value">144</div>
+                <div class="perf-change down">↓ 51.8%</div>
+            </div>
+            <div class="perf-card">
+                <h4>Reach</h4>
+                <div class="perf-value">22</div>
+                <div class="perf-change up">↑ 57.1%</div>
+            </div>
+            <div class="perf-card">
+                <h4>Interactions</h4>
+                <div class="perf-value">10</div>
+                <div class="perf-change up">↑ 100%</div>
+            </div>
+            <div class="perf-card">
+                <h4>From Followers</h4>
+                <div class="perf-value">17</div>
+                <div class="perf-change up">↑ 750%</div>
+            </div>
+        </div>
+        
+        <!-- Recent Content -->
+        <h2 class="section-title">📝 Recent Content (@inceptionpointai)</h2>
+        <div style="background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 14px; overflow: hidden;">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Post</th>
+                        <th>Date</th>
+                        <th>Reach</th>
+                        <th>Interactions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="channel-name"><span class="channel-icon-sm">👩‍🍳</span> Clare Delish. Where confidence meets craft...</span></td>
+                        <td>Jan 27, 2026</td>
+                        <td>17</td>
+                        <td>5</td>
+                    </tr>
+                    <tr>
+                        <td><span class="channel-name"><span class="channel-icon-sm">🔮</span> This is the layer we're building...</span></td>
+                        <td>Jan 27, 2026</td>
+                        <td>13</td>
+                        <td>4</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <footer>
+            <p class="footer-text">
+                📌 Note: Full data for personality accounts requires Meta Graph API setup.<br>
+                Data source: Meta Business Suite | Powered by Inception Point AI
+            </p>
+        </footer>
+    </div>
+</body>
+</html>
