@@ -4,10 +4,11 @@
     <meta name="ipai-app" content="dashboards">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Podcast Asset Tracker — IPAI</title>
+    <title>Podcast Analytics — IPAI</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
             --bg-primary: #2d2d2d;
@@ -49,9 +50,8 @@
             z-index: -1;
         }
         
-        .container { max-width: 1400px; margin: 0 auto; padding: 48px 24px; }
+        .container { max-width: 1600px; margin: 0 auto; padding: 48px 24px; }
         
-        /* Back Link */
         .back-link {
             position: fixed;
             top: 24px;
@@ -68,8 +68,7 @@
         
         .back-link:hover { color: var(--gold); text-decoration: none; }
         
-        /* Header */
-        header { text-align: center; margin-bottom: 48px; }
+        header { text-align: center; margin-bottom: 40px; }
         
         .logo {
             width: 72px;
@@ -95,9 +94,9 @@
         /* Stats Bar */
         .stats-bar {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
             gap: 12px;
-            margin-bottom: 40px;
+            margin-bottom: 32px;
         }
         
         .stat-box {
@@ -138,6 +137,35 @@
             margin-top: 4px;
         }
         
+        .stat-change {
+            font-size: 0.75rem;
+            margin-top: 6px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 3px 8px;
+            border-radius: 8px;
+        }
+        
+        .stat-change.positive { background: rgba(52, 199, 89, 0.15); color: var(--success); }
+        .stat-change.negative { background: rgba(255, 69, 58, 0.15); color: var(--error); }
+        
+        /* Section Title */
+        .section-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin: 32px 0 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text-secondary);
+        }
+        
+        /* Grids */
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 24px; }
+        @media (max-width: 900px) { .grid-2, .grid-3 { grid-template-columns: 1fr; } }
+        
         /* Card */
         .card {
             background: var(--glass-bg);
@@ -167,14 +195,24 @@
         .card-icon { font-size: 1.25rem; }
         .card-title { font-size: 1rem; font-weight: 600; letter-spacing: -0.01em; }
         
-        /* Grid Layouts */
-        .grid-2 { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; }
-        @media (max-width: 900px) { .grid-2 { grid-template-columns: 1fr; } }
+        /* Yearly Cards */
+        .yearly-card {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid transparent;
+            transition: all 0.25s ease;
+        }
+        
+        .yearly-card:hover { border-color: rgba(212, 175, 55, 0.2); }
+        .yearly-year { font-size: 0.75rem; color: var(--text-tertiary); margin-bottom: 6px; }
+        .yearly-amount { font-size: 1.5rem; font-weight: 700; color: var(--success); }
         
         /* Networks Grid */
         .networks-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
             gap: 12px;
         }
         
@@ -187,23 +225,15 @@
             transition: all 0.25s ease;
         }
         
-        .network-card:hover {
-            background: rgba(255, 255, 255, 0.06);
-            border-color: rgba(212, 175, 55, 0.2);
-        }
-        
+        .network-card:hover { background: rgba(255, 255, 255, 0.06); border-color: rgba(212, 175, 55, 0.2); }
         .network-card.active { border-color: rgba(52, 199, 89, 0.3); }
         .network-card.inactive { opacity: 0.5; }
-        
         .network-name { font-weight: 600; font-size: 0.875rem; margin-bottom: 8px; }
-        
-        .network-shows {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--gold);
-        }
-        
+        .network-shows { font-size: 1.5rem; font-weight: 700; color: var(--gold); }
         .network-label { font-size: 0.6875rem; color: var(--text-tertiary); }
+        
+        /* Chart Container */
+        .chart-container { position: relative; height: 280px; }
         
         /* Table */
         table { width: 100%; border-collapse: collapse; }
@@ -226,6 +256,8 @@
         }
         
         tr:hover { background: rgba(255,255,255,0.02); }
+        .text-right { text-align: right; }
+        .status-paid { color: var(--success); font-size: 0.8125rem; }
         
         /* Tags */
         .tag {
@@ -251,7 +283,6 @@
         }
         
         .status-dot.green { background: var(--success); box-shadow: 0 0 8px rgba(52, 199, 89, 0.5); }
-        .status-dot.yellow { background: var(--warning); }
         
         .status-row {
             display: flex;
@@ -262,14 +293,7 @@
         }
         
         .status-row:last-child { border-bottom: none; }
-        
-        .status-label {
-            display: flex;
-            align-items: center;
-            font-size: 0.875rem;
-            color: var(--text-secondary);
-        }
-        
+        .status-label { display: flex; align-items: center; font-size: 0.875rem; color: var(--text-secondary); }
         .status-value { font-size: 0.8125rem; color: var(--success); font-weight: 500; }
         
         /* Ideas List */
@@ -286,7 +310,6 @@
         
         .ideas-list li:last-child { border-bottom: none; }
         
-        /* Footer */
         footer {
             text-align: center;
             margin-top: 48px;
@@ -303,7 +326,8 @@
             .back-link { position: static; margin-bottom: 24px; }
             .container { padding: 32px 16px; }
             h1 { font-size: 2rem; }
-            .stats-bar { grid-template-columns: repeat(3, 1fr); }
+            .stat-value { font-size: 1.4rem; }
+            .chart-container { height: 220px; }
         }
     </style>
 </head>
@@ -315,38 +339,82 @@
     <div class="container">
         <header>
             <img src="ipai-logo.jpg" alt="IPAI" class="logo">
-            <h1>Podcast Asset Tracker</h1>
-            <p class="subtitle">Network Performance Overview</p>
-            <p class="updated">Last Updated: February 11, 2026 at 10:50 AM PST</p>
+            <h1>Podcast Analytics</h1>
+            <p class="subtitle">QP-1 Network Performance & Revenue</p>
+            <p class="updated">Last updated: February 18, 2026 • Data from Spreaker CMS</p>
         </header>
         
+        <!-- Key Metrics -->
         <div class="stats-bar">
             <div class="stat-box">
-                <div class="stat-value">2,889</div>
-                <div class="stat-label">Total Shows</div>
+                <div class="stat-label">📥 Downloads (30d)</div>
+                <div class="stat-value">713,577</div>
+                <span class="stat-change positive">↑ +10%</span>
             </div>
             <div class="stat-box">
-                <div class="stat-value">~250K</div>
-                <div class="stat-label">Est. Episodes</div>
+                <div class="stat-label">👁️ Ad Impressions (30d)</div>
+                <div class="stat-value">1,686,895</div>
+                <span class="stat-change negative">↓ -26%</span>
+            </div>
+            <div class="stat-box highlight">
+                <div class="stat-label">💵 Ad Revenue (30d)</div>
+                <div class="stat-value">$4,111.54</div>
+                <span class="stat-change negative">↓ -62%</span>
             </div>
             <div class="stat-box">
+                <div class="stat-label">🎙️ Total Shows</div>
+                <div class="stat-value">5,300+</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-label">📻 Episodes</div>
+                <div class="stat-value">250K+</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-label">🌐 Networks</div>
                 <div class="stat-value">11</div>
-                <div class="stat-label">Networks</div>
-            </div>
-            <div class="stat-box">
-                <div class="stat-value">~330</div>
-                <div class="stat-label">Eps/Day</div>
-            </div>
-            <div class="stat-box highlight">
-                <div class="stat-value">50,792</div>
-                <div class="stat-label">Top Downloads</div>
-            </div>
-            <div class="stat-box highlight">
-                <div class="stat-value">97%</div>
-                <div class="stat-label">Best Apple%</div>
             </div>
         </div>
         
+        <!-- Yearly Totals -->
+        <div class="section-title">💰 Revenue History</div>
+        <div class="grid-3">
+            <div class="yearly-card">
+                <div class="yearly-year">2026 YTD</div>
+                <div class="yearly-amount">$11,585.75</div>
+            </div>
+            <div class="yearly-card">
+                <div class="yearly-year">2025 Total</div>
+                <div class="yearly-amount">$69,067.97</div>
+            </div>
+            <div class="yearly-card">
+                <div class="yearly-year">2024 Total</div>
+                <div class="yearly-amount">$72,223.10</div>
+            </div>
+        </div>
+        
+        <!-- Charts Row -->
+        <div class="grid-2">
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-icon">📈</span>
+                    <span class="card-title">Monthly Revenue</span>
+                </div>
+                <div class="chart-container">
+                    <canvas id="revenueChart"></canvas>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-icon">📊</span>
+                    <span class="card-title">Revenue by Account (30d)</span>
+                </div>
+                <div class="chart-container">
+                    <canvas id="accountChart"></canvas>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Networks Status -->
         <div class="card">
             <div class="card-header">
                 <span class="card-icon">🌐</span>
@@ -408,14 +476,10 @@
                     <div class="network-shows">5,266</div>
                     <div class="network-label">shows</div>
                 </div>
-                <div class="network-card inactive">
-                    <div class="network-name">QP-JP</div>
-                    <div class="network-shows">—</div>
-                    <div class="network-label">needs API key</div>
-                </div>
             </div>
         </div>
         
+        <!-- Top Performers & System Health Row -->
         <div class="grid-2">
             <div class="card">
                 <div class="card-header">
@@ -429,7 +493,6 @@
                             <th>Title</th>
                             <th>Downloads</th>
                             <th>Apple%</th>
-                            <th>Network</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -438,70 +501,30 @@
                             <td>Calm Podcast</td>
                             <td>50,792</td>
                             <td>45%</td>
-                            <td>QP-1</td>
                         </tr>
                         <tr>
                             <td><span class="tag tag-blue">Music</span></td>
                             <td>Bad Bunny</td>
                             <td>49,668</td>
                             <td>19%</td>
-                            <td>QP-1</td>
                         </tr>
                         <tr>
                             <td><span class="tag tag-purple">Documentary</span></td>
                             <td>BIGFOOT! - Biography Flash</td>
                             <td>31,097</td>
                             <td>0%</td>
-                            <td>QP-1</td>
                         </tr>
                         <tr>
                             <td><span class="tag tag-green">Arts</span></td>
                             <td>CBS Radio Mystery Theater</td>
                             <td>25,369</td>
                             <td>21%</td>
-                            <td>QP-1</td>
                         </tr>
                         <tr>
                             <td><span class="tag tag-yellow">News</span></td>
                             <td>AK-47 Who Makes it</td>
                             <td>24,265</td>
                             <td>1%</td>
-                            <td>QP-1</td>
-                        </tr>
-                        <tr>
-                            <td><span class="tag tag-blue">Soccer</span></td>
-                            <td>Cristiano Ronaldo</td>
-                            <td>21,723</td>
-                            <td>35%</td>
-                            <td>QP-1</td>
-                        </tr>
-                        <tr>
-                            <td><span class="tag tag-green">Hobbies</span></td>
-                            <td>Bird Songs for Cats</td>
-                            <td>17,364</td>
-                            <td>7%</td>
-                            <td>QP-1</td>
-                        </tr>
-                        <tr>
-                            <td><span class="tag tag-purple">History</span></td>
-                            <td>Britney Spears - Audio Bio</td>
-                            <td>14,647</td>
-                            <td>61%</td>
-                            <td>QP-1</td>
-                        </tr>
-                        <tr>
-                            <td><span class="tag tag-purple">Fiction</span></td>
-                            <td>12 Spooky Ghost Stories</td>
-                            <td>13,801</td>
-                            <td>97%</td>
-                            <td>QP-1</td>
-                        </tr>
-                        <tr>
-                            <td><span class="tag tag-yellow">News</span></td>
-                            <td>Donald Trump Trials</td>
-                            <td>11,698</td>
-                            <td>15%</td>
-                            <td>QP-Daily</td>
                         </tr>
                     </tbody>
                 </table>
@@ -526,12 +549,8 @@
                         <span class="status-value">Active</span>
                     </div>
                     <div class="status-row">
-                        <span class="status-label">Last Episode</span>
-                        <span class="status-value" style="color: var(--text-primary);">Today 8:00 AM</span>
-                    </div>
-                    <div class="status-row">
                         <span class="status-label">Daily Avg</span>
-                        <span class="status-value" style="color: var(--text-primary);">~330 episodes</span>
+                        <span class="status-value" style="color: var(--text-primary);">~340 episodes</span>
                     </div>
                 </div>
                 
@@ -543,86 +562,213 @@
                     <ul class="ideas-list">
                         <li>
                             <span class="tag tag-yellow">🔥 Hot</span>
-                            <span>Super Bowl LX (11 days)</span>
+                            <span>March Madness / Spring Events</span>
                         </li>
                         <li>
                             <span class="tag tag-green">📅 Now</span>
-                            <span>Black History Month</span>
+                            <span>Spring Content Season</span>
                         </li>
                         <li>
                             <span class="tag tag-purple">📈 Trend</span>
-                            <span>DeepSeek AI</span>
+                            <span>AI Tools & Automation</span>
                         </li>
                         <li>
                             <span class="tag tag-blue">🏆 Awards</span>
-                            <span>Oscars 2026</span>
-                        </li>
-                        <li>
-                            <span class="tag tag-green">💡 Idea</span>
-                            <span>Grammy Drama Daily</span>
+                            <span>Grammy/Oscar Follow-ups</span>
                         </li>
                     </ul>
                 </div>
             </div>
         </div>
         
+        <!-- Payment History Table -->
         <div class="card">
             <div class="card-header">
-                <span class="card-icon">📰</span>
-                <span class="card-title">Recent Episodes</span>
+                <span class="card-icon">💳</span>
+                <span class="card-title">Payment History</span>
             </div>
             <table>
                 <thead>
                     <tr>
-                        <th>Network</th>
-                        <th>Title</th>
-                        <th>Published</th>
+                        <th>Month</th>
+                        <th class="text-right">Amount</th>
+                        <th>Status</th>
+                        <th>Paid Date</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr>
-                        <td><span class="tag tag-blue">QP-1</span></td>
-                        <td>Margot Robbie and Jacob Elordi's Wuthering Heights</td>
-                        <td>Today</td>
-                    </tr>
-                    <tr>
-                        <td><span class="tag tag-blue">QP-1</span></td>
-                        <td>Biography Flash: Kim Kardashian's Secret Lewis Hamilton Romance</td>
-                        <td>Today</td>
-                    </tr>
-                    <tr>
-                        <td><span class="tag tag-blue">QP-1</span></td>
-                        <td>Taylor Swift Skips 2026 Grammys But Parties Hard</td>
-                        <td>Today</td>
-                    </tr>
-                    <tr>
-                        <td><span class="tag tag-purple">QP-Daily</span></td>
-                        <td>Amazon's 16000 Job Cuts and Fresh Store Closures</td>
-                        <td>Today</td>
-                    </tr>
-                    <tr>
-                        <td><span class="tag tag-purple">QP-Daily</span></td>
-                        <td>Apple's AI Bet: Q.ai Acquisition, M5 MacBook Delay</td>
-                        <td>Today</td>
-                    </tr>
-                    <tr>
-                        <td><span class="tag tag-green">Katie Brown 2</span></td>
-                        <td>Elon Musk's SpaceX Acquisition of xAI</td>
-                        <td>Today</td>
-                    </tr>
-                    <tr>
-                        <td><span class="tag tag-green">Katie Brown 2</span></td>
-                        <td>SZA and Kendrick Lamar Win Record of the Year at 2026 Grammys</td>
-                        <td>Today</td>
-                    </tr>
-                </tbody>
+                <tbody id="paymentTable"></tbody>
             </table>
         </div>
         
         <footer>
-            <a href="index.html">Inception Point AI</a> • Podcast Asset Tracker • Updated via Spreaker API
+            <a href="index.html">Inception Point AI</a> • QP-1 Podcast Network • Powered by Spreaker
         </footer>
     </div>
+    
+    <script>
+        // Payment History Data
+        const paymentHistory = [
+            {month: "January 2026", amount: 7474.21, status: "PAID", paidDate: "Feb 26, 2026"},
+            {month: "December 2025", amount: 4111.54, status: "PAID", paidDate: "Jan 28, 2026"},
+            {month: "November 2025", amount: 7474.21, status: "PAID", paidDate: "Jan 26, 2026"},
+            {month: "October 2025", amount: 5886.17, status: "PAID", paidDate: "Dec 29, 2025"},
+            {month: "September 2025", amount: 8499.17, status: "PAID", paidDate: "Nov 25, 2025"},
+            {month: "August 2025", amount: 6603.91, status: "PAID", paidDate: "Oct 28, 2025"},
+            {month: "July 2025", amount: 6084.95, status: "PAID", paidDate: "Sep 26, 2025"},
+            {month: "June 2025", amount: 6465.20, status: "PAID", paidDate: "Aug 27, 2025"},
+            {month: "May 2025", amount: 5050.12, status: "PAID", paidDate: "Jul 29, 2025"},
+            {month: "April 2025", amount: 4597.62, status: "PAID", paidDate: "Jun 26, 2025"},
+            {month: "March 2025", amount: 6643.29, status: "PAID", paidDate: "May 27, 2025"},
+            {month: "February 2025", amount: 6334.82, status: "PAID", paidDate: "Apr 28, 2025"},
+        ];
+        
+        const accountRevenue = [
+            {name: "Katie Brown", revenue: 869.57},
+            {name: "QP-2", revenue: 660.86},
+            {name: "QP-1", revenue: 632.98},
+            {name: "QP - Daily", revenue: 600.10},
+            {name: "QP-3", revenue: 378.99},
+            {name: "QP - Blended", revenue: 345.77},
+            {name: "Katie Brown 2", revenue: 206.98},
+            {name: "QP-4", revenue: 159.22},
+            {name: "QP-JT2", revenue: 108.18},
+            {name: "QP-5", revenue: 65.27},
+        ];
+        
+        // Populate payment table
+        const tableBody = document.getElementById('paymentTable');
+        paymentHistory.forEach(p => {
+            tableBody.innerHTML += `
+                <tr>
+                    <td>${p.month}</td>
+                    <td class="text-right" style="font-family: 'SF Mono', Monaco, monospace;">$${p.amount.toLocaleString('en-US', {minimumFractionDigits: 2})}</td>
+                    <td><span class="status-paid">✓ ${p.status}</span></td>
+                    <td style="color: var(--text-tertiary);">${p.paidDate}</td>
+                </tr>
+            `;
+        });
+        
+        // Chart.js defaults
+        Chart.defaults.color = 'rgba(255, 255, 255, 0.5)';
+        Chart.defaults.borderColor = 'rgba(255, 255, 255, 0.1)';
+        
+        // Revenue Chart
+        new Chart(document.getElementById('revenueChart'), {
+            type: 'line',
+            data: {
+                labels: paymentHistory.map(p => p.month.split(' ')[0].slice(0,3) + ' ' + p.month.split(' ')[1].slice(2)).reverse(),
+                datasets: [{
+                    label: 'Revenue',
+                    data: paymentHistory.map(p => p.amount).reverse(),
+                    borderColor: '#d4af37',
+                    backgroundColor: 'rgba(212, 175, 55, 0.1)',
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 4,
+                    pointHoverRadius: 6,
+                    pointBackgroundColor: '#d4af37',
+                    pointBorderColor: '#2d2d2d',
+                    pointBorderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        backgroundColor: 'rgba(45, 45, 45, 0.95)',
+                        titleColor: '#fff',
+                        bodyColor: '#d4af37',
+                        borderColor: 'rgba(212, 175, 55, 0.3)',
+                        borderWidth: 1,
+                        cornerRadius: 8,
+                        padding: 12,
+                        callbacks: {
+                            label: ctx => '$' + ctx.raw.toLocaleString('en-US', {minimumFractionDigits: 2})
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: { color: 'rgba(255,255,255,0.05)' },
+                        ticks: { 
+                            color: 'rgba(255,255,255,0.5)',
+                            callback: v => '$' + (v/1000) + 'k'
+                        }
+                    },
+                    x: {
+                        grid: { display: false },
+                        ticks: { color: 'rgba(255,255,255,0.5)' }
+                    }
+                }
+            }
+        });
+        
+        // Account Revenue Chart
+        new Chart(document.getElementById('accountChart'), {
+            type: 'bar',
+            data: {
+                labels: accountRevenue.map(a => a.name),
+                datasets: [{
+                    label: 'Revenue',
+                    data: accountRevenue.map(a => a.revenue),
+                    backgroundColor: [
+                        'rgba(212, 175, 55, 0.8)',
+                        'rgba(232, 197, 71, 0.7)',
+                        'rgba(245, 215, 66, 0.6)',
+                        'rgba(168, 168, 168, 0.6)',
+                        'rgba(197, 197, 197, 0.5)',
+                        'rgba(212, 175, 55, 0.5)',
+                        'rgba(232, 197, 71, 0.4)',
+                        'rgba(168, 168, 168, 0.4)',
+                        'rgba(197, 197, 197, 0.3)',
+                        'rgba(212, 175, 55, 0.3)'
+                    ],
+                    borderRadius: 6,
+                    borderSkipped: false
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                indexAxis: 'y',
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        backgroundColor: 'rgba(45, 45, 45, 0.95)',
+                        titleColor: '#fff',
+                        bodyColor: '#d4af37',
+                        borderColor: 'rgba(212, 175, 55, 0.3)',
+                        borderWidth: 1,
+                        cornerRadius: 8,
+                        padding: 12,
+                        callbacks: {
+                            label: ctx => '$' + ctx.raw.toLocaleString('en-US', {minimumFractionDigits: 2})
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        grid: { color: 'rgba(255,255,255,0.05)' },
+                        ticks: { 
+                            color: 'rgba(255,255,255,0.5)',
+                            callback: v => '$' + v
+                        }
+                    },
+                    y: {
+                        grid: { display: false },
+                        ticks: { 
+                            color: 'rgba(255,255,255,0.7)',
+                            font: { size: 11 }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
 <script src="https://ipai-analytics.vercel.app/track.js" defer></script>
 </body>
 </html>
