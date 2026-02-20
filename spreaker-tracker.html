@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="ipai-app" content="dashboards">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spreaker Episode Tracker — IPAI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #2d2d2d;
+            --bg-secondary: #3a3a3a;
+            --bg-tertiary: #454545;
+            --silver: #a8a8a8;
+            --silver-light: #c5c5c5;
+            --gold: #d4af37;
+            --gold-light: #e8c547;
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.7);
+            --text-tertiary: rgba(255, 255, 255, 0.5);
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --spreaker-green: #1DB954;
+            --success: #34c759;
+            --warning: #ff9f0a;
+            --error: #ff453a;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            min-height: 100vh;
+            color: var(--text-primary);
+            -webkit-font-smoothing: antialiased;
+        }
+        
+        .bg-gradient {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: 
+                radial-gradient(ellipse at 20% 20%, rgba(29, 185, 84, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(212, 175, 55, 0.06) 0%, transparent 50%),
+                var(--bg-primary);
+            z-index: -1;
+        }
+        
+        .container { max-width: 1600px; margin: 0 auto; padding: 48px 24px; }
+        
+        .back-link {
+            position: fixed;
+            top: 24px;
+            left: 24px;
+            font-size: 0.8125rem;
+            color: var(--text-tertiary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: color 0.2s;
+            z-index: 100;
+        }
+        
+        .back-link:hover { color: var(--gold); }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(180deg, var(--spreaker-green) 0%, var(--gold) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+        }
+        
+        .header p { color: var(--text-tertiary); font-size: 1rem; }
+        
+        .filters {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 32px;
+            flex-wrap: wrap;
+        }
+        
+        .filter-btn {
+            padding: 10px 20px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .filter-btn:hover, .filter-btn.active {
+            background: var(--spreaker-green);
+            color: white;
+            border-color: var(--spreaker-green);
+        }
+        
+        .episodes-table {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            overflow: hidden;
+        }
+        
+        .table-header {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr 100px;
+            padding: 16px 24px;
+            background: var(--bg-tertiary);
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-tertiary);
+        }
+        
+        .episode-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr 100px;
+            padding: 16px 24px;
+            border-bottom: 1px solid var(--glass-border);
+            align-items: center;
+            transition: background 0.2s;
+        }
+        
+        .episode-row:hover {
+            background: var(--glass-hover);
+        }
+        
+        .episode-row:last-child {
+            border-bottom: none;
+        }
+        
+        .episode-title {
+            font-weight: 500;
+        }
+        
+        .episode-title small {
+            display: block;
+            font-size: 0.75rem;
+            color: var(--text-tertiary);
+            font-weight: 400;
+        }
+        
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+        
+        .status-published { background: rgba(52, 199, 89, 0.2); color: var(--success); }
+        .status-scheduled { background: rgba(255, 159, 10, 0.2); color: var(--warning); }
+        .status-draft { background: rgba(168, 168, 168, 0.2); color: var(--silver); }
+        
+        .placeholder-notice {
+            text-align: center;
+            padding: 80px 40px;
+            color: var(--text-tertiary);
+        }
+        
+        .placeholder-notice h3 {
+            font-size: 1.5rem;
+            margin-bottom: 16px;
+            color: var(--text-secondary);
+        }
+        
+        .api-info {
+            margin-top: 24px;
+            padding: 16px;
+            background: var(--bg-tertiary);
+            border-radius: 8px;
+            font-size: 0.875rem;
+            text-align: left;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .api-info code {
+            color: var(--spreaker-green);
+            background: var(--bg-primary);
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-gradient"></div>
+    <a href="index.html" class="back-link">← Back to Hub</a>
+    
+    <div class="container">
+        <header class="header">
+            <h1>📋 Episode Tracker</h1>
+            <p>Track episode publishing status across QP-1 network</p>
+        </header>
+        
+        <div class="filters">
+            <button class="filter-btn active">All Episodes</button>
+            <button class="filter-btn">Published Today</button>
+            <button class="filter-btn">Scheduled</button>
+            <button class="filter-btn">Drafts</button>
+        </div>
+        
+        <div class="episodes-table">
+            <div class="table-header">
+                <div>Episode</div>
+                <div>Show</div>
+                <div>Published</div>
+                <div>Downloads</div>
+                <div>Status</div>
+            </div>
+            
+            <div class="placeholder-notice">
+                <h3>🔌 Connect Spreaker API</h3>
+                <p>This tracker will display recent episodes once connected to the Spreaker API.</p>
+                
+                <div class="api-info">
+                    <strong>API Details:</strong><br><br>
+                    User ID: <code>17313059</code><br>
+                    Org ID: <code>12296333</code><br>
+                    Endpoint: <code>api.spreaker.com/v2</code>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
