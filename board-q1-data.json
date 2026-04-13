@@ -1,0 +1,13 @@
+{
+  "quarter": "Q1 2026",
+  "period": "2026-01-01 to 2026-03-31",
+  "generated": "2026-04-13",
+  "shows_created": 1407,
+  "episodes_created": 4097,
+  "downloads": 1996878,
+  "notes": {
+    "shows_created": "Net new shows (Arc S3 dimensions: Mar 31 count minus Dec 31 count)",
+    "episodes_created": "Episodes with published_at in Q1 2026 (Spreaker API)",
+    "downloads": "Sum of daily downloads from Arc S3 spreaker/downloads/ for Q1 dates"
+  }
+}
