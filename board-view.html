@@ -415,7 +415,7 @@
                         <div class="value-number forecast" id="revenueActual">$—</div>
                     </div>
                 </div>
-                <div class="metric-note">From Google Sheet • Total revenue</div>
+                <div class="metric-note">From Google Sheet • Q1 2026 total revenue</div>
             </div>
             
             <div class="metric-card" id="cpmCard">
@@ -433,7 +433,7 @@
                         <div class="value-number forecast" id="cpmActual">$—</div>
                     </div>
                 </div>
-                <div class="metric-note">From Google Sheet • Revenue per 1K downloads</div>
+                <div class="metric-note">From Google Sheet • Q1 2026 revenue per 1K downloads</div>
             </div>
             
             <div class="metric-card" id="grossMarginCard">
@@ -615,10 +615,16 @@
         // Google Sheet URL - IPAI Board Financials
         const FINANCE_SHEET_URL = 'https://docs.google.com/spreadsheets/d/1J68Pv6vdkmuol8uStyso0MG5y7e0J-c8-6rY7N-ubvg/export?format=csv';
         
-        // Sheet structure: 
-        // Column D (index 3) = Metric name
-        // Column E (index 4) = January 2026 Forecast
-        // Column R (index 17) = January 2026 Actual
+        // Sheet structure (updated 2026-04-17):
+        // Column D  (index 3)  = Metric name
+        // Forecast monthly:  cols  4-15  (Jan–Dec)
+        // Forecast quarterly: cols 17-20  (Q1-Q4)
+        // Actual monthly:    cols 22-33  (Jan–Dec)
+        // Actual quarterly:  cols 35-38  (Q1-Q4)
+        //
+        // Dashboard shows Q1 Forecast vs Q1 Actual
+        const COL_FORECAST_Q1 = 17;
+        const COL_ACTUAL_Q1   = 35;
         
         async function fetchFinanceData() {
             try {
@@ -650,14 +656,21 @@
                 }
                 
                 // Build lookup: metric name → { forecast, actual }
+                // "gross margin" appears twice; first = overall, second = excl. payroll
                 const data = {};
+                let grossMarginCount = 0;
                 for (let i = 0; i < lines.length; i++) {
                     const cols = parseCSVLine(lines[i]);
                     const metric = (cols[3] || '').toLowerCase().trim();
-                    if (metric && cols.length > 4) {
-                        data[metric] = {
-                            forecast: cols[4] || '',   // January forecast
-                            actual: cols[17] || ''     // January actual
+                    if (metric && cols.length > COL_ACTUAL_Q1) {
+                        let key = metric;
+                        if (key === 'gross margin') {
+                            grossMarginCount++;
+                            if (grossMarginCount === 2) key = 'gross margin excl payroll';
+                        }
+                        data[key] = {
+                            forecast: cols[COL_FORECAST_Q1] || '',  // Q1 Forecast
+                            actual: cols[COL_ACTUAL_Q1] || ''       // Q1 Actual
                         };
                     }
                 }
@@ -736,21 +749,11 @@
                     setField('cashOnHandActual', fmtDollar(data['cash'].actual));
                 }
                 
-                // Gross Margin excl payroll (the 44% one from "Gross Margin" at bottom or calculated)
-                // Look for the row that has the positive percentage
-                for (const key of Object.keys(data)) {
-                    if (key === 'gross margin' && data[key].forecast) {
-                        const val = cleanNum(data[key].forecast);
-                        if (val > 0 && val < 100) {
-                            // This is the positive gross margin %
-                            setField('grossMarginExPayrollForecast', fmtPct(data[key].forecast));
-                            setField('grossMarginExPayrollActual', fmtPct(data[key].actual));
-                            break;
-                        }
-                    }
+                // Gross Margin excl payroll (second "gross margin" row in the sheet)
+                if (data['gross margin excl payroll']) {
+                    setField('grossMarginExPayrollForecast', fmtPct(data['gross margin excl payroll'].forecast));
+                    setField('grossMarginExPayrollActual', fmtPct(data['gross margin excl payroll'].actual));
                 }
-                // Actually use "gross profit excl. payroll" row if it exists - but that's a dollar amount
-                // The percentage at the very bottom is what we want
                 
                 document.getElementById('financeDataStatus').textContent = '• Sheet connected';
                 document.getElementById('financeDataStatus').style.color = 'var(--success)';
