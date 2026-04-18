@@ -1,0 +1,28 @@
+{
+  "snapshots": [
+    {
+      "date": "2026-02-05",
+      "source": "dashboard-html-baseline",
+      "channels": {
+        "DIY HOME & GARDEN": {"subs": 7, "views": 4021, "videos": 13},
+        "History You Never Learned": {"subs": 11, "views": 1474, "videos": 10},
+        "Everyday Food and Living": {"subs": 9, "views": 323, "videos": 9},
+        "TECH EXPLAINED": {"subs": 5, "views": 198, "videos": 4},
+        "Biography Unlimited": {"subs": 5, "views": 24, "videos": 4}
+      },
+      "totals": {"subs": 37, "views": 6040, "videos": 40}
+    },
+    {
+      "date": "2026-04-18",
+      "source": "youtube-api",
+      "channels": {
+        "DIY HOME & GARDEN": {"subs": 10, "views": 4196, "videos": 15},
+        "History You Never Learned": {"subs": 17, "views": 1739, "videos": 14},
+        "Everyday Food and Living": {"subs": 12, "views": 356, "videos": 9},
+        "TECH EXPLAINED": {"subs": 5, "views": 200, "videos": 4},
+        "Biography Unlimited": {"subs": 5, "views": 75, "videos": 4}
+      },
+      "totals": {"subs": 49, "views": 6566, "videos": 46}
+    }
+  ]
+}
