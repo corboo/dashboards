@@ -143,6 +143,42 @@
         "views": 6573,
         "videos": 45
       }
+    },
+    {
+      "date": "2026-05-01",
+      "source": "youtube-api",
+      "channels": {
+        "DIY HOME & GARDEN": {
+          "subs": 11,
+          "views": 4330,
+          "videos": 15
+        },
+        "History You Never Learned": {
+          "subs": 17,
+          "views": 1741,
+          "videos": 15
+        },
+        "Everyday Food and Living": {
+          "subs": 12,
+          "views": 400,
+          "videos": 17
+        },
+        "TECH EXPLAINED": {
+          "subs": 5,
+          "views": 201,
+          "videos": 4
+        },
+        "Biography Unlimited": {
+          "subs": 5,
+          "views": 80,
+          "videos": 5
+        }
+      },
+      "totals": {
+        "subs": 50,
+        "views": 6752,
+        "videos": 56
+      }
     }
   ]
 }
