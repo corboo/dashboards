@@ -23,6 +23,8 @@
             --glass-border: rgba(255, 255, 255, 0.1);
             --success: #34c759;
             --danger: #ff3b30;
+            --warning: #ff9f0a;
+            --blue: #5ac8fa;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -64,7 +66,8 @@
         }
         .stat-label { font-size: 0.6875rem; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.05em; margin-top: 4px; }
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
-        @media (max-width: 900px) { .grid-2 { grid-template-columns: 1fr; } }
+        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+        @media (max-width: 900px) { .grid-2, .grid-3 { grid-template-columns: 1fr; } }
         .card {
             background: var(--glass-bg); backdrop-filter: blur(20px); border-radius: 16px;
             padding: 24px; border: 1px solid var(--glass-border); margin-bottom: 16px;
@@ -80,12 +83,12 @@
         .bar-row { display: flex; align-items: center; gap: 12px; }
         .bar-label { width: 100px; font-size: 0.8125rem; color: var(--text-secondary); text-align: right; }
         .bar-wrapper { flex: 1; height: 28px; background: rgba(255,255,255,0.03); border-radius: 8px; overflow: hidden; position: relative; }
-        .bar { height: 100%; background: linear-gradient(90deg, var(--gold) 0%, var(--gold-bright) 100%); border-radius: 8px; display: flex; align-items: center; justify-content: flex-end; padding-right: 10px; font-size: 0.75rem; font-weight: 600; color: var(--bg-primary); }
+        .bar { height: 100%; background: linear-gradient(90deg, var(--gold) 0%, var(--gold-bright) 100%); border-radius: 8px; display: flex; align-items: center; justify-content: flex-end; padding-right: 10px; font-size: 0.75rem; font-weight: 600; color: var(--bg-primary); min-width: 2px; }
         .bar-value { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); font-size: 0.8125rem; color: var(--text-secondary); }
         .pie-container { display: flex; align-items: center; gap: 32px; justify-content: center; flex-wrap: wrap; }
-        .pie-chart { width: 160px; height: 160px; border-radius: 50%; background: conic-gradient(var(--gold) 0deg 148deg, #b8860b 148deg 261deg, var(--silver) 261deg 345deg, #666 345deg 359deg, #444 359deg 360deg); position: relative; }
-        .pie-chart::before { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 90px; height: 90px; background: var(--bg-primary); border-radius: 50%; }
-        .pie-center { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; }
+        .pie-chart { width: 160px; height: 160px; border-radius: 50%; position: relative; }
+        .pie-chart::before { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 90px; height: 90px; background: var(--bg-primary); border-radius: 50%; z-index: 1; }
+        .pie-center { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; z-index: 2; }
         .pie-value { font-size: 1.375rem; font-weight: 700; color: var(--gold); }
         .pie-label { font-size: 0.6875rem; color: var(--text-tertiary); }
         .legend { display: flex; flex-direction: column; gap: 8px; }
@@ -111,7 +114,7 @@
         .video-info { flex: 1; min-width: 0; }
         .video-title { font-size: 0.875rem; font-weight: 500; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .video-meta { font-size: 0.6875rem; color: var(--text-tertiary); }
-        .video-stats { display: flex; gap: 12px; margin-top: 6px; }
+        .video-stats { display: flex; gap: 12px; margin-top: 6px; flex-wrap: wrap; }
         .video-stat { font-size: 0.75rem; color: var(--text-tertiary); display: flex; align-items: center; gap: 4px; }
         .video-stat.views { color: var(--gold); font-weight: 600; }
         .insight-list { list-style: none; }
@@ -135,11 +138,64 @@
         a:hover { text-decoration: underline; }
         code { font-family: 'SF Mono', monospace; font-size: 0.6875rem; color: var(--text-tertiary); }
         footer { text-align: center; margin-top: 48px; padding-top: 24px; border-top: 1px solid var(--glass-border); font-size: 0.8125rem; color: var(--text-tertiary); }
+        
+        /* NEW: Health indicator styles */
+        .health-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; }
+        .health-card { background: rgba(255,255,255,0.02); border-radius: 14px; padding: 20px; border: 1px solid transparent; transition: all 0.25s ease; }
+        .health-card:hover { border-color: rgba(212,175,55,0.2); background: rgba(255,255,255,0.04); }
+        .health-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+        .health-name { font-size: 0.9375rem; font-weight: 600; }
+        .health-trend { margin-left: auto; font-size: 0.75rem; padding: 3px 10px; border-radius: 20px; font-weight: 600; }
+        .trend-up { background: rgba(52,199,89,0.15); color: var(--success); }
+        .trend-flat { background: rgba(255,159,10,0.15); color: var(--warning); }
+        .trend-down { background: rgba(255,59,48,0.15); color: var(--danger); }
+        .health-metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .health-metric { padding: 10px; background: rgba(255,255,255,0.02); border-radius: 8px; }
+        .health-metric-value { font-size: 1rem; font-weight: 700; color: var(--gold); }
+        .health-metric-label { font-size: 0.625rem; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.03em; margin-top: 2px; }
+        .health-metric-compare { font-size: 0.6875rem; color: var(--text-tertiary); margin-top: 2px; }
+        
+        /* NEW: Duration breakdown */
+        .duration-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px; }
+        .duration-box { padding: 16px; border-radius: 12px; text-align: center; }
+        .duration-box.shorts { background: rgba(212,175,55,0.08); border: 1px solid rgba(212,175,55,0.2); }
+        .duration-box.mid { background: rgba(90,200,250,0.08); border: 1px solid rgba(90,200,250,0.2); }
+        .duration-box.long { background: rgba(168,168,168,0.08); border: 1px solid rgba(168,168,168,0.2); }
+        .duration-count { font-size: 1.5rem; font-weight: 700; }
+        .duration-box.shorts .duration-count { color: var(--gold); }
+        .duration-box.mid .duration-count { color: var(--blue); }
+        .duration-box.long .duration-count { color: var(--silver); }
+        .duration-label { font-size: 0.6875rem; color: var(--text-tertiary); text-transform: uppercase; margin-bottom: 4px; }
+        .duration-avg { font-size: 0.8125rem; margin-top: 6px; }
+        
+        /* NEW: Growth velocity */
+        .velocity-row { display: flex; align-items: center; gap: 16px; padding: 14px; background: rgba(255,255,255,0.02); border-radius: 10px; margin-bottom: 8px; }
+        .velocity-row:last-child { margin-bottom: 0; }
+        .velocity-channel { width: 140px; font-size: 0.8125rem; display: flex; align-items: center; gap: 8px; }
+        .velocity-bars { flex: 1; display: flex; gap: 8px; }
+        .velocity-bar { flex: 1; }
+        .velocity-bar-inner { height: 24px; border-radius: 6px; display: flex; align-items: center; padding-left: 8px; font-size: 0.6875rem; font-weight: 600; }
+        .velocity-bar-label { font-size: 0.6rem; color: var(--text-tertiary); text-transform: uppercase; margin-bottom: 3px; }
+        
+        /* Section title */
+        .section-title {
+            font-size: 1.125rem; font-weight: 700; letter-spacing: -0.02em;
+            margin: 32px 0 16px; padding-left: 2px;
+            background: linear-gradient(180deg, var(--silver-light) 0%, var(--gold) 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        
+        /* Cadence styles */
+        .cadence-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; border-radius: 8px; margin-bottom: 6px; }
+        .cadence-row:last-child { margin-bottom: 0; }
+        
         @media (max-width: 768px) {
             .container { padding: 32px 16px; }
             h1 { font-size: 1.75rem; }
             .engagement-row { grid-template-columns: 2fr 1fr 1fr 1fr; }
             .engagement-row .hide-mobile { display: none; }
+            .duration-grid { grid-template-columns: 1fr; }
+            .health-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -148,58 +204,541 @@
     <div class="container">
         <header>
             <h1>YouTube Analytics</h1>
-            <p class="subtitle">Video Content Performance - Inception Point AI</p>
-            <p class="updated">Last updated: May 12, 2026 @ 02:30 PM UTC <span class="auto-badge">Auto-Updated</span></p>
+            <p class="subtitle">Video Content Performance — Inception Point AI</p>
+            <p class="updated">Last updated: May 12, 2026 @ 08:30 PM UTC <span class="auto-badge">Auto-Updated</span></p>
         </header>
 
         <div class="stats-bar">
             <div class="stat-box highlight"><div class="stat-value">5</div><div class="stat-label">Channels</div></div>
             <div class="stat-box"><div class="stat-value">121</div><div class="stat-label">Subscribers</div></div>
-            <div class="stat-box highlight"><div class="stat-value">27,346</div><div class="stat-label">Total Views</div></div>
+            <div class="stat-box highlight"><div class="stat-value">34,122</div><div class="stat-label">Total Views</div></div>
             <div class="stat-box"><div class="stat-value">136</div><div class="stat-label">Videos</div></div>
-            <div class="stat-box"><div class="stat-value">201</div><div class="stat-label">Avg Views</div></div>
-            <div class="stat-box"><div class="stat-value">~20w</div><div class="stat-label">Age</div></div>
+            <div class="stat-box"><div class="stat-value">1,065</div><div class="stat-label">Total Likes</div></div>
+            <div class="stat-box"><div class="stat-value">3.12%</div><div class="stat-label">Like Rate</div></div>
+            <div class="stat-box highlight"><div class="stat-value">292.5</div><div class="stat-label">Views/Day</div></div>
+            <div class="stat-box"><div class="stat-value">~13w</div><div class="stat-label">Age</div></div>
         </div>
-
         <div class="grid-2">
             <div class="card">
                 <div class="card-header"><span class="card-icon">📊</span><span class="card-title">Views by Channel</span></div>
-                <div class="bar-chart"><div class="bar-row"><span class="bar-label">Biography</span><div class="bar-wrapper"><div class="bar" style="width: 100%;">11,144</div></div></div>
-<div class="bar-row"><span class="bar-label">History</span><div class="bar-wrapper"><div class="bar" style="width: 76%;">8,533</div></div></div>
-<div class="bar-row"><span class="bar-label">DIY</span><div class="bar-wrapper"><div class="bar" style="width: 57%;">6,363</div></div></div>
-<div class="bar-row"><span class="bar-label">Everyday</span><div class="bar-wrapper"><div class="bar" style="width: 9%;"></div><span class="bar-value">1,105</span></div></div>
-<div class="bar-row"><span class="bar-label">TECH</span><div class="bar-wrapper"><div class="bar" style="width: 1%;"></div><span class="bar-value">201</span></div></div>
+                <div class="bar-chart"><div class="bar-row"><span class="bar-label">Biography</span><div class="bar-wrapper"><div class="bar" style="width: 100%;">16,542</div></div></div>
+<div class="bar-row"><span class="bar-label">History</span><div class="bar-wrapper"><div class="bar" style="width: 52%;">8,534</div></div></div>
+<div class="bar-row"><span class="bar-label">DIY</span><div class="bar-wrapper"><div class="bar" style="width: 47%;">7,725</div></div></div>
+<div class="bar-row"><span class="bar-label">Everyday</span><div class="bar-wrapper"><div class="bar" style="width: 7%;"></div><span class="bar-value">1,120</span></div></div>
+<div class="bar-row"><span class="bar-label">TECH</span><div class="bar-wrapper"><div class="bar" style="width: 2%;"></div><span class="bar-value">201</span></div></div>
 </div>
             </div>
             <div class="card">
                 <div class="card-header"><span class="card-icon">🥧</span><span class="card-title">View Distribution</span></div>
-                <div class="pie-container">
-                    <div class="pie-chart"><div class="pie-center"><div class="pie-value">27,346</div><div class="pie-label">views</div></div></div>
-                    <div class="legend"><div class="legend-item"><span class="legend-dot" style="background: var(--gold);"></span> Biography (41%)</div>
-<div class="legend-item"><span class="legend-dot" style="background: #b8860b;"></span> History (31%)</div>
-<div class="legend-item"><span class="legend-dot" style="background: var(--silver);"></span> DIY (23%)</div>
-<div class="legend-item"><span class="legend-dot" style="background: #666;"></span> Everyday (4%)</div>
+                <div class="pie-container"><div class="pie-chart" style="background: conic-gradient(var(--gold) 0.0deg 174.5deg, #b8860b 174.5deg 264.6deg, var(--silver) 264.6deg 346.1deg, #666 346.1deg 357.9deg, #444 357.9deg 360.0deg);"><div class="pie-center"><div class="pie-value">34,122</div><div class="pie-label">views</div></div></div><div class="legend"><div class="legend-item"><span class="legend-dot" style="background: var(--gold);"></span> Biography Unlimited (48%)</div>
+<div class="legend-item"><span class="legend-dot" style="background: #b8860b;"></span> History You Never Learned (25%)</div>
+<div class="legend-item"><span class="legend-dot" style="background: var(--silver);"></span> DIY HOME & GARDEN (23%)</div>
+<div class="legend-item"><span class="legend-dot" style="background: #666;"></span> Everyday Food and Living (3%)</div>
 <div class="legend-item"><span class="legend-dot" style="background: #444;"></span> TECH EXPLAINED (1%)</div>
-</div>
+</div></div></div></div>
+
+        <div class="section-title">📊 Engagement & Performance</div>
+        <div class="grid-2">
+            <div class="card">
+                <div class="card-header"><span class="card-icon">❤️</span><span class="card-title">Engagement Rates by Channel</span></div>
+                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+                    <span style="width: 28px; text-align: center;">🍳</span>
+                    <span style="width: 100px; font-size: 0.8125rem; color: var(--text-secondary);">Everyday</span>
+                    <div style="flex: 1; display: flex; align-items: center; gap: 8px;">
+                        <div style="flex: 1; height: 20px; background: rgba(255,255,255,0.03); border-radius: 6px; overflow: hidden;">
+                            <div style="height: 100%; width: 80%; background: linear-gradient(90deg, rgba(212,175,55,0.6), var(--gold)); border-radius: 6px;"></div>
+                        </div>
+                        <span style="font-size: 0.8125rem; font-weight: 600; color: var(--gold); width: 50px; text-align: right;">4.8%</span>
+                    </div>
+                </div>
+                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+                    <span style="width: 28px; text-align: center;">📚</span>
+                    <span style="width: 100px; font-size: 0.8125rem; color: var(--text-secondary);">History</span>
+                    <div style="flex: 1; display: flex; align-items: center; gap: 8px;">
+                        <div style="flex: 1; height: 20px; background: rgba(255,255,255,0.03); border-radius: 6px; overflow: hidden;">
+                            <div style="height: 100%; width: 70%; background: linear-gradient(90deg, rgba(212,175,55,0.6), var(--gold)); border-radius: 6px;"></div>
+                        </div>
+                        <span style="font-size: 0.8125rem; font-weight: 600; color: var(--gold); width: 50px; text-align: right;">4.21%</span>
+                    </div>
+                </div>
+                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+                    <span style="width: 28px; text-align: center;">💻</span>
+                    <span style="width: 100px; font-size: 0.8125rem; color: var(--text-secondary);">TECH</span>
+                    <div style="flex: 1; display: flex; align-items: center; gap: 8px;">
+                        <div style="flex: 1; height: 20px; background: rgba(255,255,255,0.03); border-radius: 6px; overflow: hidden;">
+                            <div style="height: 100%; width: 58%; background: linear-gradient(90deg, rgba(212,175,55,0.6), var(--gold)); border-radius: 6px;"></div>
+                        </div>
+                        <span style="font-size: 0.8125rem; font-weight: 600; color: var(--gold); width: 50px; text-align: right;">3.48%</span>
+                    </div>
+                </div>
+                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+                    <span style="width: 28px; text-align: center;">👤</span>
+                    <span style="width: 100px; font-size: 0.8125rem; color: var(--text-secondary);">Biography</span>
+                    <div style="flex: 1; display: flex; align-items: center; gap: 8px;">
+                        <div style="flex: 1; height: 20px; background: rgba(255,255,255,0.03); border-radius: 6px; overflow: hidden;">
+                            <div style="height: 100%; width: 52%; background: linear-gradient(90deg, rgba(212,175,55,0.6), var(--gold)); border-radius: 6px;"></div>
+                        </div>
+                        <span style="font-size: 0.8125rem; font-weight: 600; color: var(--gold); width: 50px; text-align: right;">3.12%</span>
+                    </div>
+                </div>
+                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+                    <span style="width: 28px; text-align: center;">🏠</span>
+                    <span style="width: 100px; font-size: 0.8125rem; color: var(--text-secondary);">DIY</span>
+                    <div style="flex: 1; display: flex; align-items: center; gap: 8px;">
+                        <div style="flex: 1; height: 20px; background: rgba(255,255,255,0.03); border-radius: 6px; overflow: hidden;">
+                            <div style="height: 100%; width: 27%; background: linear-gradient(90deg, rgba(212,175,55,0.6), var(--gold)); border-radius: 6px;"></div>
+                        </div>
+                        <span style="font-size: 0.8125rem; font-weight: 600; color: var(--gold); width: 50px; text-align: right;">1.6%</span>
+                    </div>
+                </div>
+                <div style="margin-top: 16px; padding: 14px; background: rgba(255,255,255,0.02); border-radius: 10px;">
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; text-align: center;">
+                        <div><div style="font-size: 1.25rem; font-weight: 700; color: var(--gold);">1,065</div><div style="font-size: 0.625rem; color: var(--text-tertiary); text-transform: uppercase;">Total Likes</div></div>
+                        <div><div style="font-size: 1.25rem; font-weight: 700; color: var(--gold);">48</div><div style="font-size: 0.625rem; color: var(--text-tertiary); text-transform: uppercase;">Comments</div></div>
+                        <div><div style="font-size: 1.25rem; font-weight: 700; color: var(--gold);">3.12%</div><div style="font-size: 0.625rem; color: var(--text-tertiary); text-transform: uppercase;">Network Like Rate</div></div>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header"><span class="card-icon">🏆</span><span class="card-title">Best Engagement (min 50 views)</span><span class="card-badge">By Like Rate</span></div>
+                <div class="engagement-row">
+                    <span class="title-col">👤 Charlie Kirk - Biography Forever - (Part 2) - Rise...</span>
+                    <span class="num-col">166</span>
+                    <span class="num-col highlight">15</span>
+                    <span class="num-col highlight">9.04%</span>
+                    <span class="num-col hide-mobile">0</span>
+                </div>
+                <div class="engagement-row">
+                    <span class="title-col">👤 Charlie Kirk - Biography Forever - (Part 5) - How ...</span>
+                    <span class="num-col">356</span>
+                    <span class="num-col highlight">27</span>
+                    <span class="num-col highlight">7.58%</span>
+                    <span class="num-col hide-mobile">1</span>
+                </div>
+                <div class="engagement-row">
+                    <span class="title-col">📚 Five Most Foods That Changed History: Potato...</span>
+                    <span class="num-col">116</span>
+                    <span class="num-col highlight">8</span>
+                    <span class="num-col highlight">6.9%</span>
+                    <span class="num-col hide-mobile">0</span>
+                </div>
+                <div class="engagement-row">
+                    <span class="title-col">📚 History Unsealed: Salem The Truth They Burned Away...</span>
+                    <span class="num-col">1,071</span>
+                    <span class="num-col highlight">71</span>
+                    <span class="num-col highlight">6.63%</span>
+                    <span class="num-col hide-mobile">2</span>
+                </div>
+                <div class="engagement-row">
+                    <span class="title-col">👤 Charlie Kirk - Biography Forever - (Part 8) - The ...</span>
+                    <span class="num-col">110</span>
+                    <span class="num-col highlight">6</span>
+                    <span class="num-col highlight">5.45%</span>
+                    <span class="num-col hide-mobile">0</span>
+                </div>
+                <div class="engagement-row">
+                    <span class="title-col">👤 Biography Flash - Elon Musk - Founding of SpaceX...</span>
+                    <span class="num-col">1,123</span>
+                    <span class="num-col highlight">60</span>
+                    <span class="num-col highlight">5.34%</span>
+                    <span class="num-col hide-mobile">0</span>
+                </div>
+                <div class="engagement-row">
+                    <span class="title-col">📚 History Unsealed: Salem The Truth They Burned Away...</span>
+                    <span class="num-col">1,106</span>
+                    <span class="num-col highlight">59</span>
+                    <span class="num-col highlight">5.33%</span>
+                    <span class="num-col hide-mobile">0</span>
+                </div>
+                <div class="engagement-row">
+                    <span class="title-col">🏠 Lila 5 Crafts for Overwhelmed Hands - One-Line Let...</span>
+                    <span class="num-col">57</span>
+                    <span class="num-col highlight">3</span>
+                    <span class="num-col highlight">5.26%</span>
+                    <span class="num-col hide-mobile">0</span>
+                </div>
+                <div class="engagement-row header" style="margin-top: 4px;">
+                    <span>Video</span><span style="text-align:right;">Views</span><span style="text-align:right;">Likes</span><span style="text-align:right;">Rate</span><span style="text-align:right;" class="hide-mobile">💬</span>
                 </div>
             </div>
         </div>
-
+        <div class="section-title">🚀 Growth Velocity</div>
+        <div class="card">
+            <div class="card-header"><span class="card-icon">📈</span><span class="card-title">Growth Trajectory</span><span class="card-badge">96 days tracked</span></div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 24px; padding: 16px; background: rgba(212,175,55,0.05); border-radius: 12px; border: 1px solid rgba(212,175,55,0.15);">
+                <div style="text-align: center;">
+                    <div style="font-size: 1.5rem; font-weight: 700; color: var(--gold);">292.5</div>
+                    <div style="font-size: 0.625rem; color: var(--text-tertiary); text-transform: uppercase;">Views/Day (avg)</div>
+                </div>
+                <div style="text-align: center;">
+                    <div style="font-size: 1.5rem; font-weight: 700; color: var(--gold);">0.88</div>
+                    <div style="font-size: 0.625rem; color: var(--text-tertiary); text-transform: uppercase;">Subs/Day (avg)</div>
+                </div>
+                <div style="text-align: center;">
+                    <div style="font-size: 1.5rem; font-weight: 700; color: var(--success);">+28,082</div>
+                    <div style="font-size: 0.625rem; color: var(--text-tertiary); text-transform: uppercase;">Views Gained</div>
+                </div>
+                <div style="text-align: center;">
+                    <div style="font-size: 1.5rem; font-weight: 700; color: var(--success);">+84</div>
+                    <div style="font-size: 0.625rem; color: var(--text-tertiary); text-transform: uppercase;">Subs Gained</div>
+                </div>
+            </div>
+            <div class="velocity-row">
+                <div class="velocity-channel">👤 Biography</div>
+                <div style="flex: 1;">
+                    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+                        <span style="font-size: 0.6rem; color: var(--text-tertiary); width: 55px;">ALL-TIME</span>
+                        <div style="flex: 1; height: 16px; background: rgba(255,255,255,0.03); border-radius: 4px; overflow: hidden;">
+                            <div style="height: 100%; width: 100%; background: linear-gradient(90deg, var(--gold), var(--gold-bright)); border-radius: 4px;"></div>
+                        </div>
+                        <span style="font-size: 0.75rem; color: var(--gold); font-weight: 600; width: 70px; text-align: right;">172.1/day</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <span style="font-size: 0.6rem; color: var(--text-tertiary); width: 55px;">RECENT</span>
+                        <div style="flex: 1; height: 16px; background: rgba(255,255,255,0.03); border-radius: 4px; overflow: hidden;">
+                            <div style="height: 100%; width: 87%; background: linear-gradient(90deg, var(--success), #4ade80); border-radius: 4px;"></div>
+                        </div>
+                        <span style="font-size: 0.75rem; color: var(--success); font-weight: 600; width: 70px; text-align: right;">1496.5/day</span>
+                    </div>
+                </div>
+                <span class="health-trend trend-up">🚀 Accelerating</span>
+            </div>
+            <div class="velocity-row">
+                <div class="velocity-channel">📚 History</div>
+                <div style="flex: 1;">
+                    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+                        <span style="font-size: 0.6rem; color: var(--text-tertiary); width: 55px;">ALL-TIME</span>
+                        <div style="flex: 1; height: 16px; background: rgba(255,255,255,0.03); border-radius: 4px; overflow: hidden;">
+                            <div style="height: 100%; width: 43%; background: linear-gradient(90deg, var(--gold), var(--gold-bright)); border-radius: 4px;"></div>
+                        </div>
+                        <span style="font-size: 0.75rem; color: var(--gold); font-weight: 600; width: 70px; text-align: right;">73.5/day</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <span style="font-size: 0.6rem; color: var(--text-tertiary); width: 55px;">RECENT</span>
+                        <div style="flex: 1; height: 16px; background: rgba(255,255,255,0.03); border-radius: 4px; overflow: hidden;">
+                            <div style="height: 100%; width: 36%; background: linear-gradient(90deg, var(--success), #4ade80); border-radius: 4px;"></div>
+                        </div>
+                        <span style="font-size: 0.75rem; color: var(--success); font-weight: 600; width: 70px; text-align: right;">617.5/day</span>
+                    </div>
+                </div>
+                <span class="health-trend trend-up">🚀 Accelerating</span>
+            </div>
+            <div class="velocity-row">
+                <div class="velocity-channel">🏠 DIY</div>
+                <div style="flex: 1;">
+                    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+                        <span style="font-size: 0.6rem; color: var(--text-tertiary); width: 55px;">ALL-TIME</span>
+                        <div style="flex: 1; height: 16px; background: rgba(255,255,255,0.03); border-radius: 4px; overflow: hidden;">
+                            <div style="height: 100%; width: 22%; background: linear-gradient(90deg, var(--gold), var(--gold-bright)); border-radius: 4px;"></div>
+                        </div>
+                        <span style="font-size: 0.75rem; color: var(--gold); font-weight: 600; width: 70px; text-align: right;">38.6/day</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <span style="font-size: 0.6rem; color: var(--text-tertiary); width: 55px;">RECENT</span>
+                        <div style="flex: 1; height: 16px; background: rgba(255,255,255,0.03); border-radius: 4px; overflow: hidden;">
+                            <div style="height: 100%; width: 18%; background: linear-gradient(90deg, var(--success), #4ade80); border-radius: 4px;"></div>
+                        </div>
+                        <span style="font-size: 0.75rem; color: var(--success); font-weight: 600; width: 70px; text-align: right;">308.6/day</span>
+                    </div>
+                </div>
+                <span class="health-trend trend-up">🚀 Accelerating</span>
+            </div>
+            <div class="velocity-row">
+                <div class="velocity-channel">🍳 Everyday</div>
+                <div style="flex: 1;">
+                    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+                        <span style="font-size: 0.6rem; color: var(--text-tertiary); width: 55px;">ALL-TIME</span>
+                        <div style="flex: 1; height: 16px; background: rgba(255,255,255,0.03); border-radius: 4px; overflow: hidden;">
+                            <div style="height: 100%; width: 5%; background: linear-gradient(90deg, var(--gold), var(--gold-bright)); border-radius: 4px;"></div>
+                        </div>
+                        <span style="font-size: 0.75rem; color: var(--gold); font-weight: 600; width: 70px; text-align: right;">8.3/day</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <span style="font-size: 0.6rem; color: var(--text-tertiary); width: 55px;">RECENT</span>
+                        <div style="flex: 1; height: 16px; background: rgba(255,255,255,0.03); border-radius: 4px; overflow: hidden;">
+                            <div style="height: 100%; width: 4%; background: linear-gradient(90deg, var(--success), #4ade80); border-radius: 4px;"></div>
+                        </div>
+                        <span style="font-size: 0.75rem; color: var(--success); font-weight: 600; width: 70px; text-align: right;">65.5/day</span>
+                    </div>
+                </div>
+                <span class="health-trend trend-up">🚀 Accelerating</span>
+            </div>
+            <div class="velocity-row">
+                <div class="velocity-channel">💻 TECH</div>
+                <div style="flex: 1;">
+                    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+                        <span style="font-size: 0.6rem; color: var(--text-tertiary); width: 55px;">ALL-TIME</span>
+                        <div style="flex: 1; height: 16px; background: rgba(255,255,255,0.03); border-radius: 4px; overflow: hidden;">
+                            <div style="height: 100%; width: 2%; background: linear-gradient(90deg, var(--gold), var(--gold-bright)); border-radius: 4px;"></div>
+                        </div>
+                        <span style="font-size: 0.75rem; color: var(--gold); font-weight: 600; width: 70px; text-align: right;">0.0/day</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <span style="font-size: 0.6rem; color: var(--text-tertiary); width: 55px;">RECENT</span>
+                        <div style="flex: 1; height: 16px; background: rgba(255,255,255,0.03); border-radius: 4px; overflow: hidden;">
+                            <div style="height: 100%; width: 2%; background: linear-gradient(90deg, var(--success), #4ade80); border-radius: 4px;"></div>
+                        </div>
+                        <span style="font-size: 0.75rem; color: var(--success); font-weight: 600; width: 70px; text-align: right;">0.0/day</span>
+                    </div>
+                </div>
+                <span class="health-trend trend-down">📉 Stalled</span>
+            </div></div>
+        <div class="section-title">🏥 Channel Health Indicators</div>
+        <div class="card">
+            <div class="card-header"><span class="card-icon">💪</span><span class="card-title">Channel Health</span><span class="card-badge">Diagnostic</span></div>
+            <div class="health-grid">
+                <div class="health-card">
+                    <div class="health-header">
+                        <span style="font-size: 1.25rem;">👤</span>
+                        <span class="health-name">Biography Unlimited</span>
+                        <span class="health-trend trend-up">🚀 Accelerating</span>
+                    </div>
+                    <div class="health-metrics">
+                        <div class="health-metric">
+                            <div class="health-metric-value">519</div>
+                            <div class="health-metric-label">Avg Views (30d)</div>
+                            <div class="health-metric-compare" style="color: var(--warning);">≈ On par</div>
+                        </div>
+                        <div class="health-metric">
+                            <div class="health-metric-value">464</div>
+                            <div class="health-metric-label">Avg Views (All-Time)</div>
+                        </div>
+                        <div class="health-metric">
+                            <div class="health-metric-value">0.21%</div>
+                            <div class="health-metric-label">Sub/View Ratio</div>
+                        </div>
+                        <div class="health-metric">
+                            <div class="health-metric-value">3.12%</div>
+                            <div class="health-metric-label">Like Rate</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="health-card">
+                    <div class="health-header">
+                        <span style="font-size: 1.25rem;">📚</span>
+                        <span class="health-name">History You Never Learned</span>
+                        <span class="health-trend trend-up">🚀 Accelerating</span>
+                    </div>
+                    <div class="health-metrics">
+                        <div class="health-metric">
+                            <div class="health-metric-value">752</div>
+                            <div class="health-metric-label">Avg Views (30d)</div>
+                            <div class="health-metric-compare" style="color: var(--success);">↑ 103% above avg</div>
+                        </div>
+                        <div class="health-metric">
+                            <div class="health-metric-value">371</div>
+                            <div class="health-metric-label">Avg Views (All-Time)</div>
+                        </div>
+                        <div class="health-metric">
+                            <div class="health-metric-value">0.5%</div>
+                            <div class="health-metric-label">Sub/View Ratio</div>
+                        </div>
+                        <div class="health-metric">
+                            <div class="health-metric-value">4.21%</div>
+                            <div class="health-metric-label">Like Rate</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="health-card">
+                    <div class="health-header">
+                        <span style="font-size: 1.25rem;">🏠</span>
+                        <span class="health-name">DIY HOME & GARDEN</span>
+                        <span class="health-trend trend-up">🚀 Accelerating</span>
+                    </div>
+                    <div class="health-metrics">
+                        <div class="health-metric">
+                            <div class="health-metric-value">252</div>
+                            <div class="health-metric-label">Avg Views (30d)</div>
+                            <div class="health-metric-compare" style="color: var(--warning);">≈ On par</div>
+                        </div>
+                        <div class="health-metric">
+                            <div class="health-metric-value">288</div>
+                            <div class="health-metric-label">Avg Views (All-Time)</div>
+                        </div>
+                        <div class="health-metric">
+                            <div class="health-metric-value">0.27%</div>
+                            <div class="health-metric-label">Sub/View Ratio</div>
+                        </div>
+                        <div class="health-metric">
+                            <div class="health-metric-value">1.6%</div>
+                            <div class="health-metric-label">Like Rate</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="health-card">
+                    <div class="health-header">
+                        <span style="font-size: 1.25rem;">🍳</span>
+                        <span class="health-name">Everyday Food and Living</span>
+                        <span class="health-trend trend-up">🚀 Accelerating</span>
+                    </div>
+                    <div class="health-metrics">
+                        <div class="health-metric">
+                            <div class="health-metric-value">20</div>
+                            <div class="health-metric-label">Avg Views (30d)</div>
+                            <div class="health-metric-compare" style="color: var(--warning);">≈ On par</div>
+                        </div>
+                        <div class="health-metric">
+                            <div class="health-metric-value">24</div>
+                            <div class="health-metric-label">Avg Views (All-Time)</div>
+                        </div>
+                        <div class="health-metric">
+                            <div class="health-metric-value">1.61%</div>
+                            <div class="health-metric-label">Sub/View Ratio</div>
+                        </div>
+                        <div class="health-metric">
+                            <div class="health-metric-value">4.8%</div>
+                            <div class="health-metric-label">Like Rate</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="health-card">
+                    <div class="health-header">
+                        <span style="font-size: 1.25rem;">💻</span>
+                        <span class="health-name">TECH EXPLAINED</span>
+                        <span class="health-trend trend-down">📉 Stalled</span>
+                    </div>
+                    <div class="health-metrics">
+                        <div class="health-metric">
+                            <div class="health-metric-value">0</div>
+                            <div class="health-metric-label">Avg Views (30d)</div>
+                            <div class="health-metric-compare" style="color: var(--danger);">↓ 100% below avg</div>
+                        </div>
+                        <div class="health-metric">
+                            <div class="health-metric-value">50</div>
+                            <div class="health-metric-label">Avg Views (All-Time)</div>
+                        </div>
+                        <div class="health-metric">
+                            <div class="health-metric-value">2.49%</div>
+                            <div class="health-metric-label">Sub/View Ratio</div>
+                        </div>
+                        <div class="health-metric">
+                            <div class="health-metric-value">3.48%</div>
+                            <div class="health-metric-label">Like Rate</div>
+                        </div>
+                    </div>
+                </div></div></div>
+        <div class="section-title">⏱️ Content Format Analysis</div>
+        <div class="grid-2">
+            <div class="card">
+                <div class="card-header"><span class="card-icon">📱</span><span class="card-title">Video Duration Breakdown</span></div>
+                <div class="duration-grid">
+                    <div class="duration-box shorts">
+                        <div class="duration-label">📱 Shorts (≤60s)</div>
+                        <div class="duration-count">94</div>
+                        <div style="font-size: 0.75rem; color: var(--text-secondary);">videos (69%)</div>
+                        <div class="duration-avg" style="color: var(--success);">Avg 303 views</div>
+                    </div>
+                    <div class="duration-box mid">
+                        <div class="duration-label">🎬 Mid (1-10min)</div>
+                        <div class="duration-count">29</div>
+                        <div style="font-size: 0.75rem; color: var(--text-secondary);">videos (21%)</div>
+                        <div class="duration-avg" style="color: var(--blue);">Avg 191 views</div>
+                    </div>
+                    <div class="duration-box long">
+                        <div class="duration-label">🎥 Long (10min+)</div>
+                        <div class="duration-count">13</div>
+                        <div style="font-size: 0.75rem; color: var(--text-secondary);">videos (10%)</div>
+                        <div class="duration-avg" style="color: var(--silver);">Avg 27 views</div>
+                    </div>
+                </div>
+                <div style="font-size: 0.75rem; color: var(--text-tertiary); padding: 12px; background: rgba(255,255,255,0.02); border-radius: 8px;">
+                    <strong style="color: var(--gold);">Per Channel:</strong>
+                    <div style="display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.03);">
+                        <span>👤 Biography</span>
+                        <span><span style="color: var(--gold);">28S</span> · <span style="color: var(--blue);">3M</span> · <span style="color: var(--silver);">5L</span></span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.03);">
+                        <span>📚 History</span>
+                        <span><span style="color: var(--gold);">18S</span> · <span style="color: var(--blue);">3M</span> · <span style="color: var(--silver);">2L</span></span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.03);">
+                        <span>🏠 DIY</span>
+                        <span><span style="color: var(--gold);">16S</span> · <span style="color: var(--blue);">8M</span> · <span style="color: var(--silver);">3L</span></span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.03);">
+                        <span>🍳 Everyday</span>
+                        <span><span style="color: var(--gold);">30S</span> · <span style="color: var(--blue);">13M</span> · <span style="color: var(--silver);">3L</span></span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.03);">
+                        <span>💻 TECH</span>
+                        <span><span style="color: var(--gold);">2S</span> · <span style="color: var(--blue);">2M</span> · <span style="color: var(--silver);">0L</span></span>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header"><span class="card-icon">📅</span><span class="card-title">Upload Cadence</span></div>
+                <div class="cadence-row" style="background: rgba(52,199,89,0.05); border-left: 3px solid var(--success);">
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <span style="font-size: 0.8125rem;">👤 Biography</span>
+                    </div>
+                    <div style="text-align: center;">
+                        <span style="font-size: 0.8125rem; font-weight: 600; color: var(--gold);">2.0/wk</span>
+                        <span style="font-size: 0.6875rem; color: var(--text-tertiary);"> · 8.8/mo</span>
+                    </div>
+                    <span style="font-size: 0.8125rem; color: var(--success); font-weight: 600;">Today</span>
+                </div>
+                <div class="cadence-row" style="background: rgba(255,159,10,0.05); border-left: 3px solid var(--warning);">
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <span style="font-size: 0.8125rem;">📚 History</span>
+                    </div>
+                    <div style="text-align: center;">
+                        <span style="font-size: 0.8125rem; font-weight: 600; color: var(--gold);">1.4/wk</span>
+                        <span style="font-size: 0.6875rem; color: var(--text-tertiary);"> · 6.1/mo</span>
+                    </div>
+                    <span style="font-size: 0.8125rem; color: var(--warning); font-weight: 600;">10 days ago</span>
+                </div>
+                <div class="cadence-row" style="background: rgba(52,199,89,0.05); border-left: 3px solid var(--success);">
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <span style="font-size: 0.8125rem;">🏠 DIY</span>
+                    </div>
+                    <div style="text-align: center;">
+                        <span style="font-size: 0.8125rem; font-weight: 600; color: var(--gold);">1.5/wk</span>
+                        <span style="font-size: 0.6875rem; color: var(--text-tertiary);"> · 6.4/mo</span>
+                    </div>
+                    <span style="font-size: 0.8125rem; color: var(--success); font-weight: 600;">Today</span>
+                </div>
+                <div class="cadence-row" style="background: rgba(52,199,89,0.05); border-left: 3px solid var(--success);">
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <span style="font-size: 0.8125rem;">🍳 Everyday</span>
+                    </div>
+                    <div style="text-align: center;">
+                        <span style="font-size: 0.8125rem; font-weight: 600; color: var(--gold);">2.5/wk</span>
+                        <span style="font-size: 0.6875rem; color: var(--text-tertiary);"> · 10.9/mo</span>
+                    </div>
+                    <span style="font-size: 0.8125rem; color: var(--success); font-weight: 600;">Today</span>
+                </div>
+                <div class="cadence-row" style="background: rgba(255,59,48,0.05); border-left: 3px solid var(--danger);">
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <span style="font-size: 0.8125rem;">💻 TECH</span>
+                    </div>
+                    <div style="text-align: center;">
+                        <span style="font-size: 0.8125rem; font-weight: 600; color: var(--gold);">7.0/wk</span>
+                        <span style="font-size: 0.6875rem; color: var(--text-tertiary);"> · 30.0/mo</span>
+                    </div>
+                    <span style="font-size: 0.8125rem; color: var(--danger); font-weight: 600;">17 weeks ago</span>
+                </div>
+                <div style="margin-top: 16px; padding: 12px; background: rgba(255,255,255,0.02); border-radius: 10px; font-size: 0.8125rem; color: var(--text-secondary);">
+                    <div>🏃 <strong style="color: var(--gold);">Most Active:</strong> 💻 TECH EXPLAINED (7.0/wk)</div>
+                    <div style="margin-top: 4px;">🐢 <strong style="color: var(--text-tertiary);">Least Active:</strong> 📚 History You Never Learned (1.4/wk)</div>
+                </div>
+            </div>
+        </div>
+        <div class="section-title">📈 Channel Performance</div>
         <div class="card">
             <div class="card-header"><span class="card-icon">📈</span><span class="card-title">Channel Performance</span></div>
-
     <div class="channel-card">
         <div class="channel-header">
             <div class="channel-avatar">👤</div>
             <div class="channel-info">
                 <h3>Biography Unlimited</h3>
-                <p>Created Dec 29 • 36 videos • Last upload May 11</p>
+                <p>Created Dec 29 • 36 videos • Last upload May 11 • 2.0/wk</p>
             </div>
+            <span class="health-trend trend-up" style="font-size: 0.6875rem;">🚀</span>
         </div>
         <div class="channel-stats">
-            <div class="channel-stat"><div class="channel-stat-value">34</div><div class="channel-stat-label">Subs ↑8</div></div>
-            <div class="channel-stat"><div class="channel-stat-value">11,144</div><div class="channel-stat-label">Views</div></div>
-            <div class="channel-stat"><div class="channel-stat-value">309</div><div class="channel-stat-label">Per Video</div></div>
+            <div class="channel-stat"><div class="channel-stat-value">34</div><div class="channel-stat-label">Subs ↑29</div></div>
+            <div class="channel-stat"><div class="channel-stat-value">16,542</div><div class="channel-stat-label">Views</div></div>
+            <div class="channel-stat"><div class="channel-stat-value">464</div><div class="channel-stat-label">Per Video</div></div>
         </div>
         <div class="progress-bar"><div class="progress-fill" style="width: 100%;"></div></div>
     </div>
@@ -208,53 +747,57 @@
             <div class="channel-avatar">📚</div>
             <div class="channel-info">
                 <h3>History You Never Learned</h3>
-                <p>Created Dec 29 • 23 videos • Last upload May 02</p>
+                <p>Created Dec 29 • 23 videos • Last upload May 02 • 1.4/wk</p>
             </div>
+            <span class="health-trend trend-up" style="font-size: 0.6875rem;">🚀</span>
         </div>
         <div class="channel-stats">
-            <div class="channel-stat"><div class="channel-stat-value">43</div><div class="channel-stat-label">Subs</div></div>
-            <div class="channel-stat"><div class="channel-stat-value">8,533</div><div class="channel-stat-label">Views</div></div>
+            <div class="channel-stat"><div class="channel-stat-value">43</div><div class="channel-stat-label">Subs ↑32</div></div>
+            <div class="channel-stat"><div class="channel-stat-value">8,534</div><div class="channel-stat-label">Views</div></div>
             <div class="channel-stat"><div class="channel-stat-value">371</div><div class="channel-stat-label">Per Video</div></div>
         </div>
-        <div class="progress-bar"><div class="progress-fill" style="width: 76%;"></div></div>
+        <div class="progress-bar"><div class="progress-fill" style="width: 52%;"></div></div>
     </div>
     <div class="channel-card">
         <div class="channel-header">
             <div class="channel-avatar">🏠</div>
             <div class="channel-info">
                 <h3>DIY HOME & GARDEN</h3>
-                <p>Created Dec 28 • 27 videos • Last upload May 11</p>
+                <p>Created Dec 28 • 27 videos • Last upload May 11 • 1.5/wk</p>
             </div>
+            <span class="health-trend trend-up" style="font-size: 0.6875rem;">🚀</span>
         </div>
         <div class="channel-stats">
-            <div class="channel-stat"><div class="channel-stat-value">21</div><div class="channel-stat-label">Subs ↑4</div></div>
-            <div class="channel-stat"><div class="channel-stat-value">6,363</div><div class="channel-stat-label">Views ↑98</div></div>
-            <div class="channel-stat"><div class="channel-stat-value">236</div><div class="channel-stat-label">Per Video</div></div>
+            <div class="channel-stat"><div class="channel-stat-value">21</div><div class="channel-stat-label">Subs ↑14</div></div>
+            <div class="channel-stat"><div class="channel-stat-value">7,725</div><div class="channel-stat-label">Views</div></div>
+            <div class="channel-stat"><div class="channel-stat-value">288</div><div class="channel-stat-label">Per Video</div></div>
         </div>
-        <div class="progress-bar"><div class="progress-fill" style="width: 57%;"></div></div>
+        <div class="progress-bar"><div class="progress-fill" style="width: 47%;"></div></div>
     </div>
     <div class="channel-card">
         <div class="channel-header">
             <div class="channel-avatar">🍳</div>
             <div class="channel-info">
                 <h3>Everyday Food and Living</h3>
-                <p>Created Dec 28 • 46 videos • Last upload May 12</p>
+                <p>Created Dec 28 • 46 videos • Last upload May 12 • 2.5/wk</p>
             </div>
+            <span class="health-trend trend-up" style="font-size: 0.6875rem;">🚀</span>
         </div>
         <div class="channel-stats">
-            <div class="channel-stat"><div class="channel-stat-value">18</div><div class="channel-stat-label">Subs ↑1</div></div>
-            <div class="channel-stat"><div class="channel-stat-value">1,105</div><div class="channel-stat-label">Views</div></div>
+            <div class="channel-stat"><div class="channel-stat-value">18</div><div class="channel-stat-label">Subs ↑9</div></div>
+            <div class="channel-stat"><div class="channel-stat-value">1,120</div><div class="channel-stat-label">Views</div></div>
             <div class="channel-stat"><div class="channel-stat-value">24</div><div class="channel-stat-label">Per Video</div></div>
         </div>
-        <div class="progress-bar"><div class="progress-fill" style="width: 9%;"></div></div>
+        <div class="progress-bar"><div class="progress-fill" style="width: 7%;"></div></div>
     </div>
     <div class="channel-card">
         <div class="channel-header">
             <div class="channel-avatar">💻</div>
             <div class="channel-info">
                 <h3>TECH EXPLAINED</h3>
-                <p>Created Dec 29 • 4 videos • Last upload Jan 12</p>
+                <p>Created Dec 29 • 4 videos • Last upload Jan 12 • 7.0/wk</p>
             </div>
+            <span class="health-trend trend-down" style="font-size: 0.6875rem;">📉</span>
         </div>
         <div class="channel-stats">
             <div class="channel-stat"><div class="channel-stat-value">5</div><div class="channel-stat-label">Subs</div></div>
@@ -262,44 +805,44 @@
             <div class="channel-stat"><div class="channel-stat-value">50</div><div class="channel-stat-label">Per Video</div></div>
         </div>
         <div class="progress-bar"><div class="progress-fill" style="width: 1%;"></div></div>
-    </div>
-        </div>
-
+    </div></div>
+        <div class="section-title">🔥 Top Performers</div>
         <div class="grid-2">
             <div class="card">
-                <div class="card-header"><span class="card-icon">🔥</span><span class="card-title">Top Videos (All Time)</span></div>
-
+                <div class="card-header"><span class="card-icon">🔥</span><span class="card-title">Top 10 Videos (by Views)</span></div>
     <div class="video-card">
         <div class="video-thumb">👤</div>
         <div class="video-info">
-            <div class="video-title">Biography Flash - Elon Musk - Personal Life & Relationships</div>
+            <div class="video-title"><span style="color: var(--gold); font-weight: 700; margin-right: 4px;">#1</span>Biography Flash - Elon Musk - Personal Life & Relationships</div>
             <div class="video-meta">Biography Unlimited • May 04 • 1m 1s</div>
             <div class="video-stats">
                 <span class="video-stat views">👁 1,526</span>
                 <span class="video-stat">👍 22</span>
+                <span class="video-stat" style="color: var(--gold);">📊 1.44%</span>
             </div>
         </div>
     </div>
     <div class="video-card">
         <div class="video-thumb">👤</div>
         <div class="video-info">
-            <div class="video-title">Biography Flash - Elon Musk - From PayPal to SpaceX</div>
+            <div class="video-title"><span style="color: var(--gold); font-weight: 700; margin-right: 4px;">#2</span>Biography Flash - Elon Musk - From PayPal to SpaceX</div>
             <div class="video-meta">Biography Unlimited • May 04 • 59s</div>
             <div class="video-stats">
                 <span class="video-stat views">👁 1,388</span>
                 <span class="video-stat">👍 35</span>
+                <span class="video-stat" style="color: var(--gold);">📊 2.52%</span>
             </div>
         </div>
     </div>
     <div class="video-card">
         <div class="video-thumb">👤</div>
         <div class="video-info">
-            <div class="video-title">Biography Flash - Elon Musk - Did Elon Musk actually start Tesla</div>
+            <div class="video-title"><span style="color: var(--gold); font-weight: 700; margin-right: 4px;">#3</span>Biography Flash - Elon Musk - Did Elon Musk actually start Tesla</div>
             <div class="video-meta">Biography Unlimited • May 04 • 1m</div>
             <div class="video-stats">
                 <span class="video-stat views">👁 1,288</span>
                 <span class="video-stat">👍 20</span>
-                <span class="video-stat">💬 1</span>
+                <span class="video-stat" style="color: var(--gold);">📊 1.55%</span><span class="video-stat">💬 1</span>
             </div>
         </div>
     </div>
@@ -311,7 +854,7 @@
             <div class="video-stats">
                 <span class="video-stat views">👁 1,252</span>
                 <span class="video-stat">👍 32</span>
-                <span class="video-stat">💬 1</span>
+                <span class="video-stat" style="color: var(--gold);">📊 2.56%</span><span class="video-stat">💬 1</span>
             </div>
         </div>
     </div>
@@ -323,18 +866,19 @@
             <div class="video-stats">
                 <span class="video-stat views">👁 1,227</span>
                 <span class="video-stat">👍 15</span>
-                <span class="video-stat">💬 3</span>
+                <span class="video-stat" style="color: var(--gold);">📊 1.22%</span><span class="video-stat">💬 3</span>
             </div>
         </div>
     </div>
     <div class="video-card">
         <div class="video-thumb">📚</div>
         <div class="video-info">
-            <div class="video-title">History Unsealed: Salem - Expendable Women</div>
+            <div class="video-title">History Unsealed:  Salem The Truth They Burned Away - Expendable Women</div>
             <div class="video-meta">History You Never Learned • May 02 • 1m</div>
             <div class="video-stats">
                 <span class="video-stat views">👁 1,152</span>
                 <span class="video-stat">👍 33</span>
+                <span class="video-stat" style="color: var(--gold);">📊 2.86%</span>
             </div>
         </div>
     </div>
@@ -346,185 +890,61 @@
             <div class="video-stats">
                 <span class="video-stat views">👁 1,123</span>
                 <span class="video-stat">👍 60</span>
+                <span class="video-stat" style="color: var(--gold);">📊 5.34%</span>
             </div>
         </div>
     </div>
     <div class="video-card">
         <div class="video-thumb">📚</div>
         <div class="video-info">
-            <div class="video-title">History Unsealed: Salem - True story of Tituba</div>
+            <div class="video-title">History Unsealed: Salem The Truth They Burned Away - True story of Tituba</div>
             <div class="video-meta">History You Never Learned • May 02 • 1m</div>
             <div class="video-stats">
                 <span class="video-stat views">👁 1,106</span>
                 <span class="video-stat">👍 59</span>
+                <span class="video-stat" style="color: var(--gold);">📊 5.33%</span>
             </div>
         </div>
     </div>
     <div class="video-card">
         <div class="video-thumb">👤</div>
         <div class="video-info">
-            <div class="video-title">Charlie Kirk - Biography Forever - (Part 10) - Erica Kirk</div>
+            <div class="video-title">Charlie Kirk - Biography Forever - (Part 10) - Erica Kirk: Leading Turning Point USA</div>
             <div class="video-meta">Biography Unlimited • May 11 • 1m</div>
             <div class="video-stats">
-                <span class="video-stat views">👁 1,101</span>
+                <span class="video-stat views">👁 1,103</span>
                 <span class="video-stat">👍 14</span>
-                <span class="video-stat" style="color: var(--success);">🆕 NEW!</span>
+                <span class="video-stat" style="color: var(--gold);">📊 1.27%</span>
             </div>
         </div>
     </div>
     <div class="video-card">
         <div class="video-thumb">📚</div>
         <div class="video-info">
-            <div class="video-title">History Unsealed: Salem - Land, Taxes, and Greed</div>
+            <div class="video-title">History Unsealed: Salem The Truth They Burned Away - Land, Taxes, and Greed</div>
             <div class="video-meta">History You Never Learned • May 02 • 1m</div>
             <div class="video-stats">
                 <span class="video-stat views">👁 1,071</span>
                 <span class="video-stat">👍 71</span>
-                <span class="video-stat">💬 2</span>
+                <span class="video-stat" style="color: var(--gold);">📊 6.63%</span><span class="video-stat">💬 2</span>
             </div>
         </div>
-    </div>
-            </div>
+    </div></div>
             <div class="card">
                 <div class="card-header"><span class="card-icon">💡</span><span class="card-title">Insights</span><span class="card-badge">Auto-Generated</span></div>
-                <ul class="insight-list"><li class="insight-item"><span class="insight-icon">🔥</span><span class="insight-text"><strong>Charlie Kirk series EXPLODING!</strong> 13 new Biography videos dropped May 11. Part 10 (Erica Kirk) already at <strong>1,101 views</strong> in 1 day — cracked the 1K club instantly. Parts 3-7 all 900+ views. Bio channel jumped from 26→<strong>34 subs (+8)</strong>, biggest sub gain on the network</span></li>
-<li class="insight-item"><span class="insight-icon">🏠</span><span class="insight-text"><strong>DIY gains 4 subs</strong> (17→21) and +98 views to 6,363. "You don't need much to make something feel loved" hit <strong>933 views</strong> in 1 day! Rosemary Pell "10 Ways" climbed to 299. Cottagecore content consistently performing well</span></li>
-<li class="insight-item"><span class="insight-icon">📚</span><span class="insight-text"><strong>History holding steady</strong> at 43 subs (still highest on network) and 8,533 views. Salem series dominant — "Expendable Women" at 1,152, "Land, Taxes" at 1,071 with best like rate (6.6%). <strong>10 days since last upload — needs next series</strong></span></li>
-<li class="insight-item"><span class="insight-icon">🍳</span><span class="insight-text"><strong>Everyday Food crosses 1,105 views</strong> (+6). "Burgers Fall Apart" at 331. Most prolific channel (46 videos) but lowest views/video (24). Nightclub/Berghain content getting modest traction. New upload today: "Your Worth Isn't Your Net Worth"</span></li>
-<li class="insight-item"><span class="insight-icon">📈</span><span class="insight-text"><strong>Network: 136 videos, 121 subs (+13!), 27,346 views (+105 DoD).</strong> Now 10 videos over 1K views (up from 8). Shorts avg 324 views vs long-form 65 — shorts winning 5:1. Charlie Kirk series proving biography shorts formula works beyond Musk</span></li></ul>
-            </div>
-        </div>
-
+                <ul class="insight-list"><li class="insight-item"><span class="insight-icon">🚀</span><span class="insight-text"><strong>Biography Unlimited is the fastest accelerating channel</strong> — gaining <strong>1496.5 views/day</strong> recently (vs 172.1/day all-time). 16,542 total views across 36 videos.</span></li><li class="insight-item"><span class="insight-icon">❤️</span><span class="insight-text"><strong>Everyday Food and Living leads engagement</strong> with a <strong>4.8% like rate</strong> and avg 1.3 engagements per video. 54 total likes, 5 comments.</span></li><li class="insight-item"><span class="insight-icon">📱</span><span class="insight-text"><strong>Shorts dominate the network:</strong> 94 shorts averaging <strong>303 views</strong> vs 29 mid-form at 191 views and 13 long-form at 27 views. Shorts outperform long-form <strong>11:1</strong>.</span></li><li class="insight-item"><span class="insight-icon">📈</span><span class="insight-text"><strong>Network: 136 videos, 121 subs, 34,122 views.</strong> Growing at <strong>292.5 views/day</strong> and 0.88 subs/day over 96 days. 1,065 total likes at 3.12% rate.</span></li><li class="insight-item"><span class="insight-icon">⚠️</span><span class="insight-text"><strong>Upload gap alert:</strong> 💻 TECH EXPLAINED (120d) — consider scheduling new content to maintain momentum.</span></li></ul></div></div>
+        <div class="section-title">🆕 Recent Activity</div>
         <div class="card">
-            <div class="card-header"><span class="card-icon">💬</span><span class="card-title">Engagement Deep Dive</span></div>
-            <div class="engagement-row header">
-                <span>Video</span><span style="text-align:right;">Views</span><span style="text-align:right;">Likes</span><span style="text-align:right;">Like Rate</span><span style="text-align:right;" class="hide-mobile">Comments</span>
-            </div>
-
-    <div class="engagement-row">
-        <span class="title-col">👤 Charlie Kirk - Biography Forever (Part 5)...</span>
-        <span class="num-col">295</span>
-        <span class="num-col highlight">22</span>
-        <span class="num-col highlight">7.5%</span>
-        <span class="num-col hide-mobile">0</span>
-    </div>
-    <div class="engagement-row">
-        <span class="title-col">📚 Five Most Foods That Changed History: Po...</span>
-        <span class="num-col">116</span>
-        <span class="num-col highlight">8</span>
-        <span class="num-col highlight">6.9%</span>
-        <span class="num-col hide-mobile">0</span>
-    </div>
-    <div class="engagement-row">
-        <span class="title-col">👤 Charlie Kirk - Biography Forever (Part 2)...</span>
-        <span class="num-col">146</span>
-        <span class="num-col highlight">10</span>
-        <span class="num-col highlight">6.8%</span>
-        <span class="num-col hide-mobile">0</span>
-    </div>
-    <div class="engagement-row">
-        <span class="title-col">📚 History Unsealed: Salem - Land, Taxes...</span>
-        <span class="num-col">1,071</span>
-        <span class="num-col highlight">71</span>
-        <span class="num-col highlight">6.6%</span>
-        <span class="num-col hide-mobile">2</span>
-    </div>
-    <div class="engagement-row">
-        <span class="title-col">👤 Biography Flash - Elon Musk - Founding o...</span>
-        <span class="num-col">1,123</span>
-        <span class="num-col highlight">60</span>
-        <span class="num-col highlight">5.3%</span>
-        <span class="num-col hide-mobile">0</span>
-    </div>
-    <div class="engagement-row">
-        <span class="title-col">📚 History Unsealed: Salem - True story of...</span>
-        <span class="num-col">1,106</span>
-        <span class="num-col highlight">59</span>
-        <span class="num-col highlight">5.3%</span>
-        <span class="num-col hide-mobile">0</span>
-    </div>
-    <div class="engagement-row">
-        <span class="title-col">🏠 Lila 5 Crafts - One-Line Letter...</span>
-        <span class="num-col">57</span>
-        <span class="num-col highlight">3</span>
-        <span class="num-col highlight">5.3%</span>
-        <span class="num-col hide-mobile">0</span>
-    </div>
-    <div class="engagement-row">
-        <span class="title-col">📚 History Unsealed: Salem - Three Myths</span>
-        <span class="num-col">430</span>
-        <span class="num-col highlight">22</span>
-        <span class="num-col highlight">5.1%</span>
-        <span class="num-col hide-mobile">0</span>
-    </div>
-            <div style="margin-top: 20px; padding: 16px; background: rgba(255,255,255,0.02); border-radius: 12px;">
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 16px; text-align: center;">
-                    <div><div style="font-size: 1.5rem; font-weight: 700; color: var(--gold);">1,044</div><div style="font-size: 0.625rem; color: var(--text-tertiary); text-transform: uppercase;">Total Likes</div></div>
-                    <div><div style="font-size: 1.5rem; font-weight: 700; color: var(--gold);">44</div><div style="font-size: 0.625rem; color: var(--text-tertiary); text-transform: uppercase;">Total Comments</div></div>
-                    <div><div style="font-size: 1.5rem; font-weight: 700; color: var(--gold);">3.1%</div><div style="font-size: 0.625rem; color: var(--text-tertiary); text-transform: uppercase;">Avg Like Rate</div></div>
-                    <div><div style="font-size: 1.5rem; font-weight: 700; color: var(--gold);">7.7</div><div style="font-size: 0.625rem; color: var(--text-tertiary); text-transform: uppercase;">Likes/Video</div></div>
-                </div>
-            </div>
-        </div>
-
-        <div class="grid-2">
-            <div class="card">
-                <div class="card-header"><span class="card-icon">⏱️</span><span class="card-title">Shorts vs Long-Form</span></div>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;">
-                    <div style="padding: 16px; background: rgba(212,175,55,0.05); border-radius: 12px; border: 1px solid rgba(212,175,55,0.15); text-align: center;">
-                        <div style="font-size: 0.6875rem; color: var(--text-tertiary); text-transform: uppercase; margin-bottom: 8px;">📱 Shorts (≤60s)</div>
-                        <div style="font-size: 1.5rem; font-weight: 700; color: var(--gold);">98</div>
-                        <div style="font-size: 0.75rem; color: var(--text-secondary);">videos</div>
-                        <div style="margin-top: 8px; font-size: 0.875rem; color: var(--success);">Avg 324 views</div>
-                    </div>
-                    <div style="padding: 16px; background: rgba(255,255,255,0.02); border-radius: 12px; border: 1px solid var(--glass-border); text-align: center;">
-                        <div style="font-size: 0.6875rem; color: var(--text-tertiary); text-transform: uppercase; margin-bottom: 8px;">🎬 Long-Form (>60s)</div>
-                        <div style="font-size: 1.5rem; font-weight: 700; color: var(--silver);">30</div>
-                        <div style="font-size: 0.75rem; color: var(--text-secondary);">videos</div>
-                        <div style="margin-top: 8px; font-size: 0.875rem; color: var(--text-tertiary);">Avg 65 views</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-header"><span class="card-icon">📅</span><span class="card-title">Upload Freshness</span></div>
-                <div style="display: flex; flex-direction: column; gap: 10px;">
-
-    <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; background: rgba(52,199,89,0.05); border-radius: 8px; border-left: 3px solid var(--success);">
-        <span style="font-size: 0.8125rem;">🍳 Everyday</span>
-        <span style="font-size: 0.8125rem; color: var(--success); font-weight: 600;">May 12 — Today</span>
-    </div>
-    <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; background: rgba(52,199,89,0.05); border-radius: 8px; border-left: 3px solid var(--success);">
-        <span style="font-size: 0.8125rem;">👤 Biography</span>
-        <span style="font-size: 0.8125rem; color: var(--success); font-weight: 600;">May 11 — Yesterday</span>
-    </div>
-    <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; background: rgba(52,199,89,0.05); border-radius: 8px; border-left: 3px solid var(--success);">
-        <span style="font-size: 0.8125rem;">🏠 DIY</span>
-        <span style="font-size: 0.8125rem; color: var(--success); font-weight: 600;">May 11 — Yesterday</span>
-    </div>
-    <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; background: rgba(52,199,89,0.05); border-radius: 8px; border-left: 3px solid var(--success);">
-        <span style="font-size: 0.8125rem;">📚 History</span>
-        <span style="font-size: 0.8125rem; color: var(--success); font-weight: 600;">May 02 — 10 days ago</span>
-    </div>
-    <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; background: rgba(255,59,48,0.05); border-radius: 8px; border-left: 3px solid var(--danger);">
-        <span style="font-size: 0.8125rem;">💻 TECH</span>
-        <span style="font-size: 0.8125rem; color: var(--danger); font-weight: 600;">Jan 12 — 17 weeks ago</span>
-    </div>
-                </div>
-            </div>
-        </div>
-
-
-        <div class="card">
-            <div class="card-header"><span class="card-icon">🆕</span><span class="card-title">Recent Uploads (Last 30 Days)</span></div>
-
+            <div class="card-header"><span class="card-icon">🆕</span><span class="card-title">Recent Uploads (Last 30 Days)</span><span class="card-badge">92 videos</span></div>
     <div class="video-card">
         <div class="video-thumb">🍳</div>
         <div class="video-info">
-            <div class="video-title">Your Worth Isn't Your Net Worth — Discover Your True Value</div>
-            <div class="video-meta">Everyday Food and Living • May 12 - NEW!</div>
+            <div class="video-title">Your Worth Isn't Your Net Worth  Discover Your True Value</div>
+            <div class="video-meta">Everyday Food and Living • May 12 • 17s</div>
             <div class="video-stats">
                 <span class="video-stat views">👁 0</span>
+                <span class="video-stat">👍 0</span>
+                
                 <span class="video-stat" style="color: var(--success);">🔥 Just uploaded!</span>
             </div>
         </div>
@@ -532,11 +952,12 @@
     <div class="video-card">
         <div class="video-thumb">🏠</div>
         <div class="video-info">
-            <div class="video-title">You don't need much to make something feel loved.</div>
-            <div class="video-meta">DIY HOME & GARDEN • May 11</div>
+            <div class="video-title">You don’t need much to make something feel loved.</div>
+            <div class="video-meta">DIY HOME & GARDEN • May 11 • 22s</div>
             <div class="video-stats">
-                <span class="video-stat views">👁 933</span>
-                <span class="video-stat">👍 6</span>
+                <span class="video-stat views">👁 947</span>
+                <span class="video-stat">👍 7</span>
+                <span class="video-stat">📊 0.74%</span>
                 <span class="video-stat" style="color: var(--success);">🔥 Hot start!</span>
             </div>
         </div>
@@ -544,73 +965,133 @@
     <div class="video-card">
         <div class="video-thumb">👤</div>
         <div class="video-info">
-            <div class="video-title">Charlie Kirk - Biography Forever - 13 Part Series</div>
-            <div class="video-meta">Biography Unlimited • May 11 • 12 parts</div>
+            <div class="video-title">Charlie Kirk - Biography Forever - (Part 12) -  Charlie Kirk The Aftermath</div>
+            <div class="video-meta">Biography Unlimited • May 11 • 1m</div>
             <div class="video-stats">
-                <span class="video-stat views">👁 5,450+ combined</span>
-                <span class="video-stat">👍 204</span>
-                <span class="video-stat" style="color: var(--success);">🔥 Breakout!</span>
-            </div>
-        </div>
-    </div>
-    <div class="video-card">
-        <div class="video-thumb">🏠</div>
-        <div class="video-info">
-            <div class="video-title">Cottagecore is not a decorating trend...</div>
-            <div class="video-meta">DIY HOME & GARDEN • May 11</div>
-            <div class="video-stats">
-                <span class="video-stat views">👁 290</span>
-                <span class="video-stat">👍 10</span>
-            </div>
-        </div>
-    </div>
-    <div class="video-card">
-        <div class="video-thumb">🍳</div>
-        <div class="video-info">
-            <div class="video-title">5 Sparkly Money Tips That Will Save You Thousands</div>
-            <div class="video-meta">Everyday Food and Living • May 09</div>
-            <div class="video-stats">
-                <span class="video-stat views">👁 12</span>
+                <span class="video-stat views">👁 5</span>
                 <span class="video-stat">👍 0</span>
+                <span class="video-stat">📊 0.0%</span>
+                <span class="video-stat" style="color: var(--success);">🆕 NEW!</span>
             </div>
         </div>
     </div>
     <div class="video-card">
-        <div class="video-thumb">🏠</div>
+        <div class="video-thumb">👤</div>
         <div class="video-info">
-            <div class="video-title">Rosemary and the emotional connection to Cottagecore</div>
-            <div class="video-meta">DIY HOME & GARDEN • May 09 • 1m 38s</div>
+            <div class="video-title">Charlie Kirk - Biography Forever - (Part 11) - The Legacy of Charlie Kirk</div>
+            <div class="video-meta">Biography Unlimited • May 11 • 57s</div>
             <div class="video-stats">
-                <span class="video-stat views">👁 76</span>
-                <span class="video-stat">👍 2</span>
-            </div>
-        </div>
-    </div>
-    <div class="video-card">
-        <div class="video-thumb">🏠</div>
-        <div class="video-info">
-            <div class="video-title">Rosemary Pell 10 Ways to have a cottage core life</div>
-            <div class="video-meta">DIY HOME & GARDEN • May 08 • 8m 22s</div>
-            <div class="video-stats">
-                <span class="video-stat views">👁 299</span>
-                <span class="video-stat">👍 12</span>
-            </div>
-        </div>
-    </div>
-    <div class="video-card">
-        <div class="video-thumb">🍳</div>
-        <div class="video-info">
-            <div class="video-title">Inside: UNVRS Ibiza</div>
-            <div class="video-meta">Everyday Food and Living • May 07</div>
-            <div class="video-stats">
-                <span class="video-stat views">👁 45</span>
+                <span class="video-stat views">👁 1</span>
                 <span class="video-stat">👍 0</span>
+                <span class="video-stat">📊 0.0%</span>
+                <span class="video-stat" style="color: var(--success);">🆕 NEW!</span>
             </div>
         </div>
     </div>
+    <div class="video-card">
+        <div class="video-thumb">👤</div>
+        <div class="video-info">
+            <div class="video-title">Charlie Kirk - Biography Forever - (Part 10) - Erica Kirk: Leading Turning Point USA</div>
+            <div class="video-meta">Biography Unlimited • May 11 • 1m</div>
+            <div class="video-stats">
+                <span class="video-stat views">👁 1,103</span>
+                <span class="video-stat">👍 14</span>
+                <span class="video-stat">📊 1.27%</span>
+                <span class="video-stat" style="color: var(--success);">🔥 Hot start!</span>
+            </div>
         </div>
-
-
+    </div>
+    <div class="video-card">
+        <div class="video-thumb">👤</div>
+        <div class="video-info">
+            <div class="video-title">Charlie Kirk - Biography Forever - (Part 9) - A Turning Point in American Conservatism</div>
+            <div class="video-meta">Biography Unlimited • May 11 • 1m</div>
+            <div class="video-stats">
+                <span class="video-stat views">👁 1</span>
+                <span class="video-stat">👍 0</span>
+                <span class="video-stat">📊 0.0%</span>
+                <span class="video-stat" style="color: var(--success);">🆕 NEW!</span>
+            </div>
+        </div>
+    </div>
+    <div class="video-card">
+        <div class="video-thumb">👤</div>
+        <div class="video-info">
+            <div class="video-title">Charlie Kirk - Biography Forever - (Part 8) - The Charlie Kirk Show | Media and Controversy</div>
+            <div class="video-meta">Biography Unlimited • May 11 • 57s</div>
+            <div class="video-stats">
+                <span class="video-stat views">👁 110</span>
+                <span class="video-stat">👍 6</span>
+                <span class="video-stat">📊 5.45%</span>
+                <span class="video-stat" style="color: var(--success);">🆕 NEW!</span>
+            </div>
+        </div>
+    </div>
+    <div class="video-card">
+        <div class="video-thumb">👤</div>
+        <div class="video-info">
+            <div class="video-title">Charlie Kirk - Biography Forever - (Part 7) - Charlie Kirk - Faith and Family</div>
+            <div class="video-meta">Biography Unlimited • May 11 • 57s</div>
+            <div class="video-stats">
+                <span class="video-stat views">👁 928</span>
+                <span class="video-stat">👍 41</span>
+                <span class="video-stat">📊 4.42%</span>
+                <span class="video-stat" style="color: var(--success);">🔥 Hot start!</span>
+            </div>
+        </div>
+    </div>
+    <div class="video-card">
+        <div class="video-thumb">👤</div>
+        <div class="video-info">
+            <div class="video-title">Charlie Kirk - Biography Forever - (Part 6) -Turning Point USA’s Impact on the Youth Vote</div>
+            <div class="video-meta">Biography Unlimited • May 11 • 59s</div>
+            <div class="video-stats">
+                <span class="video-stat views">👁 930</span>
+                <span class="video-stat">👍 44</span>
+                <span class="video-stat">📊 4.73%</span>
+                <span class="video-stat" style="color: var(--success);">🔥 Hot start!</span>
+            </div>
+        </div>
+    </div>
+    <div class="video-card">
+        <div class="video-thumb">👤</div>
+        <div class="video-info">
+            <div class="video-title">Charlie Kirk - Biography Forever - (Part 5) - How Charlie Kirk Mastered Viral Organizing</div>
+            <div class="video-meta">Biography Unlimited • May 11 • 1m</div>
+            <div class="video-stats">
+                <span class="video-stat views">👁 356</span>
+                <span class="video-stat">👍 27</span>
+                <span class="video-stat">📊 7.58%</span>
+                <span class="video-stat" style="color: var(--success);">🆕 NEW!</span>
+            </div>
+        </div>
+    </div>
+    <div class="video-card">
+        <div class="video-thumb">👤</div>
+        <div class="video-info">
+            <div class="video-title">Charlie Kirk - Biography Forever - (Part 4) - Inside Turning Point USA</div>
+            <div class="video-meta">Biography Unlimited • May 11 • 1m</div>
+            <div class="video-stats">
+                <span class="video-stat views">👁 966</span>
+                <span class="video-stat">👍 38</span>
+                <span class="video-stat">📊 3.93%</span>
+                <span class="video-stat" style="color: var(--success);">🔥 Hot start!</span>
+            </div>
+        </div>
+    </div>
+    <div class="video-card">
+        <div class="video-thumb">👤</div>
+        <div class="video-info">
+            <div class="video-title">Charlie Kirk - Biography Forever - (Part 3) - How Charlie Kirk Built a Media Empire</div>
+            <div class="video-meta">Biography Unlimited • May 11 • 56s</div>
+            <div class="video-stats">
+                <span class="video-stat views">👁 988</span>
+                <span class="video-stat">👍 36</span>
+                <span class="video-stat">📊 3.64%</span>
+                <span class="video-stat" style="color: var(--success);">🔥 Hot start!</span>
+            </div>
+        </div>
+    </div></div>
         <div class="card">
             <div class="card-header"><span class="card-icon">🔗</span><span class="card-title">Channel Links</span></div>
             <table><thead><tr><th>Channel</th><th>Link</th><th>ID</th></tr></thead><tbody>

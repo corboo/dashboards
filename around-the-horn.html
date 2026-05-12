@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Around the Horn ⚡ — IPAI Weekly Status</title>
+<style>
+  :root {
+    --bg-deep: #0a0a1a;
+    --bg-mid: #111128;
+    --glass-bg: rgba(255,255,255,0.04);
+    --glass-border: rgba(255,255,255,0.08);
+    --glass-bg-hover: rgba(255,255,255,0.07);
+    --text-primary: #f5f5f7;
+    --text-secondary: rgba(245,245,247,0.6);
+    --text-tertiary: rgba(245,245,247,0.35);
+    --accent-blue: #2997ff;
+    --accent-purple: #bf5af2;
+    --accent-pink: #ff375f;
+    --accent-green: #30d158;
+    --accent-orange: #ff9f0a;
+    --accent-teal: #64d2ff;
+    --accent-yellow: #ffd60a;
+    --gradient-hero: linear-gradient(135deg, #1a1a4e 0%, #2d1b69 30%, #4a1942 60%, #6b2040 100%);
+    --card-radius: 20px;
+    --section-gap: 24px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    background: var(--bg-deep);
+    color: var(--text-primary);
+    min-height: 100vh;
+    overflow-x: hidden;
+    line-height: 1.5;
+  }
+
+  /* ===== Ambient Background ===== */
+  .ambient-bg {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+  .ambient-bg .orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(120px);
+    opacity: 0.3;
+    animation: float 20s ease-in-out infinite;
+  }
+  .ambient-bg .orb:nth-child(1) {
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, #4a1942, transparent 70%);
+    top: -10%; left: -5%;
+    animation-delay: 0s;
+  }
+  .ambient-bg .orb:nth-child(2) {
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, #1a1a6e, transparent 70%);
+    top: 30%; right: -10%;
+    animation-delay: -7s;
+    animation-duration: 25s;
+  }
+  .ambient-bg .orb:nth-child(3) {
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, #2d1b69, transparent 70%);
+    bottom: -5%; left: 30%;
+    animation-delay: -14s;
+    animation-duration: 22s;
+  }
+  .ambient-bg .orb:nth-child(4) {
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, #6b2040, transparent 70%);
+    top: 60%; left: 10%;
+    animation-delay: -3s;
+    animation-duration: 18s;
+  }
+  @keyframes float {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    25% { transform: translate(30px, -40px) scale(1.05); }
+    50% { transform: translate(-20px, 20px) scale(0.95); }
+    75% { transform: translate(40px, 30px) scale(1.02); }
+  }
+
+  /* ===== Layout ===== */
+  .container {
+    position: relative;
+    z-index: 1;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+  }
+
+  /* ===== Header ===== */
+  .header {
+    text-align: center;
+    margin-bottom: 56px;
+    animation: fadeInDown 0.8s ease-out;
+  }
+  .header-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(191,90,242,0.15);
+    border: 1px solid rgba(191,90,242,0.25);
+    border-radius: 100px;
+    padding: 6px 16px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--accent-purple);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+  .header h1 {
+    font-size: clamp(40px, 7vw, 72px);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+    background: linear-gradient(135deg, #f5f5f7 0%, #a1a1b5 50%, #f5f5f7 100%);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: shimmer 6s linear infinite;
+  }
+  .header .subtitle {
+    font-size: 18px;
+    color: var(--text-secondary);
+    margin-top: 8px;
+    font-weight: 400;
+  }
+  .header .date-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 16px;
+    font-size: 13px;
+    color: var(--text-tertiary);
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 100px;
+    padding: 6px 14px;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+  @keyframes shimmer {
+    0% { background-position: 200% center; }
+    100% { background-position: -200% center; }
+  }
+
+  /* ===== Glass Card ===== */
+  .glass-card {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--card-radius);
+    backdrop-filter: blur(40px) saturate(180%);
+    -webkit-backdrop-filter: blur(40px) saturate(180%);
+    padding: 28px;
+    transition: background 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
+  }
+  .glass-card:hover {
+    background: var(--glass-bg-hover);
+    border-color: rgba(255,255,255,0.12);
+  }
+
+  .section-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--text-secondary);
+    margin-bottom: 20px;
+  }
+  .section-label .icon {
+    font-size: 16px;
+  }
+
+  /* ===== Hero Section - YouTube ===== */
+  .hero-section {
+    margin-bottom: var(--section-gap);
+    animation: fadeInUp 0.8s ease-out 0.1s both;
+  }
+  .hero-card {
+    background: linear-gradient(135deg, rgba(41,151,255,0.08) 0%, rgba(191,90,242,0.08) 50%, rgba(255,55,95,0.06) 100%);
+    border: 1px solid rgba(191,90,242,0.15);
+    padding: 36px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-card::before {
+    content: '';
+    position: absolute;
+    top: -2px; right: -2px; bottom: -2px; left: -2px;
+    background: linear-gradient(135deg, rgba(41,151,255,0.2), rgba(191,90,242,0.2), rgba(255,55,95,0.15));
+    border-radius: var(--card-radius);
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+  }
+  .hero-card:hover::before { opacity: 1; }
+
+  .hero-title-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+  .hero-title-row h2 {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+  .hero-title-row h2 span.network-name {
+    color: var(--accent-purple);
+  }
+  .growth-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: rgba(48,209,88,0.12);
+    border: 1px solid rgba(48,209,88,0.25);
+    border-radius: 100px;
+    padding: 6px 14px;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--accent-green);
+    white-space: nowrap;
+    animation: pulse-glow 2s ease-in-out infinite;
+  }
+  @keyframes pulse-glow {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(48,209,88,0); }
+    50% { box-shadow: 0 0 20px 2px rgba(48,209,88,0.15); }
+  }
+
+  /* ===== KPI Row ===== */
+  .kpi-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+  .kpi-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 16px;
+    padding: 20px;
+    text-align: center;
+    transition: transform 0.2s ease;
+  }
+  .kpi-card:hover { transform: translateY(-2px); }
+  .kpi-card .kpi-value {
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+  }
+  .kpi-card .kpi-label {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-top: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .kpi-card .kpi-delta {
+    font-size: 12px;
+    font-weight: 600;
+    margin-top: 4px;
+  }
+  .kpi-delta.up { color: var(--accent-green); }
+  .kpi-delta.down { color: var(--accent-pink); }
+
+  /* ===== Chart Area ===== */
+  .chart-section {
+    margin-bottom: 32px;
+  }
+  .chart-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: 16px;
+  }
+  .chart-container {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 2.8 / 1;
+    min-height: 200px;
+  }
+  .chart-container svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  /* ===== Channel Breakdown ===== */
+  .channel-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .channel-item {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    align-items: center;
+    gap: 16px;
+    padding: 14px 18px;
+    background: rgba(255,255,255,0.025);
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 14px;
+    transition: background 0.2s ease;
+  }
+  .channel-item:hover { background: rgba(255,255,255,0.05); }
+  .channel-item .ch-name {
+    font-size: 14px;
+    font-weight: 500;
+  }
+  .channel-item .ch-views {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+    text-align: right;
+    white-space: nowrap;
+  }
+  .channel-item .ch-delta {
+    font-size: 12px;
+    font-weight: 600;
+    text-align: right;
+    min-width: 60px;
+  }
+  .channel-item .ch-bar-wrap {
+    grid-column: 1 / -1;
+    height: 4px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 100px;
+    overflow: hidden;
+    margin-top: 2px;
+  }
+  .channel-item .ch-bar {
+    height: 100%;
+    border-radius: 100px;
+    transition: width 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .channel-item:nth-child(1) .ch-bar { background: linear-gradient(90deg, var(--accent-purple), var(--accent-pink)); }
+  .channel-item:nth-child(2) .ch-bar { background: linear-gradient(90deg, var(--accent-green), var(--accent-teal)); }
+  .channel-item:nth-child(3) .ch-bar { background: linear-gradient(90deg, var(--accent-orange), var(--accent-yellow)); }
+  .channel-item:nth-child(4) .ch-bar { background: linear-gradient(90deg, var(--accent-blue), var(--accent-teal)); }
+  .channel-item:nth-child(5) .ch-bar { background: linear-gradient(90deg, var(--accent-pink), var(--accent-orange)); }
+
+  .breakout-callout {
+    margin-top: 20px;
+    padding: 16px 20px;
+    background: linear-gradient(135deg, rgba(191,90,242,0.1), rgba(255,55,95,0.08));
+    border: 1px solid rgba(191,90,242,0.2);
+    border-radius: 14px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--text-secondary);
+  }
+  .breakout-callout .callout-icon {
+    font-size: 24px;
+    flex-shrink: 0;
+    margin-top: -2px;
+  }
+  .breakout-callout strong {
+    color: var(--text-primary);
+  }
+
+  /* ===== Grid Sections ===== */
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--section-gap);
+    margin-bottom: var(--section-gap);
+  }
+  .grid-3 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: var(--section-gap);
+    margin-bottom: var(--section-gap);
+  }
+  @media (max-width: 768px) {
+    .grid-2, .grid-3 { grid-template-columns: 1fr; }
+  }
+
+  /* ===== Systems Status ===== */
+  .status-section {
+    animation: fadeInUp 0.8s ease-out 0.3s both;
+  }
+  .status-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+  }
+  .status-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 18px;
+    background: rgba(255,255,255,0.025);
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 14px;
+  }
+  .status-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    position: relative;
+  }
+  .status-dot.green {
+    background: var(--accent-green);
+    box-shadow: 0 0 8px rgba(48,209,88,0.5);
+  }
+  .status-dot.green::after {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    border-radius: 50%;
+    background: rgba(48,209,88,0.2);
+    animation: status-ping 2s ease-in-out infinite;
+  }
+  .status-dot.yellow {
+    background: var(--accent-orange);
+    box-shadow: 0 0 8px rgba(255,159,10,0.5);
+  }
+  @keyframes status-ping {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.6); opacity: 0; }
+  }
+  .status-info .status-name {
+    font-size: 14px;
+    font-weight: 500;
+  }
+  .status-info .status-detail {
+    font-size: 11px;
+    color: var(--text-tertiary);
+    margin-top: 1px;
+  }
+
+  /* ===== Disk Usage Bars ===== */
+  .disk-bar-container {
+    margin-top: 6px;
+    height: 6px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 100px;
+    overflow: hidden;
+  }
+  .disk-bar {
+    height: 100%;
+    border-radius: 100px;
+    transition: width 1.5s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .disk-bar.low { background: var(--accent-green); }
+  .disk-bar.mid { background: var(--accent-orange); }
+  .disk-bar.high { background: var(--accent-pink); }
+
+  /* ===== Quick Glance Cards ===== */
+  .glance-section {
+    animation: fadeInUp 0.8s ease-out 0.4s both;
+    margin-bottom: var(--section-gap);
+  }
+  .glance-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--section-gap);
+  }
+  @media (max-width: 640px) {
+    .glance-grid { grid-template-columns: 1fr; }
+  }
+  .glance-card {
+    padding: 24px;
+  }
+  .glance-card .glance-icon {
+    font-size: 28px;
+    margin-bottom: 12px;
+  }
+  .glance-card h3 {
+    font-size: 17px;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+  .glance-card p {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+
+  /* ===== Footer ===== */
+  .footer {
+    text-align: center;
+    margin-top: 48px;
+    padding-top: 24px;
+    border-top: 1px solid var(--glass-border);
+    animation: fadeInUp 0.8s ease-out 0.6s both;
+  }
+  .footer p {
+    font-size: 12px;
+    color: var(--text-tertiary);
+  }
+  .footer .logo-mark {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: 4px;
+    letter-spacing: 0.5px;
+  }
+
+  /* ===== Animations ===== */
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes countUp {
+    from { opacity: 0; transform: scale(0.8); }
+    to { opacity: 1; transform: scale(1); }
+  }
+  .animate-in {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  .animate-in.visible {
+    animation: fadeInUp 0.7s ease-out forwards;
+  }
+
+  /* ===== Hockey Stick Marker ===== */
+  .hockey-stick-label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    fill: var(--accent-green);
+  }
+
+  /* ===== Sparkline in KPI ===== */
+  .kpi-spark {
+    margin-top: 8px;
+    height: 24px;
+  }
+  .kpi-spark svg { width: 100%; height: 100%; }
+
+  /* ===== Responsive ===== */
+  @media (max-width: 600px) {
+    .container { padding: 24px 16px 60px; }
+    .hero-card { padding: 24px; }
+    .kpi-row { grid-template-columns: 1fr 1fr; }
+    .kpi-card .kpi-value { font-size: 26px; }
+    .channel-item { grid-template-columns: 1fr auto; }
+    .channel-item .ch-delta { display: none; }
+    .status-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Ambient Background -->
+<div class="ambient-bg">
+  <div class="orb"></div>
+  <div class="orb"></div>
+  <div class="orb"></div>
+  <div class="orb"></div>
+</div>
+
+<div class="container">
+
+  <!-- Header -->
+  <header class="header">
+    <div class="header-badge">⚡ Weekly Briefing</div>
+    <h1>Around the Horn ⚡</h1>
+    <p class="subtitle">IPAI Weekly Status</p>
+    <div class="date-pill">
+      <span>📅</span>
+      <span>Week of May 4, 2026 — Sunday</span>
+    </div>
+  </header>
+
+  <!-- ===== HERO: YouTube Network ===== -->
+  <section class="hero-section">
+    <div class="glass-card hero-card">
+      <div class="section-label">
+        <span class="icon">📺</span>
+        YouTube Network
+      </div>
+
+      <div class="hero-title-row">
+        <h2><span class="network-name">QP-1</span> Network</h2>
+        <div class="growth-badge">↑ 93.8% views this week</div>
+      </div>
+
+      <!-- KPIs -->
+      <div class="kpi-row">
+        <div class="kpi-card">
+          <div class="kpi-value" style="color: var(--accent-blue);">13,086</div>
+          <div class="kpi-label">Total Views</div>
+          <div class="kpi-delta up">↑ 93.8% from 6,752</div>
+          <div class="kpi-spark">
+            <svg viewBox="0 0 100 24" preserveAspectRatio="none">
+              <polyline points="5,20 30,19 55,18.5 75,18 95,4" fill="none" stroke="#2997ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="95" cy="4" r="2.5" fill="#2997ff"/>
+            </svg>
+          </div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-value" style="color: var(--accent-purple);">77</div>
+          <div class="kpi-label">Subscribers</div>
+          <div class="kpi-delta up">↑ 54% from 50</div>
+          <div class="kpi-spark">
+            <svg viewBox="0 0 100 24" preserveAspectRatio="none">
+              <polyline points="5,20 30,17 55,16.5 75,15.5 95,5" fill="none" stroke="#bf5af2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="95" cy="5" r="2.5" fill="#bf5af2"/>
+            </svg>
+          </div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-value" style="color: var(--accent-teal);">65</div>
+          <div class="kpi-label">Videos</div>
+          <div class="kpi-delta" style="color: var(--text-tertiary);">Library growing</div>
+        </div>
+      </div>
+
+      <!-- Growth Chart -->
+      <div class="chart-section">
+        <div class="chart-title">📈 Network Views — Growth Trajectory</div>
+        <div class="chart-container">
+          <svg viewBox="0 0 700 220" preserveAspectRatio="xMidYMid meet">
+            <defs>
+              <linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#bf5af2" stop-opacity="0.3"/>
+                <stop offset="100%" stop-color="#bf5af2" stop-opacity="0"/>
+              </linearGradient>
+              <linearGradient id="lineGrad" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stop-color="#2997ff"/>
+                <stop offset="50%" stop-color="#bf5af2"/>
+                <stop offset="100%" stop-color="#ff375f"/>
+              </linearGradient>
+              <filter id="glow">
+                <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+                <feMerge>
+                  <feMergeNode in="coloredBlur"/>
+                  <feMergeNode in="SourceGraphic"/>
+                </feMerge>
+              </filter>
+            </defs>
+
+            <!-- Grid lines -->
+            <line x1="80" y1="30" x2="80" y2="185" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+            <line x1="80" y1="185" x2="660" y2="185" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+            <line x1="80" y1="145" x2="660" y2="145" stroke="rgba(255,255,255,0.03)" stroke-width="1" stroke-dasharray="4,6"/>
+            <line x1="80" y1="105" x2="660" y2="105" stroke="rgba(255,255,255,0.03)" stroke-width="1" stroke-dasharray="4,6"/>
+            <line x1="80" y1="65" x2="660" y2="65" stroke="rgba(255,255,255,0.03)" stroke-width="1" stroke-dasharray="4,6"/>
+
+            <!-- Y-axis labels -->
+            <text x="70" y="190" text-anchor="end" fill="rgba(245,245,247,0.3)" font-size="11" font-family="-apple-system, sans-serif">0</text>
+            <text x="70" y="148" text-anchor="end" fill="rgba(245,245,247,0.3)" font-size="11" font-family="-apple-system, sans-serif">4K</text>
+            <text x="70" y="108" text-anchor="end" fill="rgba(245,245,247,0.3)" font-size="11" font-family="-apple-system, sans-serif">8K</text>
+            <text x="70" y="68" text-anchor="end" fill="rgba(245,245,247,0.3)" font-size="11" font-family="-apple-system, sans-serif">12K</text>
+
+            <!-- Area fill -->
+            <path d="M120,92 L313,94 L507,93.5 L600,38 L600,185 L120,185 Z" fill="url(#chartGrad)" opacity="0.6">
+              <animate attributeName="opacity" from="0" to="0.6" dur="1.5s" fill="freeze"/>
+            </path>
+
+            <!-- Main line: Feb 5 → Apr 20 → May 1 → May 4 -->
+            <!-- 6040→6573→6752→13086 mapped to Y: 185 = 0, 30 = 14000 -->
+            <!-- Y = 185 - (value/14000)*155 -->
+            <!-- 6040 → 185 - 66.9 = 118.1 ≈ 118 -->
+            <!-- 6573 → 185 - 72.8 = 112.2 ≈ 112 -->
+            <!-- 6752 → 185 - 74.8 = 110.2 ≈ 110 -->
+            <!-- 13086 → 185 - 144.9 = 40.1 ≈ 40 -->
+            <polyline
+              points="120,118 313,112 507,110 600,40"
+              fill="none"
+              stroke="url(#lineGrad)"
+              stroke-width="3"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              filter="url(#glow)"
+              stroke-dasharray="600"
+              stroke-dashoffset="600"
+            >
+              <animate attributeName="stroke-dashoffset" from="600" to="0" dur="2s" fill="freeze" calcMode="spline" keySplines="0.22 1 0.36 1"/>
+            </polyline>
+
+            <!-- Data points -->
+            <circle cx="120" cy="118" r="5" fill="#1a1a4e" stroke="#2997ff" stroke-width="2.5" opacity="0">
+              <animate attributeName="opacity" from="0" to="1" dur="0.3s" begin="0.5s" fill="freeze"/>
+            </circle>
+            <circle cx="313" cy="112" r="5" fill="#1a1a4e" stroke="#8a5cf5" stroke-width="2.5" opacity="0">
+              <animate attributeName="opacity" from="0" to="1" dur="0.3s" begin="1s" fill="freeze"/>
+            </circle>
+            <circle cx="507" cy="110" r="5" fill="#1a1a4e" stroke="#bf5af2" stroke-width="2.5" opacity="0">
+              <animate attributeName="opacity" from="0" to="1" dur="0.3s" begin="1.3s" fill="freeze"/>
+            </circle>
+            <circle cx="600" cy="40" r="7" fill="#1a1a4e" stroke="#ff375f" stroke-width="3" opacity="0">
+              <animate attributeName="opacity" from="0" to="1" dur="0.3s" begin="1.8s" fill="freeze"/>
+              <animate attributeName="r" values="7;9;7" dur="2s" begin="2s" repeatCount="indefinite"/>
+            </circle>
+
+            <!-- Data labels -->
+            <text x="120" y="138" text-anchor="middle" fill="rgba(245,245,247,0.5)" font-size="11" font-family="-apple-system, sans-serif" font-weight="500" opacity="0">
+              6,040
+              <animate attributeName="opacity" from="0" to="1" dur="0.3s" begin="0.6s" fill="freeze"/>
+            </text>
+            <text x="120" y="150" text-anchor="middle" fill="rgba(245,245,247,0.25)" font-size="9" font-family="-apple-system, sans-serif" opacity="0">
+              37 subs
+              <animate attributeName="opacity" from="0" to="1" dur="0.3s" begin="0.6s" fill="freeze"/>
+            </text>
+
+            <text x="313" y="132" text-anchor="middle" fill="rgba(245,245,247,0.5)" font-size="11" font-family="-apple-system, sans-serif" font-weight="500" opacity="0">
+              6,573
+              <animate attributeName="opacity" from="0" to="1" dur="0.3s" begin="1.1s" fill="freeze"/>
+            </text>
+            <text x="313" y="144" text-anchor="middle" fill="rgba(245,245,247,0.25)" font-size="9" font-family="-apple-system, sans-serif" opacity="0">
+              49 subs
+              <animate attributeName="opacity" from="0" to="1" dur="0.3s" begin="1.1s" fill="freeze"/>
+            </text>
+
+            <text x="507" y="130" text-anchor="middle" fill="rgba(245,245,247,0.5)" font-size="11" font-family="-apple-system, sans-serif" font-weight="500" opacity="0">
+              6,752
+              <animate attributeName="opacity" from="0" to="1" dur="0.3s" begin="1.4s" fill="freeze"/>
+            </text>
+            <text x="507" y="142" text-anchor="middle" fill="rgba(245,245,247,0.25)" font-size="9" font-family="-apple-system, sans-serif" opacity="0">
+              50 subs
+              <animate attributeName="opacity" from="0" to="1" dur="0.3s" begin="1.4s" fill="freeze"/>
+            </text>
+
+            <text x="600" y="28" text-anchor="middle" fill="#ff375f" font-size="13" font-family="-apple-system, sans-serif" font-weight="700" opacity="0">
+              13,086
+              <animate attributeName="opacity" from="0" to="1" dur="0.4s" begin="1.9s" fill="freeze"/>
+            </text>
+            <text x="600" y="60" text-anchor="middle" fill="rgba(48,209,88,0.8)" font-size="9" font-family="-apple-system, sans-serif" font-weight="600" opacity="0">
+              77 subs
+              <animate attributeName="opacity" from="0" to="1" dur="0.4s" begin="2s" fill="freeze"/>
+            </text>
+
+            <!-- X-axis labels -->
+            <text x="120" y="202" text-anchor="middle" fill="rgba(245,245,247,0.3)" font-size="11" font-family="-apple-system, sans-serif">Feb 5</text>
+            <text x="313" y="202" text-anchor="middle" fill="rgba(245,245,247,0.3)" font-size="11" font-family="-apple-system, sans-serif">Apr 20</text>
+            <text x="507" y="202" text-anchor="middle" fill="rgba(245,245,247,0.3)" font-size="11" font-family="-apple-system, sans-serif">May 1</text>
+            <text x="600" y="202" text-anchor="middle" fill="rgba(245,245,247,0.4)" font-size="11" font-family="-apple-system, sans-serif" font-weight="600">May 4</text>
+
+            <!-- Hockey stick annotation -->
+            <text x="556" y="80" text-anchor="middle" fill="rgba(255,55,95,0.6)" font-size="9" font-weight="700" font-family="-apple-system, sans-serif" letter-spacing="0.8" opacity="0" transform="rotate(-50 556 80)">
+              🏒 HOCKEY STICK
+              <animate attributeName="opacity" from="0" to="1" dur="0.4s" begin="2.2s" fill="freeze"/>
+            </text>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Channel Breakdown -->
+      <div class="chart-title" style="margin-bottom: 14px;">📊 Channel Breakdown</div>
+      <div class="channel-list">
+        <div class="channel-item">
+          <div class="ch-name">🔥 History You Never Learned</div>
+          <div class="ch-views">~7,965 views</div>
+          <div class="ch-delta up" style="color: var(--accent-green);">+357% 🚀</div>
+          <div class="ch-bar-wrap">
+            <div class="ch-bar" style="width: 0%;" data-width="61%"></div>
+          </div>
+        </div>
+        <div class="channel-item">
+          <div class="ch-name">🏡 DIY HOME & GARDEN</div>
+          <div class="ch-views">~4,330 views</div>
+          <div class="ch-delta" style="color: var(--accent-teal);">11 subs · steady</div>
+          <div class="ch-bar-wrap">
+            <div class="ch-bar" style="width: 0%;" data-width="33%"></div>
+          </div>
+        </div>
+        <div class="channel-item">
+          <div class="ch-name">🍳 Everyday Food and Living</div>
+          <div class="ch-views">~400 views</div>
+          <div class="ch-delta" style="color: var(--accent-orange);">12 subs · growing</div>
+          <div class="ch-bar-wrap">
+            <div class="ch-bar" style="width: 0%;" data-width="3%"></div>
+          </div>
+        </div>
+        <div class="channel-item">
+          <div class="ch-name">💻 TECH EXPLAINED</div>
+          <div class="ch-views">~200 views</div>
+          <div class="ch-delta" style="color: var(--text-tertiary);">5 subs</div>
+          <div class="ch-bar-wrap">
+            <div class="ch-bar" style="width: 0%;" data-width="1.5%"></div>
+          </div>
+        </div>
+        <div class="channel-item">
+          <div class="ch-name">📖 Biography Unlimited</div>
+          <div class="ch-views">~80 views</div>
+          <div class="ch-delta" style="color: var(--text-tertiary);">5 subs</div>
+          <div class="ch-bar-wrap">
+            <div class="ch-bar" style="width: 0%;" data-width="0.6%"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Breakout Callout -->
+      <div class="breakout-callout">
+        <div class="callout-icon">🏛️</div>
+        <div>
+          <strong>Salem "History Unsealed" Series — Breakout Hit</strong><br>
+          The Salem witch trials deep-dive series is driving the explosion on History You Never Learned. <strong>5 videos have each crossed 1,000+ views</strong> — organic discovery is kicking in hard. This is the content-market fit signal we've been looking for.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Quick Glance: Email + Calendar ===== -->
+  <section class="glance-section">
+    <div class="glance-grid">
+      <div class="glass-card glance-card animate-in">
+        <div class="glance-icon">📧</div>
+        <h3>Email</h3>
+        <p>Nothing urgent. A few older unreads sitting in the queue — nothing that needs Sunday attention.</p>
+      </div>
+      <div class="glass-card glance-card animate-in">
+        <div class="glance-icon">📅</div>
+        <h3>Calendar</h3>
+        <p>Quiet Sunday. No meetings or deadlines on the books. A good day to strategize on the YouTube momentum.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Systems Status ===== -->
+  <section class="status-section">
+    <div class="glass-card animate-in">
+      <div class="section-label">
+        <span class="icon">🖥️</span>
+        Infrastructure Status
+      </div>
+      <div class="status-grid">
+        <div class="status-item">
+          <div class="status-dot green"></div>
+          <div class="status-info">
+            <div class="status-name">OAISYS API</div>
+            <div class="status-detail">v4.2-autoroute · Healthy</div>
+          </div>
+        </div>
+        <div class="status-item">
+          <div class="status-dot green"></div>
+          <div class="status-info">
+            <div class="status-name">mac-mini</div>
+            <div class="status-detail">Disk: 6% used</div>
+            <div class="disk-bar-container">
+              <div class="disk-bar low" style="width: 0%;" data-width="6%"></div>
+            </div>
+          </div>
+        </div>
+        <div class="status-item">
+          <div class="status-dot green"></div>
+          <div class="status-info">
+            <div class="status-name">team-cb</div>
+            <div class="status-detail">Disk: 66% used</div>
+            <div class="disk-bar-container">
+              <div class="disk-bar mid" style="width: 0%;" data-width="66%"></div>
+            </div>
+          </div>
+        </div>
+        <div class="status-item">
+          <div class="status-dot green"></div>
+          <div class="status-info">
+            <div class="status-name">nigel</div>
+            <div class="status-detail">Disk: 65% used</div>
+            <div class="disk-bar-container">
+              <div class="disk-bar mid" style="width: 0%;" data-width="65%"></div>
+            </div>
+          </div>
+        </div>
+        <div class="status-item">
+          <div class="status-dot green"></div>
+          <div class="status-info">
+            <div class="status-name">All Systems</div>
+            <div class="status-detail">Operational ✓</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="logo-mark">INCEPTION POINT AI</div>
+    <p>Around the Horn ⚡ — Compiled May 4, 2026</p>
+    <p style="margin-top: 4px;">Built with care by CB 🤖</p>
+  </footer>
+
+</div>
+
+<script>
+  // Intersection Observer for scroll animations
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        entry.target.style.animationDelay = `${i * 0.1}s`;
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+  document.querySelectorAll('.animate-in').forEach(el => observer.observe(el));
+
+  // Animate bars on load
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      document.querySelectorAll('[data-width]').forEach(bar => {
+        bar.style.width = bar.dataset.width;
+      });
+    }, 600);
+  });
+
+  // Counter animation for KPI values
+  function animateCounter(el, target, duration = 1500) {
+    const start = 0;
+    const startTime = performance.now();
+    const isComma = target.includes(',');
+    const num = parseInt(target.replace(/,/g, ''));
+
+    function update(currentTime) {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      const current = Math.round(start + (num - start) * eased);
+      el.textContent = isComma ? current.toLocaleString() : current;
+      if (progress < 1) requestAnimationFrame(update);
+    }
+    requestAnimationFrame(update);
+  }
+
+  // Trigger counters when visible
+  const kpiObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const el = entry.target;
+        const target = el.textContent.trim();
+        if (/^[\d,]+$/.test(target)) {
+          animateCounter(el, target);
+        }
+        kpiObserver.unobserve(el);
+      }
+    });
+  }, { threshold: 0.5 });
+
+  document.querySelectorAll('.kpi-value').forEach(el => kpiObserver.observe(el));
+</script>
+
+</body>
+</html>
