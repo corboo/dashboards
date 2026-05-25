@@ -251,6 +251,39 @@
         "views": 35564,
         "videos": 147
       }
+    },
+    {
+      "date": "2026-05-25",
+      "total_subs": 166,
+      "total_views": 40401,
+      "total_videos": 171,
+      "channels": {
+        "biography_unlimited": {
+          "subs": 38,
+          "views": 17370,
+          "videos": 36
+        },
+        "history_you_never_learned": {
+          "subs": 44,
+          "views": 8609,
+          "videos": 24
+        },
+        "tech_explained": {
+          "subs": 9,
+          "views": 385,
+          "videos": 9
+        },
+        "everyday_food_and_living": {
+          "subs": 20,
+          "views": 1366,
+          "videos": 64
+        },
+        "diy_home_garden": {
+          "subs": 55,
+          "views": 12671,
+          "videos": 38
+        }
+      }
     }
   ]
 }
