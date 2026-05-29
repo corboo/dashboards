@@ -550,7 +550,7 @@ function fmtHours(h) {
 let DATA;
 
 async function init() {
-  const resp = await fetch('data.json');
+  const resp = await fetch('apple-podcasts-data.json');
   DATA = await resp.json();
   renderOverview();
   renderShows('hours');
