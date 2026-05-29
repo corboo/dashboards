@@ -22,374 +22,134 @@
     --border: #38383a;
     --radius: 12px;
   }
-
   * { margin: 0; padding: 0; box-sizing: border-box; }
-
   body {
-    background: var(--bg);
-    color: var(--text);
+    background: var(--bg); color: var(--text);
     font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif;
-    -webkit-font-smoothing: antialiased;
-    line-height: 1.4;
+    -webkit-font-smoothing: antialiased; line-height: 1.4;
   }
-
-  .header {
-    padding: 24px 32px 0;
-    display: flex;
-    align-items: center;
-    gap: 16px;
-  }
-
+  .header { padding: 24px 32px 0; display: flex; align-items: center; gap: 16px; }
   .header-icon {
-    width: 48px;
-    height: 48px;
+    width: 48px; height: 48px;
     background: linear-gradient(135deg, #9b59b6, #bf5af2);
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 24px;
+    border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px;
   }
-
-  .header h1 {
-    font-size: 28px;
-    font-weight: 700;
-    letter-spacing: -0.5px;
-  }
-
-  .header .subtitle {
-    color: var(--text-secondary);
-    font-size: 14px;
-    margin-top: 2px;
-  }
-
-  .nav {
-    display: flex;
-    gap: 0;
-    padding: 16px 32px 0;
-    border-bottom: 1px solid var(--border);
-    margin-bottom: 24px;
-  }
-
+  .header h1 { font-size: 28px; font-weight: 700; letter-spacing: -0.5px; }
+  .header .subtitle { color: var(--text-secondary); font-size: 14px; margin-top: 2px; }
+  .nav { display: flex; gap: 0; padding: 16px 32px 0; border-bottom: 1px solid var(--border); margin-bottom: 24px; }
   .nav-tab {
-    padding: 10px 20px;
-    color: var(--text-secondary);
-    font-size: 15px;
-    font-weight: 500;
-    cursor: pointer;
-    border-bottom: 2px solid transparent;
-    margin-bottom: -1px;
-    transition: all 0.2s;
+    padding: 10px 20px; color: var(--text-secondary); font-size: 15px; font-weight: 500;
+    cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; transition: all 0.2s;
   }
-
   .nav-tab:hover { color: var(--text); }
-  .nav-tab.active {
-    color: var(--accent);
-    border-bottom-color: var(--accent);
-  }
-
+  .nav-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
   .container { padding: 0 32px 48px; max-width: 1400px; margin: 0 auto; }
 
-  .kpi-row {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 16px;
-    margin-bottom: 24px;
+  /* Date range selector */
+  .range-bar {
+    display: flex; align-items: center; gap: 8px; margin-bottom: 20px; flex-wrap: wrap;
   }
-
-  .kpi-card {
-    background: var(--bg-card);
-    border-radius: var(--radius);
-    padding: 20px 24px;
-    border: 1px solid var(--border);
+  .range-btn {
+    padding: 6px 14px; border-radius: 16px; border: 1px solid var(--border);
+    background: transparent; color: var(--text-secondary); font-size: 13px;
+    cursor: pointer; transition: all 0.2s; font-family: inherit;
   }
+  .range-btn:hover { border-color: var(--accent); color: var(--text); }
+  .range-btn.active { background: var(--accent); color: white; border-color: var(--accent); }
+  .range-label { font-size: 13px; color: var(--text-secondary); margin-left: 8px; }
 
-  .kpi-label {
-    font-size: 13px;
-    color: var(--text-secondary);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin-bottom: 8px;
-  }
-
-  .kpi-value {
-    font-size: 32px;
-    font-weight: 700;
-    letter-spacing: -1px;
-  }
-
-  .kpi-change {
-    font-size: 13px;
-    margin-top: 4px;
-  }
-
+  .kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+  .kpi-card { background: var(--bg-card); border-radius: var(--radius); padding: 20px 24px; border: 1px solid var(--border); }
+  .kpi-label { font-size: 13px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+  .kpi-value { font-size: 32px; font-weight: 700; letter-spacing: -1px; }
+  .kpi-change { font-size: 13px; margin-top: 4px; }
   .kpi-change.up { color: var(--green); }
   .kpi-change.down { color: var(--red); }
 
-  .chart-card {
-    background: var(--bg-card);
-    border-radius: var(--radius);
-    padding: 24px;
-    border: 1px solid var(--border);
-    margin-bottom: 24px;
-  }
-
-  .chart-card h2 {
-    font-size: 17px;
-    font-weight: 600;
-    margin-bottom: 4px;
-  }
-
-  .chart-card .chart-subtitle {
-    font-size: 13px;
-    color: var(--text-secondary);
-    margin-bottom: 16px;
-  }
-
+  .chart-card { background: var(--bg-card); border-radius: var(--radius); padding: 24px; border: 1px solid var(--border); margin-bottom: 24px; }
+  .chart-card h2 { font-size: 17px; font-weight: 600; margin-bottom: 4px; }
+  .chart-card .chart-subtitle { font-size: 13px; color: var(--text-secondary); margin-bottom: 16px; }
   .chart-container { position: relative; height: 280px; }
 
-  .section-title {
-    font-size: 22px;
-    font-weight: 700;
-    margin: 32px 0 16px;
-    letter-spacing: -0.3px;
-  }
+  .section-title { font-size: 22px; font-weight: 700; margin: 32px 0 16px; letter-spacing: -0.3px; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
 
-  .grid-2 {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-    margin-bottom: 24px;
-  }
-
-  /* Shows table */
-  .shows-table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-
+  .shows-table { width: 100%; border-collapse: collapse; }
   .shows-table th {
-    text-align: left;
-    font-size: 12px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    color: var(--text-secondary);
-    padding: 8px 12px;
-    border-bottom: 1px solid var(--border);
-    font-weight: 500;
+    text-align: left; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px;
+    color: var(--text-secondary); padding: 8px 12px; border-bottom: 1px solid var(--border); font-weight: 500;
   }
-
   .shows-table th.right, .shows-table td.right { text-align: right; }
-
-  .shows-table td {
-    padding: 12px;
-    border-bottom: 1px solid rgba(56, 56, 58, 0.5);
-    font-size: 14px;
-  }
-
+  .shows-table td { padding: 12px; border-bottom: 1px solid rgba(56, 56, 58, 0.5); font-size: 14px; }
   .shows-table tr:hover { background: var(--bg-card-hover); }
+  .shows-table .show-rank { color: var(--text-secondary); font-size: 13px; width: 40px; }
+  .shows-table .show-name { font-weight: 500; }
+  .shows-table .show-channel { color: var(--text-secondary); font-size: 12px; display: block; margin-top: 2px; }
+  .shows-table .metric { font-variant-numeric: tabular-nums; }
+  .shows-table .bar-cell { width: 120px; }
 
-  .shows-table .show-rank {
-    color: var(--text-secondary);
-    font-size: 13px;
-    width: 40px;
-  }
+  .mini-bar { height: 6px; background: var(--accent-dim); border-radius: 3px; overflow: hidden; }
+  .mini-bar-fill { height: 100%; background: var(--accent); border-radius: 3px; transition: width 0.5s ease; }
 
-  .shows-table .show-name {
-    font-weight: 500;
-  }
-
-  .shows-table .show-channel {
-    color: var(--text-secondary);
-    font-size: 12px;
-    display: block;
-    margin-top: 2px;
-  }
-
-  .shows-table .metric {
-    font-variant-numeric: tabular-nums;
-  }
-
-  .shows-table .bar-cell {
-    width: 120px;
-  }
-
-  .mini-bar {
-    height: 6px;
-    background: var(--accent-dim);
-    border-radius: 3px;
-    overflow: hidden;
-  }
-
-  .mini-bar-fill {
-    height: 100%;
-    background: var(--accent);
-    border-radius: 3px;
-    transition: width 0.5s ease;
-  }
-
-  /* Country list */
   .country-list { list-style: none; }
-
-  .country-item {
-    display: flex;
-    align-items: center;
-    padding: 10px 0;
-    border-bottom: 1px solid rgba(56, 56, 58, 0.3);
-  }
-
-  .country-flag {
-    font-size: 20px;
-    margin-right: 12px;
-    width: 28px;
-    text-align: center;
-  }
-
-  .country-name {
-    flex: 1;
-    font-size: 14px;
-    font-weight: 500;
-  }
-
-  .country-metric {
-    font-size: 14px;
-    font-variant-numeric: tabular-nums;
-    color: var(--text-secondary);
-    margin-left: 16px;
-    min-width: 60px;
-    text-align: right;
-  }
-
+  .country-item { display: flex; align-items: center; padding: 10px 0; border-bottom: 1px solid rgba(56, 56, 58, 0.3); }
+  .country-flag { font-size: 20px; margin-right: 12px; width: 28px; text-align: center; }
+  .country-name { flex: 1; font-size: 14px; font-weight: 500; }
+  .country-metric { font-size: 14px; font-variant-numeric: tabular-nums; color: var(--text-secondary); margin-left: 16px; min-width: 60px; text-align: right; }
   .country-metric.primary { color: var(--text); font-weight: 600; }
+  .country-bar { width: 80px; margin-left: 16px; }
 
-  .country-bar {
-    width: 80px;
-    margin-left: 16px;
-  }
-
-  /* Metric toggle buttons */
-  .metric-toggles {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 16px;
-  }
-
+  .metric-toggles { display: flex; gap: 8px; }
   .metric-btn {
-    padding: 6px 14px;
-    border-radius: 16px;
-    border: 1px solid var(--border);
-    background: transparent;
-    color: var(--text-secondary);
-    font-size: 13px;
-    cursor: pointer;
-    transition: all 0.2s;
-    font-family: inherit;
+    padding: 6px 14px; border-radius: 16px; border: 1px solid var(--border);
+    background: transparent; color: var(--text-secondary); font-size: 13px;
+    cursor: pointer; transition: all 0.2s; font-family: inherit;
   }
-
   .metric-btn:hover { border-color: var(--accent); color: var(--text); }
-  .metric-btn.active {
-    background: var(--accent);
-    color: white;
-    border-color: var(--accent);
-  }
+  .metric-btn.active { background: var(--accent); color: white; border-color: var(--accent); }
 
-  .period-selector {
-    display: flex;
-    gap: 8px;
-    margin-left: auto;
+  .search-box {
+    width: 100%; padding: 10px 16px; background: rgba(56, 56, 58, 0.5);
+    border: 1px solid var(--border); border-radius: 8px; color: var(--text);
+    font-size: 14px; font-family: inherit; margin-bottom: 16px; outline: none;
   }
+  .search-box::placeholder { color: var(--text-secondary); }
+  .search-box:focus { border-color: var(--accent); }
 
-  .date-range {
-    font-size: 13px;
-    color: var(--text-secondary);
-    padding: 20px 0 0;
-    text-align: center;
-  }
-
+  .date-range { font-size: 13px; color: var(--text-secondary); padding: 20px 0 0; text-align: center; }
   .tab-content { display: none; }
   .tab-content.active { display: block; }
 
   /* Show detail modal */
   .modal-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.7);
-    z-index: 100;
-    backdrop-filter: blur(8px);
-    justify-content: center;
-    align-items: center;
+    display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7);
+    z-index: 100; backdrop-filter: blur(8px); justify-content: center; align-items: center;
   }
-
   .modal-overlay.active { display: flex; }
-
   .modal {
-    background: var(--bg-card);
-    border-radius: 16px;
-    border: 1px solid var(--border);
-    width: 90%;
-    max-width: 700px;
-    max-height: 80vh;
-    overflow-y: auto;
-    padding: 32px;
+    background: var(--bg-card); border-radius: 16px; border: 1px solid var(--border);
+    width: 90%; max-width: 700px; max-height: 80vh; overflow-y: auto; padding: 32px;
   }
-
-  .modal h2 {
-    font-size: 22px;
-    margin-bottom: 4px;
-  }
-
-  .modal .modal-subtitle {
-    color: var(--text-secondary);
-    font-size: 14px;
-    margin-bottom: 24px;
-  }
-
-  .modal-close {
-    float: right;
-    background: none;
-    border: none;
-    color: var(--text-secondary);
-    font-size: 24px;
-    cursor: pointer;
-    padding: 4px;
-    line-height: 1;
-  }
-
+  .modal h2 { font-size: 22px; margin-bottom: 4px; }
+  .modal .modal-subtitle { color: var(--text-secondary); font-size: 14px; margin-bottom: 24px; }
+  .modal-close { float: right; background: none; border: none; color: var(--text-secondary); font-size: 24px; cursor: pointer; padding: 4px; line-height: 1; }
   .modal-close:hover { color: var(--text); }
-
-  .modal-kpis {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 12px;
-    margin-bottom: 24px;
-  }
-
-  .modal-kpi {
-    text-align: center;
-    padding: 12px;
-    background: rgba(56, 56, 58, 0.3);
-    border-radius: 8px;
-  }
-
+  .modal-kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 24px; }
+  .modal-kpi { text-align: center; padding: 12px; background: rgba(56, 56, 58, 0.3); border-radius: 8px; }
   .modal-kpi .label { font-size: 11px; color: var(--text-secondary); text-transform: uppercase; }
   .modal-kpi .value { font-size: 22px; font-weight: 700; margin-top: 4px; }
 
-  .search-box {
-    width: 100%;
-    padding: 10px 16px;
-    background: rgba(56, 56, 58, 0.5);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    color: var(--text);
-    font-size: 14px;
-    font-family: inherit;
-    margin-bottom: 16px;
-    outline: none;
+  /* Pagination */
+  .pagination { display: flex; align-items: center; gap: 8px; justify-content: center; padding: 16px; }
+  .page-btn {
+    padding: 6px 12px; border-radius: 8px; border: 1px solid var(--border);
+    background: transparent; color: var(--text-secondary); font-size: 13px;
+    cursor: pointer; font-family: inherit;
   }
-
-  .search-box::placeholder { color: var(--text-secondary); }
-  .search-box:focus { border-color: var(--accent); }
+  .page-btn:hover { border-color: var(--accent); color: var(--text); }
+  .page-btn.active { background: var(--accent); color: white; border-color: var(--accent); }
+  .page-btn:disabled { opacity: 0.3; cursor: default; }
+  .page-info { font-size: 13px; color: var(--text-secondary); }
 
   @media (max-width: 768px) {
     .kpi-row { grid-template-columns: repeat(2, 1fr); }
@@ -418,15 +178,27 @@
 </div>
 
 <div class="container">
+  <!-- Date Range Selector (shared across tabs) -->
+  <div class="range-bar" id="rangeBar">
+    <button class="range-btn" data-days="7">7D</button>
+    <button class="range-btn" data-days="14">14D</button>
+    <button class="range-btn active" data-days="30">30D</button>
+    <button class="range-btn" data-days="60">60D</button>
+    <button class="range-btn" data-days="90">90D</button>
+    <button class="range-btn" data-days="180">6M</button>
+    <button class="range-btn" data-days="365">1Y</button>
+    <button class="range-btn" data-days="0">All</button>
+    <span class="range-label" id="rangeLabel"></span>
+  </div>
+
   <!-- OVERVIEW TAB -->
   <div class="tab-content active" id="tab-overview">
     <div class="kpi-row" id="kpi-row"></div>
-
     <div class="chart-card">
       <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px;">
         <div>
           <h2>Listening Trends</h2>
-          <div class="chart-subtitle">Daily performance over time</div>
+          <div class="chart-subtitle" id="trendSubtitle">Daily performance over time</div>
         </div>
         <div class="metric-toggles" id="chart-toggles">
           <button class="metric-btn active" data-metric="totalPlays">Plays</button>
@@ -435,35 +207,27 @@
           <button class="metric-btn" data-metric="engagedListeners">Engaged</button>
         </div>
       </div>
-      <div class="chart-container">
-        <canvas id="trendChart"></canvas>
-      </div>
+      <div class="chart-container"><canvas id="trendChart"></canvas></div>
     </div>
-
     <div class="grid-2">
       <div class="chart-card">
         <h2>Top Shows</h2>
-        <div class="chart-subtitle">By listening hours (last 7 days)</div>
-        <div class="chart-container" style="height: 300px;">
-          <canvas id="topShowsChart"></canvas>
-        </div>
+        <div class="chart-subtitle">By listening hours (selected range)</div>
+        <div class="chart-container" style="height: 300px;"><canvas id="topShowsChart"></canvas></div>
       </div>
       <div class="chart-card">
         <h2>Top Countries</h2>
-        <div class="chart-subtitle">By listening hours</div>
-        <div class="chart-container" style="height: 300px;">
-          <canvas id="countriesChart"></canvas>
-        </div>
+        <div class="chart-subtitle">By listening hours (selected range)</div>
+        <div class="chart-container" style="height: 300px;"><canvas id="countriesChart"></canvas></div>
       </div>
     </div>
-
     <div class="date-range" id="dateRange"></div>
   </div>
 
   <!-- SHOWS TAB -->
   <div class="tab-content" id="tab-shows">
     <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:16px;">
-      <h2 class="section-title" style="margin:0">All Shows</h2>
+      <h2 class="section-title" style="margin:0">All Shows <span id="showCount" style="font-size:14px;color:var(--text-secondary);font-weight:400;"></span></h2>
       <div class="metric-toggles" id="show-sort-toggles">
         <button class="metric-btn active" data-sort="hours">Hours</button>
         <button class="metric-btn" data-sort="plays">Plays</button>
@@ -487,15 +251,14 @@
         <tbody id="showsBody"></tbody>
       </table>
     </div>
+    <div class="pagination" id="showsPagination"></div>
   </div>
 
   <!-- GEOGRAPHY TAB -->
   <div class="tab-content" id="tab-geography">
-    <h2 class="section-title">Listening by Country</h2>
+    <h2 class="section-title">Listening by Country <span id="countryCount" style="font-size:14px;color:var(--text-secondary);font-weight:400;"></span></h2>
     <div class="chart-card">
-      <div class="chart-container" style="height:400px;">
-        <canvas id="geoBarChart"></canvas>
-      </div>
+      <div class="chart-container" style="height:400px;"><canvas id="geoBarChart"></canvas></div>
     </div>
     <div class="chart-card">
       <ul class="country-list" id="countryList"></ul>
@@ -516,339 +279,302 @@
 </div>
 
 <script>
-// Country code → flag emoji + name
 const COUNTRIES = {
-  AE:'🇦🇪 UAE',AO:'🇦🇴 Angola',AT:'🇦🇹 Austria',AU:'🇦🇺 Australia',BR:'🇧🇷 Brazil',
-  CA:'🇨🇦 Canada',CH:'🇨🇭 Switzerland',CI:'🇨🇮 Ivory Coast',DE:'🇩🇪 Germany',
-  DK:'🇩🇰 Denmark',ES:'🇪🇸 Spain',FR:'🇫🇷 France',GB:'🇬🇧 United Kingdom',
-  GH:'🇬🇭 Ghana',HK:'🇭🇰 Hong Kong',IE:'🇮🇪 Ireland',IN:'🇮🇳 India',IT:'🇮🇹 Italy',
-  JP:'🇯🇵 Japan',KE:'🇰🇪 Kenya',KH:'🇰🇭 Cambodia',KR:'🇰🇷 South Korea',
-  MX:'🇲🇽 Mexico',NG:'🇳🇬 Nigeria',NL:'🇳🇱 Netherlands',NO:'🇳🇴 Norway',
-  NZ:'🇳🇿 New Zealand',PH:'🇵🇭 Philippines',PK:'🇵🇰 Pakistan',RU:'🇷🇺 Russia',
-  SA:'🇸🇦 Saudi Arabia',SE:'🇸🇪 Sweden',SG:'🇸🇬 Singapore',SI:'🇸🇮 Slovenia',
-  TH:'🇹🇭 Thailand',TN:'🇹🇳 Tunisia',TW:'🇹🇼 Taiwan',US:'🇺🇸 United States',
-  VN:'🇻🇳 Vietnam',ZA:'🇿🇦 South Africa',AI:'🇦🇮 Anguilla',CO:'🇨🇴 Colombia',
-  CZ:'🇨🇿 Czechia',FI:'🇫🇮 Finland',ID:'🇮🇩 Indonesia',IL:'🇮🇱 Israel',
-  MY:'🇲🇾 Malaysia',PE:'🇵🇪 Peru',PL:'🇵🇱 Poland',PT:'🇵🇹 Portugal',RO:'🇷🇴 Romania',
-  TR:'🇹🇷 Turkey',UA:'🇺🇦 Ukraine'
+  AE:'🇦🇪 UAE',AG:'🇦🇬 Antigua',AI:'🇦🇮 Anguilla',AO:'🇦🇴 Angola',AR:'🇦🇷 Argentina',AT:'🇦🇹 Austria',AU:'🇦🇺 Australia',
+  BB:'🇧🇧 Barbados',BD:'🇧🇩 Bangladesh',BE:'🇧🇪 Belgium',BG:'🇧🇬 Bulgaria',BH:'🇧🇭 Bahrain',BN:'🇧🇳 Brunei',BO:'🇧🇴 Bolivia',BR:'🇧🇷 Brazil',BW:'🇧🇼 Botswana',
+  CA:'🇨🇦 Canada',CH:'🇨🇭 Switzerland',CI:'🇨🇮 Ivory Coast',CL:'🇨🇱 Chile',CM:'🇨🇲 Cameroon',CN:'🇨🇳 China',CO:'🇨🇴 Colombia',CR:'🇨🇷 Costa Rica',CZ:'🇨🇿 Czechia',
+  DE:'🇩🇪 Germany',DK:'🇩🇰 Denmark',DO:'🇩🇴 Dominican Republic',
+  EC:'🇪🇨 Ecuador',EE:'🇪🇪 Estonia',EG:'🇪🇬 Egypt',ES:'🇪🇸 Spain',
+  FI:'🇫🇮 Finland',FJ:'🇫🇯 Fiji',FR:'🇫🇷 France',
+  GB:'🇬🇧 United Kingdom',GH:'🇬🇭 Ghana',GR:'🇬🇷 Greece',GT:'🇬🇹 Guatemala',GY:'🇬🇾 Guyana',
+  HK:'🇭🇰 Hong Kong',HN:'🇭🇳 Honduras',HR:'🇭🇷 Croatia',HU:'🇭🇺 Hungary',
+  ID:'🇮🇩 Indonesia',IE:'🇮🇪 Ireland',IL:'🇮🇱 Israel',IN:'🇮🇳 India',IS:'🇮🇸 Iceland',IT:'🇮🇹 Italy',
+  JM:'🇯🇲 Jamaica',JO:'🇯🇴 Jordan',JP:'🇯🇵 Japan',
+  KE:'🇰🇪 Kenya',KH:'🇰🇭 Cambodia',KR:'🇰🇷 South Korea',KW:'🇰🇼 Kuwait',KZ:'🇰🇿 Kazakhstan',
+  LB:'🇱🇧 Lebanon',LK:'🇱🇰 Sri Lanka',LT:'🇱🇹 Lithuania',LU:'🇱🇺 Luxembourg',LV:'🇱🇻 Latvia',
+  MG:'🇲🇬 Madagascar',MO:'🇲🇴 Macau',MT:'🇲🇹 Malta',MU:'🇲🇺 Mauritius',MW:'🇲🇼 Malawi',MX:'🇲🇽 Mexico',MY:'🇲🇾 Malaysia',MZ:'🇲🇿 Mozambique',
+  NA:'🇳🇦 Namibia',NG:'🇳🇬 Nigeria',NI:'🇳🇮 Nicaragua',NL:'🇳🇱 Netherlands',NO:'🇳🇴 Norway',NZ:'🇳🇿 New Zealand',
+  OM:'🇴🇲 Oman',PA:'🇵🇦 Panama',PE:'🇵🇪 Peru',PH:'🇵🇭 Philippines',PK:'🇵🇰 Pakistan',PL:'🇵🇱 Poland',PT:'🇵🇹 Portugal',PY:'🇵🇾 Paraguay',
+  QA:'🇶🇦 Qatar',RO:'🇷🇴 Romania',RU:'🇷🇺 Russia',RW:'🇷🇼 Rwanda',
+  SA:'🇸🇦 Saudi Arabia',SE:'🇸🇪 Sweden',SG:'🇸🇬 Singapore',SI:'🇸🇮 Slovenia',SK:'🇸🇰 Slovakia',SV:'🇸🇻 El Salvador',
+  TH:'🇹🇭 Thailand',TN:'🇹🇳 Tunisia',TR:'🇹🇷 Turkey',TT:'🇹🇹 Trinidad',TW:'🇹🇼 Taiwan',TZ:'🇹🇿 Tanzania',
+  UA:'🇺🇦 Ukraine',UG:'🇺🇬 Uganda',US:'🇺🇸 United States',UY:'🇺🇾 Uruguay',UZ:'🇺🇿 Uzbekistan',
+  VE:'🇻🇪 Venezuela',VN:'🇻🇳 Vietnam',ZA:'🇿🇦 South Africa',ZW:'🇿🇼 Zimbabwe'
 };
+function countryName(c) { return COUNTRIES[c] || `🏳️ ${c}`; }
+function fmt(n) { if (n>=1e6) return (n/1e6).toFixed(1)+'M'; if (n>=1e3) return (n/1e3).toFixed(1)+'K'; return n.toLocaleString(); }
+function fmtH(h) { return h>=1e3 ? (h/1e3).toFixed(1)+'K' : h.toFixed(1); }
 
-function countryName(code) {
-  return COUNTRIES[code] || `🏳️ ${code}`;
-}
-
-function fmt(n) {
-  if (n >= 1000000) return (n/1000000).toFixed(1) + 'M';
-  if (n >= 1000) return (n/1000).toFixed(1) + 'K';
-  return n.toLocaleString();
-}
-
-function fmtHours(h) {
-  return h >= 1000 ? (h/1000).toFixed(1) + 'K' : h.toFixed(1);
-}
-
-let DATA;
+let DATA, selectedDays = 30, currentMetric = 'totalPlays', showSort = 'hours', showPage = 0;
+const SHOWS_PER_PAGE = 50;
 
 async function init() {
-  const resp = await fetch('apple-podcasts-data.json');
-  DATA = await resp.json();
-  renderOverview();
-  renderShows('hours');
-  renderGeography();
+  const r = await fetch('apple-podcasts-data.json');
+  DATA = await r.json();
+  setupRangeButtons();
   setupTabs();
-  setupSearch();
+  refresh();
 }
 
-function renderOverview() {
-  const ww = DATA.worldwide;
-  const latest = ww[ww.length - 1];
-  const prev = ww[ww.length - 8] || ww[0]; // ~1 week ago
+function getFiltered() {
+  if (selectedDays === 0) return DATA.worldwide;
+  return DATA.worldwide.slice(-selectedDays);
+}
 
-  // Sum last 7 days and previous 7 days for comparison
-  const last7 = ww.slice(-7);
-  const prev7 = ww.slice(-14, -7);
+function refresh() {
+  renderKPIs();
+  renderTrendChart(currentMetric);
+  renderTopShows();
+  renderTopCountries();
+  renderShows(showSort);
+  renderGeography();
+  updateRangeLabel();
+}
 
-  const sumLast = (arr, key) => arr.reduce((s, d) => s + d[key], 0);
-  const metrics = [
-    { label: 'Total Plays', key: 'totalPlays', fmt: fmt, color: 'var(--accent)' },
-    { label: 'Listeners', key: 'totalListeners', fmt: fmt, color: 'var(--blue)' },
-    { label: 'Listening Hours', key: 'totalHours', fmt: fmtHours, color: 'var(--green)' },
-    { label: 'Engaged Listeners', key: 'engagedListeners', fmt: fmt, color: 'var(--orange)' },
-  ];
-
-  const row = document.getElementById('kpi-row');
-  row.innerHTML = metrics.map(m => {
-    const cur = sumLast(last7, m.key);
-    const pre = sumLast(prev7, m.key);
-    const pct = pre > 0 ? ((cur - pre) / pre * 100).toFixed(1) : 0;
-    const cls = pct >= 0 ? 'up' : 'down';
-    const arrow = pct >= 0 ? '↑' : '↓';
-    return `
-      <div class="kpi-card">
-        <div class="kpi-label">${m.label} (7d)</div>
-        <div class="kpi-value" style="color:${m.color}">${m.fmt(cur)}</div>
-        <div class="kpi-change ${cls}">${arrow} ${Math.abs(pct)}% vs prev 7d</div>
-      </div>`;
-  }).join('');
-
-  // Trend chart
-  renderTrendChart('totalPlays');
-
-  // Top shows chart
-  const topShows = DATA.shows.slice(0, 8);
-  const topCtx = document.getElementById('topShowsChart').getContext('2d');
-  new Chart(topCtx, {
-    type: 'bar',
-    data: {
-      labels: topShows.map(s => s.name.length > 25 ? s.name.slice(0,25)+'…' : s.name),
-      datasets: [{
-        data: topShows.map(s => s.hours),
-        backgroundColor: 'rgba(191, 90, 242, 0.6)',
-        borderColor: 'rgba(191, 90, 242, 1)',
-        borderWidth: 1,
-        borderRadius: 4,
-      }]
-    },
-    options: {
-      indexAxis: 'y',
-      responsive: true, maintainAspectRatio: false,
-      plugins: { legend: { display: false },
-        tooltip: { callbacks: { label: ctx => `${ctx.raw.toFixed(1)} hours` } }
-      },
-      scales: {
-        x: { grid: { color: 'rgba(56,56,58,0.3)' }, ticks: { color: '#8e8e93' } },
-        y: { grid: { display: false }, ticks: { color: '#f5f5f7', font: { size: 11 } } }
-      }
-    }
-  });
-
-  // Countries chart
-  const topCountries = DATA.countries.slice(0, 10);
-  const cCtx = document.getElementById('countriesChart').getContext('2d');
-  new Chart(cCtx, {
-    type: 'doughnut',
-    data: {
-      labels: topCountries.map(c => countryName(c.country).replace(/^[^ ]+ /, '')),
-      datasets: [{
-        data: topCountries.map(c => c.totalHours),
-        backgroundColor: [
-          '#bf5af2','#0a84ff','#30d158','#ff9f0a','#ff453a',
-          '#5e5ce6','#64d2ff','#ac8e68','#ff375f','#ffd60a'
-        ],
-        borderWidth: 0,
-      }]
-    },
-    options: {
-      responsive: true, maintainAspectRatio: false,
-      plugins: {
-        legend: { position: 'right', labels: { color: '#f5f5f7', font: { size: 12 }, padding: 8 } },
-        tooltip: { callbacks: { label: ctx => ` ${ctx.raw.toFixed(1)} hours` } }
-      }
-    }
-  });
-
-  // Date range
+function updateRangeLabel() {
+  const f = getFiltered();
+  const label = selectedDays === 0 ? 'All time' : `Last ${selectedDays} days`;
+  document.getElementById('rangeLabel').textContent =
+    `${label}: ${f[0]?.date || '?'} → ${f[f.length-1]?.date || '?'} (${f.length} days)`;
   document.getElementById('dateRange').textContent =
-    `Data from ${DATA.dateRange.from} to ${DATA.dateRange.to} · ${DATA.worldwide.length} days · ${DATA.totalShows} shows`;
+    `Full dataset: ${DATA.dateRange.from} to ${DATA.dateRange.to} · ${DATA.worldwide.length} days · ${DATA.totalShows} shows`;
+}
 
-  // Chart toggle buttons
-  document.querySelectorAll('#chart-toggles .metric-btn').forEach(btn => {
+function setupRangeButtons() {
+  document.querySelectorAll('#rangeBar .range-btn').forEach(btn => {
     btn.addEventListener('click', () => {
-      document.querySelectorAll('#chart-toggles .metric-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('#rangeBar .range-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
-      renderTrendChart(btn.dataset.metric);
+      selectedDays = parseInt(btn.dataset.days);
+      showPage = 0;
+      refresh();
     });
   });
 }
 
-let trendChartInstance;
-function renderTrendChart(metric) {
-  if (trendChartInstance) trendChartInstance.destroy();
-  const ctx = document.getElementById('trendChart').getContext('2d');
-  const labels = DATA.worldwide.map(d => d.date.slice(5)); // MM-DD
-  const values = DATA.worldwide.map(d => d[metric]);
+function renderKPIs() {
+  const ww = getFiltered();
+  const half = Math.floor(ww.length / 2);
+  const cur = ww.slice(half);
+  const prev = ww.slice(0, half);
+  const sum = (a, k) => a.reduce((s, d) => s + d[k], 0);
+  const periodLabel = selectedDays === 0 ? 'All' : `${cur.length}d`;
 
+  const metrics = [
+    { label: `Total Plays (${periodLabel})`, key: 'totalPlays', fmt: fmt, color: 'var(--accent)' },
+    { label: `Listeners (${periodLabel})`, key: 'totalListeners', fmt: fmt, color: 'var(--blue)' },
+    { label: `Listening Hours (${periodLabel})`, key: 'totalHours', fmt: fmtH, color: 'var(--green)' },
+    { label: `Engaged Listeners (${periodLabel})`, key: 'engagedListeners', fmt: fmt, color: 'var(--orange)' },
+  ];
+  document.getElementById('kpi-row').innerHTML = metrics.map(m => {
+    const c = sum(cur, m.key), p = sum(prev, m.key);
+    const pct = p > 0 ? ((c - p) / p * 100).toFixed(1) : 0;
+    return `<div class="kpi-card">
+      <div class="kpi-label">${m.label}</div>
+      <div class="kpi-value" style="color:${m.color}">${m.fmt(c)}</div>
+      <div class="kpi-change ${pct>=0?'up':'down'}">${pct>=0?'↑':'↓'} ${Math.abs(pct)}% vs prev period</div>
+    </div>`;
+  }).join('');
+}
+
+let trendChart;
+function renderTrendChart(metric) {
+  currentMetric = metric;
+  if (trendChart) trendChart.destroy();
+  const ww = getFiltered();
+  const ctx = document.getElementById('trendChart').getContext('2d');
   const colors = {
     totalPlays: { line: '#bf5af2', fill: 'rgba(191,90,242,0.1)' },
     totalListeners: { line: '#0a84ff', fill: 'rgba(10,132,255,0.1)' },
     totalHours: { line: '#30d158', fill: 'rgba(48,209,88,0.1)' },
     engagedListeners: { line: '#ff9f0a', fill: 'rgba(255,159,10,0.1)' },
   };
-
-  const c = colors[metric] || colors.totalPlays;
-
-  trendChartInstance = new Chart(ctx, {
+  const c = colors[metric];
+  trendChart = new Chart(ctx, {
     type: 'line',
     data: {
-      labels,
+      labels: ww.map(d => d.date.slice(5)),
       datasets: [{
-        data: values,
-        borderColor: c.line,
-        backgroundColor: c.fill,
-        fill: true,
-        tension: 0.3,
-        pointRadius: 2,
-        pointHoverRadius: 5,
-        borderWidth: 2,
+        data: ww.map(d => d[metric]),
+        borderColor: c.line, backgroundColor: c.fill, fill: true,
+        tension: 0.3, pointRadius: ww.length > 90 ? 0 : 2, pointHoverRadius: 5, borderWidth: 2,
       }]
     },
     options: {
       responsive: true, maintainAspectRatio: false,
       plugins: { legend: { display: false },
-        tooltip: {
-          backgroundColor: '#2c2c2e',
-          titleColor: '#f5f5f7',
-          bodyColor: '#f5f5f7',
-          borderColor: '#38383a',
-          borderWidth: 1,
-          callbacks: {
-            label: ctx => {
-              const v = ctx.raw;
-              return metric === 'totalHours' ? `${v.toFixed(1)} hours` : fmt(v);
-            }
-          }
+        tooltip: { backgroundColor:'#2c2c2e', titleColor:'#f5f5f7', bodyColor:'#f5f5f7', borderColor:'#38383a', borderWidth:1,
+          callbacks: { label: ctx => metric==='totalHours' ? `${ctx.raw.toFixed(1)} hours` : fmt(ctx.raw) }
         }
       },
       scales: {
-        x: { grid: { color: 'rgba(56,56,58,0.3)' }, ticks: { color: '#8e8e93', maxTicksLimit: 15, font: { size: 11 } } },
-        y: { grid: { color: 'rgba(56,56,58,0.3)' }, ticks: { color: '#8e8e93',
-          callback: v => metric === 'totalHours' ? fmtHours(v) : fmt(v) } }
+        x: { grid:{color:'rgba(56,56,58,0.3)'}, ticks:{color:'#8e8e93', maxTicksLimit:15, font:{size:11}} },
+        y: { grid:{color:'rgba(56,56,58,0.3)'}, ticks:{color:'#8e8e93', callback: v => metric==='totalHours' ? fmtH(v) : fmt(v)} }
       },
       interaction: { intersect: false, mode: 'index' }
+    }
+  });
+  document.querySelectorAll('#chart-toggles .metric-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.metric === metric);
+    btn.onclick = () => renderTrendChart(btn.dataset.metric);
+  });
+}
+
+let topShowsChart;
+function renderTopShows() {
+  if (topShowsChart) topShowsChart.destroy();
+  const shows = DATA.shows.slice(0, 8);
+  const ctx = document.getElementById('topShowsChart').getContext('2d');
+  topShowsChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: shows.map(s => s.name.length>28 ? s.name.slice(0,28)+'…' : s.name),
+      datasets: [{ data: shows.map(s => s.hours), backgroundColor:'rgba(191,90,242,0.6)', borderColor:'rgba(191,90,242,1)', borderWidth:1, borderRadius:4 }]
+    },
+    options: {
+      indexAxis:'y', responsive:true, maintainAspectRatio:false,
+      plugins: { legend:{display:false}, tooltip:{callbacks:{label:ctx=>`${ctx.raw.toFixed(1)} hours`}} },
+      scales: { x:{grid:{color:'rgba(56,56,58,0.3)'},ticks:{color:'#8e8e93'}}, y:{grid:{display:false},ticks:{color:'#f5f5f7',font:{size:11}}} }
+    }
+  });
+}
+
+let countriesChart;
+function renderTopCountries() {
+  if (countriesChart) countriesChart.destroy();
+  const top = DATA.countries.slice(0, 10);
+  const ctx = document.getElementById('countriesChart').getContext('2d');
+  countriesChart = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: top.map(c => countryName(c.country).replace(/^[^ ]+ /,'')),
+      datasets: [{ data: top.map(c=>c.totalHours), backgroundColor:['#bf5af2','#0a84ff','#30d158','#ff9f0a','#ff453a','#5e5ce6','#64d2ff','#ac8e68','#ff375f','#ffd60a'], borderWidth:0 }]
+    },
+    options: {
+      responsive:true, maintainAspectRatio:false,
+      plugins: { legend:{position:'right',labels:{color:'#f5f5f7',font:{size:12},padding:8}}, tooltip:{callbacks:{label:ctx=>` ${ctx.raw.toFixed(1)} hours`}} }
     }
   });
 }
 
 function renderShows(sortKey) {
-  const shows = [...DATA.shows].sort((a, b) => b[sortKey] - a[sortKey]);
-  const maxVal = shows[0]?.[sortKey] || 1;
-  const body = document.getElementById('showsBody');
+  showSort = sortKey;
+  const shows = [...DATA.shows].sort((a,b) => b[sortKey] - a[sortKey]);
+  const q = (document.getElementById('showSearch').value||'').toLowerCase();
+  const filtered = q ? shows.filter(s => s.name.toLowerCase().includes(q) || (s.channels||[]).join(' ').toLowerCase().includes(q)) : shows;
 
-  body.innerHTML = shows.map((s, i) => `
-    <tr class="show-row" data-idx="${DATA.shows.indexOf(s)}">
-      <td class="show-rank">${i + 1}</td>
-      <td>
-        <span class="show-name">${s.name}</span>
-        <span class="show-channel">${s.channels.join(', ') || '—'}</span>
-      </td>
-      <td class="right metric">${fmtHours(s.hours)}</td>
+  const totalPages = Math.ceil(filtered.length / SHOWS_PER_PAGE);
+  if (showPage >= totalPages) showPage = Math.max(0, totalPages - 1);
+  const start = showPage * SHOWS_PER_PAGE;
+  const page = filtered.slice(start, start + SHOWS_PER_PAGE);
+  const maxVal = filtered[0]?.[sortKey] || 1;
+
+  document.getElementById('showCount').textContent = `(${filtered.length} shows)`;
+
+  document.getElementById('showsBody').innerHTML = page.map((s, i) => `
+    <tr class="show-row" data-show-id="${s.id}" style="cursor:pointer">
+      <td class="show-rank">${start + i + 1}</td>
+      <td><span class="show-name">${s.name}</span><span class="show-channel">${(s.channels||[]).join(', ') || '—'}</span></td>
+      <td class="right metric">${fmtH(s.hours)}</td>
       <td class="right metric">${fmt(s.plays)}</td>
       <td class="right metric">${fmt(s.listeners)}</td>
       <td class="right metric">${fmt(s.engaged)}</td>
-      <td class="bar-cell">
-        <div class="mini-bar">
-          <div class="mini-bar-fill" style="width:${(s[sortKey] / maxVal * 100).toFixed(1)}%"></div>
-        </div>
-      </td>
-    </tr>
-  `).join('');
+      <td class="bar-cell"><div class="mini-bar"><div class="mini-bar-fill" style="width:${(s[sortKey]/maxVal*100).toFixed(1)}%"></div></div></td>
+    </tr>`).join('');
+
+  // Pagination
+  let pagHtml = '';
+  if (totalPages > 1) {
+    pagHtml += `<button class="page-btn" onclick="changePage(-1)" ${showPage===0?'disabled':''}>← Prev</button>`;
+    for (let p = 0; p < totalPages; p++) {
+      if (totalPages <= 7 || p < 2 || p > totalPages-3 || Math.abs(p-showPage) < 2) {
+        pagHtml += `<button class="page-btn ${p===showPage?'active':''}" onclick="goPage(${p})">${p+1}</button>`;
+      } else if (p === 2 && showPage > 3) {
+        pagHtml += '<span class="page-info">…</span>';
+      } else if (p === totalPages-3 && showPage < totalPages-4) {
+        pagHtml += '<span class="page-info">…</span>';
+      }
+    }
+    pagHtml += `<button class="page-btn" onclick="changePage(1)" ${showPage>=totalPages-1?'disabled':''}>Next →</button>`;
+  }
+  document.getElementById('showsPagination').innerHTML = pagHtml;
 
   // Row click → modal
   document.querySelectorAll('.show-row').forEach(row => {
-    row.style.cursor = 'pointer';
-    row.addEventListener('click', () => openShowModal(DATA.shows[parseInt(row.dataset.idx)]));
+    row.addEventListener('click', () => {
+      const show = DATA.shows.find(s => s.id === row.dataset.showId);
+      if (show) openShowModal(show);
+    });
   });
 
   // Sort toggles
   document.querySelectorAll('#show-sort-toggles .metric-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('#show-sort-toggles .metric-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      renderShows(btn.dataset.sort);
-    });
+    btn.classList.toggle('active', btn.dataset.sort === sortKey);
+    btn.onclick = () => { showPage = 0; renderShows(btn.dataset.sort); };
   });
 }
+
+window.changePage = d => { showPage += d; renderShows(showSort); };
+window.goPage = p => { showPage = p; renderShows(showSort); };
 
 function openShowModal(show) {
   document.getElementById('modalTitle').textContent = show.name;
   document.getElementById('modalSubtitle').textContent =
-    `${show.channels.join(', ') || 'Direct'} · ${show.countries.length} countries · ${show.days} days of data`;
-
+    `${(show.channels||[]).join(', ') || 'Direct'} · ${(show.countries||[]).length} countries · ${show.days} days of data`;
   document.getElementById('modalKpis').innerHTML = [
-    { label: 'Hours', value: fmtHours(show.hours) },
-    { label: 'Plays', value: fmt(show.plays) },
-    { label: 'Listeners', value: fmt(show.listeners) },
-    { label: 'Engaged', value: fmt(show.engaged) },
-  ].map(k => `
-    <div class="modal-kpi">
-      <div class="label">${k.label}</div>
-      <div class="value">${k.value}</div>
-    </div>
-  `).join('');
+    {l:'Hours',v:fmtH(show.hours)},{l:'Plays',v:fmt(show.plays)},{l:'Listeners',v:fmt(show.listeners)},{l:'Engaged',v:fmt(show.engaged)}
+  ].map(k=>`<div class="modal-kpi"><div class="label">${k.l}</div><div class="value">${k.v}</div></div>`).join('');
 
-  const countries = (show.countryBreakdown || []).sort((a, b) => b.hours - a.hours);
-  const maxH = countries[0]?.hours || 1;
-
-  document.getElementById('modalCountries').innerHTML = countries.length
-    ? countries.map(c => `
-      <li class="country-item">
+  const cb = (show.countryBreakdown||[]).sort((a,b)=>b.hours-a.hours);
+  const mx = cb[0]?.hours||1;
+  document.getElementById('modalCountries').innerHTML = cb.length
+    ? cb.map(c=>`<li class="country-item">
         <span class="country-flag">${countryName(c.country).split(' ')[0]}</span>
-        <span class="country-name">${countryName(c.country).replace(/^[^ ]+ /, '')}</span>
+        <span class="country-name">${countryName(c.country).replace(/^[^ ]+ /,'')}</span>
         <span class="country-metric">${fmt(c.plays)} plays</span>
         <span class="country-metric">${fmt(c.listeners)} listeners</span>
-        <span class="country-metric primary">${fmtHours(c.hours)}h</span>
-        <div class="country-bar">
-          <div class="mini-bar"><div class="mini-bar-fill" style="width:${(c.hours/maxH*100).toFixed(1)}%"></div></div>
-        </div>
+        <span class="country-metric primary">${fmtH(c.hours)}h</span>
+        <div class="country-bar"><div class="mini-bar"><div class="mini-bar-fill" style="width:${(c.hours/mx*100).toFixed(1)}%"></div></div></div>
       </li>`).join('')
     : '<li style="padding:16px;color:var(--text-secondary);">No country breakdown available</li>';
-
   document.getElementById('showModal').classList.add('active');
 }
 
-document.getElementById('modalClose').addEventListener('click', () => {
-  document.getElementById('showModal').classList.remove('active');
-});
-document.getElementById('showModal').addEventListener('click', e => {
-  if (e.target === e.currentTarget) document.getElementById('showModal').classList.remove('active');
-});
+document.getElementById('modalClose').addEventListener('click', () => document.getElementById('showModal').classList.remove('active'));
+document.getElementById('showModal').addEventListener('click', e => { if(e.target===e.currentTarget) e.target.classList.remove('active'); });
 
+let geoChart;
 function renderGeography() {
+  if (geoChart) geoChart.destroy();
   const countries = DATA.countries;
+  document.getElementById('countryCount').textContent = `(${countries.length} countries)`;
   const maxH = countries[0]?.totalHours || 1;
+  const palette = ['#bf5af2','#0a84ff','#30d158','#ff9f0a','#ff453a','#5e5ce6','#64d2ff','#ac8e68'];
 
-  // Bar chart
   const ctx = document.getElementById('geoBarChart').getContext('2d');
-  new Chart(ctx, {
+  geoChart = new Chart(ctx, {
     type: 'bar',
     data: {
-      labels: countries.map(c => countryName(c.country).replace(/^[^ ]+ /, '')),
-      datasets: [{
-        label: 'Listening Hours',
-        data: countries.map(c => c.totalHours),
-        backgroundColor: countries.map((_, i) => {
-          const colors = ['#bf5af2','#0a84ff','#30d158','#ff9f0a','#ff453a','#5e5ce6','#64d2ff','#ac8e68'];
-          return colors[i % colors.length] + '99';
-        }),
-        borderRadius: 4,
-      }]
+      labels: countries.map(c => countryName(c.country).replace(/^[^ ]+ /,'')),
+      datasets: [{ label:'Listening Hours', data:countries.map(c=>c.totalHours),
+        backgroundColor: countries.map((_,i) => palette[i%palette.length]+'99'), borderRadius:4 }]
     },
     options: {
-      responsive: true, maintainAspectRatio: false,
-      plugins: { legend: { display: false },
-        tooltip: { callbacks: { label: ctx => ` ${ctx.raw.toFixed(1)} hours` } }
-      },
-      scales: {
-        x: { grid: { display: false }, ticks: { color: '#8e8e93', font: { size: 10 }, maxRotation: 45 } },
-        y: { grid: { color: 'rgba(56,56,58,0.3)' }, ticks: { color: '#8e8e93' } }
-      }
+      responsive:true, maintainAspectRatio:false,
+      plugins: { legend:{display:false}, tooltip:{callbacks:{label:ctx=>` ${ctx.raw.toFixed(1)} hours`}} },
+      scales: { x:{grid:{display:false},ticks:{color:'#8e8e93',font:{size:10},maxRotation:45}}, y:{grid:{color:'rgba(56,56,58,0.3)'},ticks:{color:'#8e8e93'}} }
     }
   });
 
-  // Country list
-  const list = document.getElementById('countryList');
-  list.innerHTML = countries.map(c => `
+  document.getElementById('countryList').innerHTML = countries.map(c => `
     <li class="country-item">
       <span class="country-flag">${countryName(c.country).split(' ')[0]}</span>
-      <span class="country-name">${countryName(c.country).replace(/^[^ ]+ /, '')}</span>
+      <span class="country-name">${countryName(c.country).replace(/^[^ ]+ /,'')}</span>
       <span class="country-metric">${fmt(c.totalPlays)} plays</span>
       <span class="country-metric">${fmt(c.totalListeners)} listeners</span>
-      <span class="country-metric primary">${fmtHours(c.totalHours)}h</span>
-      <div class="country-bar">
-        <div class="mini-bar"><div class="mini-bar-fill" style="width:${(c.totalHours/maxH*100).toFixed(1)}%"></div></div>
-      </div>
-    </li>
-  `).join('');
+      <span class="country-metric primary">${fmtH(c.totalHours)}h</span>
+      <div class="country-bar"><div class="mini-bar"><div class="mini-bar-fill" style="width:${(c.totalHours/maxH*100).toFixed(1)}%"></div></div></div>
+    </li>`).join('');
 }
 
 function setupTabs() {
@@ -862,16 +588,7 @@ function setupTabs() {
   });
 }
 
-function setupSearch() {
-  document.getElementById('showSearch').addEventListener('input', e => {
-    const q = e.target.value.toLowerCase();
-    document.querySelectorAll('#showsBody tr').forEach(row => {
-      const name = row.querySelector('.show-name')?.textContent.toLowerCase() || '';
-      const channel = row.querySelector('.show-channel')?.textContent.toLowerCase() || '';
-      row.style.display = (name.includes(q) || channel.includes(q)) ? '' : 'none';
-    });
-  });
-}
+document.getElementById('showSearch').addEventListener('input', () => { showPage = 0; renderShows(showSort); });
 
 init();
 </script>
