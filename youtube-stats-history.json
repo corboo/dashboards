@@ -284,6 +284,72 @@
           "videos": 38
         }
       }
+    },
+    {
+      "date": "2026-06-10",
+      "total_views": 49150,
+      "total_subs": 183,
+      "total_videos": 214,
+      "channels": {
+        "DIY HOME & GARDEN": {
+          "views": 20686,
+          "subs": 66,
+          "videos": 67
+        },
+        "Biography Unlimited": {
+          "views": 17407,
+          "subs": 39,
+          "videos": 36
+        },
+        "History You Never Learned": {
+          "views": 8649,
+          "subs": 47,
+          "videos": 26
+        },
+        "Everyday Food and Living": {
+          "views": 1623,
+          "subs": 20,
+          "videos": 69
+        },
+        "TECH EXPLAINED": {
+          "views": 785,
+          "subs": 11,
+          "videos": 16
+        }
+      }
+    },
+    {
+      "date": "2026-06-13",
+      "total_views": 54143,
+      "total_subs": 388,
+      "total_videos": 226,
+      "channels": {
+        "Biography Unlimited": {
+          "views": 17680,
+          "subs": 75,
+          "videos": 36
+        },
+        "History You Never Learned": {
+          "views": 12182,
+          "subs": 71,
+          "videos": 29
+        },
+        "TECH EXPLAINED": {
+          "views": 948,
+          "subs": 79,
+          "videos": 19
+        },
+        "Everyday Food and Living": {
+          "views": 2078,
+          "subs": 87,
+          "videos": 71
+        },
+        "DIY HOME & GARDEN": {
+          "views": 21255,
+          "subs": 76,
+          "videos": 71
+        }
+      }
     }
   ]
 }
